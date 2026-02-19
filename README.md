@@ -1,16 +1,37 @@
-# React + Vite
+# 5 Minutes Lesson
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+互動式 5 分鐘微課程，用 React 打造的學習平台。
 
-Currently, two official plugins are available:
+## 目前課程
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Git 版本控制（6 堂）
 
-## React Compiler
+1. **Git 入門** — 版本控制基礎、三個空間、基本指令
+2. **Git 進階** — stash、log/diff、reset/revert、rebase
+3. **遠端與協作** — clone、fetch、push、Pull Request
+4. **合併與衝突** — merge vs rebase、衝突處理、tag、bisect
+5. **指令總覽** — 情境式指令比較、速查表
+6. **總複習** — Git Flow、實戰情境演練
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 特色
 
-## Expanding the ESLint configuration
+- 每堂課 5 分鐘，互動式學習
+- 模擬終端機，親手輸入指令
+- 每個段落附帶小測驗
+- 深色主題，響應式雙欄佈局
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 本地執行
+```bash
+git clone https://github.com/hui0315/5-minutes-lesson.git
+cd 5-minutes-lesson/Git/my-react-app
+npm install
+npm run dev
+```
+
+## Tech Stack
+
+React · React Router · Framer Motion · Vite
+
+## License
+
+MIT
