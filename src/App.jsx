@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChapterContext } from "./chapter-context";
+import CheatsheetPanel from "./git-cheatsheet-panel";
 import GitTutorial from "./git-tutorial";
 import GitGithubSetup from "./git-github-setup";
 import GitDailyWorkflow from "./git-daily-workflow";
@@ -33,7 +34,7 @@ const COURSES = [
   { path: "/collaboration",  label: "團隊協作",   subtitle: "clone · fetch · pull",    accent: GOLD, badge: "5", element: <GitBridge1 /> },
   { path: "/merge-advanced",  label: "合併進階",   subtitle: "rebase · conflict · tag", accent: GOLD, badge: "6", element: <GitBridge2 /> },
   { path: "/advanced",       label: "進階技巧",   subtitle: "stash · reset · bisect",  accent: GOLD, badge: "7", element: <GitAdvanced /> },
-  { path: "/commands-ref",    label: "指令總覽",   subtitle: "比較 · 速查表",           accent: GOLD, badge: "8", element: <GitCommandsRef /> },
+  { path: "/commands-ref",    label: "觀念澄清",   subtitle: "易混淆指令 · 情境決策",    accent: GOLD, badge: "8", element: <GitCommandsRef /> },
   { path: "/review",         label: "總複習",     subtitle: "情境實戰演練",             accent: GOLD, badge: "9", element: <GitReview /> },
   { path: "/hands-on",       label: "實戰演練",   subtitle: "從零到 GitHub 三日旅程",   accent: GOLD, badge: "10", element: <GitHandsOn /> },
 ];
@@ -55,7 +56,7 @@ const pageTransition = {
 /* ─────────────────────────────────────
    Sidebar component
    ───────────────────────────────────── */
-function Sidebar({ open, onClose }) {
+function Sidebar({ open, onClose, onOpenCheatsheet }) {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -281,6 +282,70 @@ function Sidebar({ open, onClose }) {
           })}
         </div>
 
+        {/* Cheatsheet button */}
+        <div style={{ padding: "0 10px 8px" }}>
+          <div style={{
+            borderTop: "1px dashed rgba(255,255,255,0.08)",
+            margin: "0 8px 10px",
+          }} />
+          <button
+            onClick={() => { onOpenCheatsheet(); if (window.innerWidth < 900) onClose(); }}
+            style={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              padding: "12px 12px",
+              background: "rgba(232,200,114,0.04)",
+              border: "1px dashed rgba(232,200,114,0.2)",
+              borderRadius: 10,
+              cursor: "pointer",
+              textAlign: "left",
+              transition: "all 0.25s ease",
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.background = "rgba(232,200,114,0.1)";
+              e.currentTarget.style.borderColor = "rgba(232,200,114,0.35)";
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.background = "rgba(232,200,114,0.04)";
+              e.currentTarget.style.borderColor = "rgba(232,200,114,0.2)";
+            }}
+          >
+            <div style={{
+              width: 32,
+              height: 32,
+              borderRadius: 8,
+              background: "rgba(232,200,114,0.12)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: 15,
+              flexShrink: 0,
+            }}>
+              ⚡
+            </div>
+            <div style={{ minWidth: 0 }}>
+              <div style={{
+                fontSize: 13,
+                fontWeight: 600,
+                color: "#E8C872",
+                whiteSpace: "nowrap",
+              }}>
+                指令速查表
+              </div>
+              <div style={{
+                fontSize: 11,
+                color: "rgba(232,200,114,0.5)",
+                fontFamily: "'JetBrains Mono', monospace",
+                whiteSpace: "nowrap",
+              }}>
+                隨時查閱所有指令
+              </div>
+            </div>
+          </button>
+        </div>
+
         {/* Sidebar footer */}
         <div
           style={{
@@ -350,6 +415,7 @@ function AnimatedRoutes() {
 function AppContent() {
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth >= 900);
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 900);
+  const [cheatsheetOpen, setCheatsheetOpen] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -372,6 +438,11 @@ function AppContent() {
       <Sidebar
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
+        onOpenCheatsheet={() => setCheatsheetOpen(true)}
+      />
+      <CheatsheetPanel
+        open={cheatsheetOpen}
+        onClose={() => setCheatsheetOpen(false)}
       />
 
       {/* Main content */}
@@ -454,6 +525,37 @@ function AppContent() {
           >
             Git 互動課程
           </div>
+
+          {/* Cheatsheet quick access in topbar */}
+          <button
+            onClick={() => setCheatsheetOpen(true)}
+            style={{
+              marginLeft: "auto",
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "6px 12px",
+              background: "rgba(232,200,114,0.06)",
+              border: "1px solid rgba(232,200,114,0.15)",
+              borderRadius: 8,
+              cursor: "pointer",
+              transition: "all 0.2s",
+              color: "rgba(232,200,114,0.6)",
+              fontSize: 12,
+              fontFamily: "'JetBrains Mono', monospace",
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.background = "rgba(232,200,114,0.12)";
+              e.currentTarget.style.color = "#E8C872";
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.background = "rgba(232,200,114,0.06)";
+              e.currentTarget.style.color = "rgba(232,200,114,0.6)";
+            }}
+            title="指令速查表"
+          >
+            ⚡ 速查表
+          </button>
         </div>
 
         {/* Page content */}
