@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useChapterNav } from "./chapter-context";
+import { colors, lessonThemes, hexToRgba } from "./theme";
+
+const { accent: ACCENT, accent2: ACCENT2 } = lessonThemes["/github-setup"];
 
 /* ══════════════════════════════════════════════
    第二堂：本地到雲端
@@ -15,13 +18,13 @@ const STEPS = [
     conceptBlocks: [
       {
         title: "什麼是 Repository？",
-        color: "#E8C872",
+        color: ACCENT,
         content:
           "Repository（簡稱 repo）就是你專案在雲端的「家」。目前你所有的 commit 都在你自己的電腦上，建立 GitHub repo 後，就能把程式碼推到雲端，讓別人看到、備份也不怕電腦壞掉。",
       },
       {
         title: "建立 repo 時的四個選項",
-        color: "#E8C872",
+        color: ACCENT,
         content:
           "Description（專案簡介）、Visibility（Public 公開 / Private 私有）、Add a README（專案說明書）、License（授權條款，MIT 最常用）。如果本地已經有專案，README 和 License 建議不要勾，避免和本地歷史衝突。",
       },
@@ -213,28 +216,28 @@ function SettingsDemo() {
       desc: "專案簡介（選填）",
       example: "Interactive 5-minute micro-lessons built with React",
       icon: "📝",
-      color: "#E8C872",
+      color: ACCENT,
     },
     {
       name: "Visibility",
       desc: "誰能看到你的 repo",
       example: "Public（公開）→ 建立作品集　Private（私有）→ 個人專案",
       icon: "👁️",
-      color: "#E8C872",
+      color: ACCENT,
     },
     {
       name: "README",
       desc: "專案的「首頁說明書」",
       example: "本地已有專案 → 不勾　從零開始 → 可以勾",
       icon: "📄",
-      color: "#E8C872",
+      color: ACCENT,
     },
     {
       name: "License",
       desc: "授權條款，決定別人能怎麼用你的程式碼",
       example: "MIT → 最寬鬆，別人可以自由使用　不選 → 保留所有權利",
       icon: "⚖️",
-      color: "#E8C872",
+      color: ACCENT,
     },
   ];
 
@@ -242,7 +245,7 @@ function SettingsDemo() {
     <div style={{ margin: "20px 0" }}>
       <div
         style={{
-          background: "#0A0E17",
+          background: colors.bgDeep,
           borderRadius: 12,
           border: "1px solid rgba(255,255,255,0.08)",
           overflow: "hidden",
@@ -297,8 +300,8 @@ function SettingsDemo() {
                 padding: "12px 14px",
                 marginBottom: 6,
                 background:
-                  step === i ? `${s.color}10` : "rgba(255,255,255,0.02)",
-                border: `1px solid ${step === i ? `${s.color}33` : "rgba(255,255,255,0.04)"}`,
+                  step === i ? hexToRgba(s.color, 0.063) : "rgba(255,255,255,0.02)",
+                border: `1px solid ${step === i ? hexToRgba(s.color, 0.2) : "rgba(255,255,255,0.04)"}`,
                 borderRadius: 10,
                 cursor: "pointer",
                 transition: "all 0.3s",
@@ -333,9 +336,9 @@ function SettingsDemo() {
                   <div
                     style={{
                       fontSize: 11.5,
-                      color: `${s.color}cc`,
+                      color: hexToRgba(s.color, 0.8),
                       fontFamily: "'JetBrains Mono', monospace",
-                      background: `${s.color}0a`,
+                      background: hexToRgba(s.color, 0.039),
                       padding: "8px 10px",
                       borderRadius: 6,
                       lineHeight: 1.6,
@@ -408,7 +411,7 @@ function CommandInput({ command, onComplete }) {
       return "rgba(255,255,255,0.12)";
     return input[i] === expectedNorm[i] ? "#10B981" : "#EF4444";
   };
-  const accent = "#E8C872";
+  const accent = ACCENT;
   const borderColor =
     status === "correct"
       ? "#10B981"
@@ -539,7 +542,7 @@ function CommandInput({ command, onComplete }) {
             marginTop: 2,
             marginLeft: 24,
             fontSize: 11.5,
-            color: `${accent}88`,
+            color: hexToRgba(accent, 0.533),
             fontStyle: "italic",
           }}
         >
@@ -601,7 +604,7 @@ function TerminalSim({ commands, onAllComplete }) {
           <div key={`done-${i}`} style={{ marginBottom: 12 }}>
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12 }}>
               <span style={{ color: "#10B981" }}>$ </span>
-              <span style={{ color: "#E8C872" }}>{cmd.answer}</span>
+              <span style={{ color: ACCENT }}>{cmd.answer}</span>
               <span style={{ color: "#10B981", marginLeft: 8, fontSize: 11 }}>✓</span>
             </div>
             {cmd.output && (
@@ -658,12 +661,12 @@ function Quiz({ quiz, onComplete }) {
       style={{
         margin: "20px 0 0",
         padding: "18px",
-        background: "rgba(232,200,114,0.04)",
+        background: hexToRgba(ACCENT, 0.04),
         borderRadius: 12,
-        border: "1px solid rgba(232,200,114,0.12)",
+        border: `1px solid ${hexToRgba(ACCENT, 0.12)}`,
       }}
     >
-      <div style={{ fontSize: 12.5, fontWeight: 700, color: "#E8C872", marginBottom: 12 }}>
+      <div style={{ fontSize: 12.5, fontWeight: 700, color: ACCENT, marginBottom: 12 }}>
         💡 觀念確認
       </div>
       <div
@@ -741,7 +744,7 @@ function ConceptBlocks({ blocks }) {
           key={i}
           style={{
             padding: "14px 16px",
-            background: `${b.color}08`,
+            background: hexToRgba(b.color, 0.031),
             borderLeft: `3px solid ${b.color}`,
             borderRadius: "0 10px 10px 0",
           }}
@@ -771,7 +774,7 @@ export default function GitGithubSetup() {
   const { prevPath, nextPath } = useChapterNav();
 
   const step = STEPS[currentStep];
-  const accent = "#E8C872";
+  const accent = ACCENT;
   const goNext = () => {
     if (currentStep < STEPS.length - 1) setCurrentStep((s) => s + 1);
   };
@@ -817,13 +820,13 @@ export default function GitGithubSetup() {
                 width: 38,
                 height: 38,
                 borderRadius: 10,
-                background: `linear-gradient(135deg, #E8C872, #D4A843)`,
+                background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 fontSize: 14,
                 fontWeight: 900,
-                color: "#0D1117",
+                color: colors.bg,
                 fontFamily: "'JetBrains Mono', monospace",
               }}
             >
@@ -841,9 +844,9 @@ export default function GitGithubSetup() {
           <div
             style={{
               fontSize: 12,
-              color: "#E8C872",
+              color: ACCENT,
               fontFamily: "'JetBrains Mono', monospace",
-              background: `rgba(232,200,114,0.1)`,
+              background: hexToRgba(ACCENT, 0.1),
               padding: "4px 10px",
               borderRadius: 6,
             }}
@@ -865,7 +868,7 @@ export default function GitGithubSetup() {
                 cursor: "pointer",
                 background:
                   i <= currentStep
-                    ? `linear-gradient(90deg, #E8C872, #D4A843)`
+                    ? `linear-gradient(90deg, ${ACCENT}, ${ACCENT2})`
                     : "rgba(255,255,255,0.06)",
                 transition: "background 0.4s",
                 animation: i <= currentStep ? "goldGlow 3s ease-in-out infinite" : "none",
@@ -901,7 +904,7 @@ export default function GitGithubSetup() {
                 margin: 0,
                 fontSize: 20,
                 fontWeight: 900,
-                background: `linear-gradient(135deg, #E8C872, #D4A843)`,
+                background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`,
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
               }}
@@ -950,8 +953,8 @@ export default function GitGithubSetup() {
             <div
               style={{
                 padding: "14px 16px",
-                background: "rgba(232,200,114,0.04)",
-                borderLeft: `3px solid #E8C872`,
+                background: hexToRgba(ACCENT, 0.04),
+                borderLeft: `3px solid ${ACCENT}`,
                 borderRadius: "0 10px 10px 0",
                 fontSize: 12.5,
                 color: "rgba(255,255,255,0.6)",
@@ -983,10 +986,10 @@ export default function GitGithubSetup() {
           )}
           {currentStep === STEPS.length - 1 ? (
             nextPath ? (
-              <button onClick={() => navigate(nextPath)} style={{ padding: "12px 24px", background: "linear-gradient(135deg, #E8C872, #D4A843)", border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一章 →</button>
+              <button onClick={() => navigate(nextPath)} style={{ padding: "12px 24px", background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, border: "none", borderRadius: 10, color: colors.bg, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一章 →</button>
             ) : <div />
           ) : (
-            <button onClick={goNext} style={{ padding: "12px 24px", background: `linear-gradient(135deg, #E8C872, #D4A843)`, border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一課 →</button>
+            <button onClick={goNext} style={{ padding: "12px 24px", background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, border: "none", borderRadius: 10, color: colors.bg, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一課 →</button>
           )}
         </div>
 
@@ -997,13 +1000,13 @@ export default function GitGithubSetup() {
               marginTop: 24,
               textAlign: "center",
               padding: "24px",
-              background: `rgba(232,200,114,0.08)`,
-              border: `1px solid rgba(232,200,114,0.2)`,
+              background: hexToRgba(ACCENT, 0.08),
+              border: `1px solid ${hexToRgba(ACCENT, 0.2)}`,
               borderRadius: 14,
             }}
           >
             <div style={{ fontSize: 32, marginBottom: 8 }}>🎉</div>
-            <div style={{ fontSize: 17, fontWeight: 800, color: "#E8C872", marginBottom: 6 }}>
+            <div style={{ fontSize: 17, fontWeight: 800, color: ACCENT, marginBottom: 6 }}>
               恭喜！你的專案已推上 GitHub！
             </div>
             <div

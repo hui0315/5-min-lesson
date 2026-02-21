@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useChapterNav } from "./chapter-context";
+import { colors, hexToRgba } from "./theme";
 
 /* ══════════════════════════════════════════════
    第四堂：Git 命名規範與慣例
@@ -250,7 +251,7 @@ function PrefixTable() {
     <div style={{ margin: "16px 0" }}>
       <div
         style={{
-          background: "#0A0E17",
+          background: colors.bgDeep,
           borderRadius: 12,
           border: "1px solid rgba(255,255,255,0.08)",
           overflow: "hidden",
@@ -281,7 +282,7 @@ function PrefixTable() {
                 gap: 12,
                 padding: "10px 12px",
                 borderRadius: 8,
-                background: hovered === i ? `${p.color}0a` : "transparent",
+                background: hovered === i ? hexToRgba(p.color, 0.039) : "transparent",
                 transition: "background 0.2s",
                 cursor: "default",
               }}
@@ -369,7 +370,7 @@ function BranchDemo() {
     <div style={{ margin: "16px 0" }}>
       <div
         style={{
-          background: "#0A0E17",
+          background: colors.bgDeep,
           borderRadius: 12,
           border: "1px solid rgba(255,255,255,0.08)",
           overflow: "hidden",
@@ -406,8 +407,8 @@ function BranchDemo() {
               style={{
                 padding: "12px 14px",
                 marginBottom: 6,
-                background: selected === i ? `${b.color}0a` : "rgba(255,255,255,0.02)",
-                border: `1px solid ${selected === i ? `${b.color}33` : "rgba(255,255,255,0.04)"}`,
+                background: selected === i ? hexToRgba(b.color, 0.039) : "rgba(255,255,255,0.02)",
+                border: `1px solid ${selected === i ? hexToRgba(b.color, 0.2) : "rgba(255,255,255,0.04)"}`,
                 borderRadius: 10,
                 cursor: "pointer",
                 transition: "all 0.3s",
@@ -501,7 +502,7 @@ function VersionDemo() {
     <div style={{ margin: "16px 0" }}>
       <div
         style={{
-          background: "#0A0E17",
+          background: colors.bgDeep,
           borderRadius: 12,
           border: "1px solid rgba(255,255,255,0.08)",
           overflow: "hidden",
@@ -561,8 +562,8 @@ function VersionDemo() {
                 onClick={() => bump(b.type)}
                 style={{
                   padding: "8px 16px",
-                  background: `${b.color}15`,
-                  border: `1px solid ${b.color}33`,
+                  background: hexToRgba(b.color, 0.08),
+                  border: `1px solid ${hexToRgba(b.color, 0.2)}`,
                   borderRadius: 8,
                   color: b.color,
                   fontFamily: "'JetBrains Mono', monospace",
@@ -626,7 +627,7 @@ function PRDemo() {
     <div style={{ margin: "16px 0" }}>
       <div
         style={{
-          background: "#0A0E17",
+          background: colors.bgDeep,
           borderRadius: 12,
           border: "1px solid rgba(255,255,255,0.08)",
           overflow: "hidden",
@@ -754,7 +755,7 @@ function GitignoreDemo() {
     <div style={{ margin: "16px 0" }}>
       <div
         style={{
-          background: "#0A0E17",
+          background: colors.bgDeep,
           borderRadius: 12,
           border: "1px solid rgba(255,255,255,0.08)",
           overflow: "hidden",
@@ -788,8 +789,8 @@ function GitignoreDemo() {
                   padding: "3px 10px",
                   fontSize: 10.5,
                   fontFamily: "'JetBrains Mono', monospace",
-                  background: framework === key ? `${val.color}15` : "transparent",
-                  border: `1px solid ${framework === key ? `${val.color}44` : "rgba(255,255,255,0.08)"}`,
+                  background: framework === key ? hexToRgba(val.color, 0.08) : "transparent",
+                  border: `1px solid ${framework === key ? hexToRgba(val.color, 0.267) : "rgba(255,255,255,0.08)"}`,
                   borderRadius: 5,
                   color: framework === key ? val.color : "rgba(255,255,255,0.35)",
                   cursor: "pointer",
@@ -1046,7 +1047,7 @@ function CommandInput({ command, onComplete }) {
             marginTop: 2,
             marginLeft: 24,
             fontSize: 11.5,
-            color: `${ACCENT}88`,
+            color: hexToRgba(ACCENT, 0.533),
             fontStyle: "italic",
           }}
         >
@@ -1165,9 +1166,9 @@ function Quiz({ quiz, onComplete }) {
       style={{
         margin: "20px 0 0",
         padding: "18px",
-        background: `${ACCENT}06`,
+        background: hexToRgba(ACCENT, 0.024),
         borderRadius: 12,
-        border: `1px solid ${ACCENT}18`,
+        border: `1px solid ${hexToRgba(ACCENT, 0.094)}`,
       }}
     >
       <div style={{ fontSize: 12.5, fontWeight: 700, color: ACCENT, marginBottom: 12 }}>
@@ -1248,7 +1249,7 @@ function ConceptBlocks({ blocks }) {
           key={i}
           style={{
             padding: "14px 16px",
-            background: `${b.color}08`,
+            background: hexToRgba(b.color, 0.031),
             borderLeft: `3px solid ${b.color}`,
             borderRadius: "0 10px 10px 0",
           }}
@@ -1329,7 +1330,7 @@ export default function GitConventions() {
                 justifyContent: "center",
                 fontSize: 14,
                 fontWeight: 900,
-                color: "#0D1117",
+                color: colors.bg,
                 fontFamily: "'JetBrains Mono', monospace",
               }}
             >
@@ -1349,7 +1350,7 @@ export default function GitConventions() {
               fontSize: 12,
               color: ACCENT,
               fontFamily: "'JetBrains Mono', monospace",
-              background: `${ACCENT}15`,
+              background: hexToRgba(ACCENT, 0.08),
               padding: "4px 10px",
               borderRadius: 6,
             }}
@@ -1459,7 +1460,7 @@ export default function GitConventions() {
             <div
               style={{
                 padding: "14px 16px",
-                background: `${ACCENT}06`,
+                background: hexToRgba(ACCENT, 0.024),
                 borderLeft: `3px solid ${ACCENT}`,
                 borderRadius: "0 10px 10px 0",
                 fontSize: 12.5,
@@ -1495,7 +1496,7 @@ export default function GitConventions() {
               <button onClick={() => navigate(nextPath)} style={{ padding: "12px 24px", background: "linear-gradient(135deg, #8B5CF6, #A78BFA)", border: "none", borderRadius: 10, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一章 →</button>
             ) : <div />
           ) : (
-            <button onClick={goNext} style={{ padding: "12px 24px", background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一課 →</button>
+            <button onClick={goNext} style={{ padding: "12px 24px", background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, border: "none", borderRadius: 10, color: colors.bg, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一課 →</button>
           )}
         </div>
 
@@ -1506,8 +1507,8 @@ export default function GitConventions() {
               marginTop: 24,
               textAlign: "center",
               padding: "24px",
-              background: `${ACCENT}08`,
-              border: `1px solid ${ACCENT}22`,
+              background: hexToRgba(ACCENT, 0.031),
+              border: `1px solid ${hexToRgba(ACCENT, 0.133)}`,
               borderRadius: 14,
             }}
           >

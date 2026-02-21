@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useChapterNav } from "./chapter-context";
+import { colors, lessonThemes, hexToRgba } from "./theme";
+
+const { accent: ACCENT, accent2: ACCENT2 } = lessonThemes["/review"];
 
 /* ══════════════════════════════════════════════
    COURSE DATA — 總複習：從基礎到實戰
@@ -331,7 +334,7 @@ function CommandInput({ command, onComplete }) {
   return (
     <div style={{ marginBottom: 6 }}>
       <div style={{ fontSize: 13, color: "rgba(255,255,255,0.55)", marginBottom: 8, display: "flex", gap: 8, lineHeight: 1.6 }}>
-        <span style={{ color: "#E8C872", fontWeight: 700, flexShrink: 0 }}>▸</span>
+        <span style={{ color: ACCENT, fontWeight: 700, flexShrink: 0 }}>▸</span>
         <span>{command.prompt}</span>
       </div>
       {/* Ghost preview */}
@@ -354,8 +357,8 @@ function CommandInput({ command, onComplete }) {
           autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false}
           style={{
             flex: 1, background: "transparent", border: "none", outline: "none",
-            color: status === "correct" ? "#10B981" : status === "wrong" ? "#EF4444" : "#E8C872",
-            fontFamily: "'JetBrains Mono', monospace", fontSize: 13, padding: "11px 0", caretColor: "#E8C872",
+            color: status === "correct" ? "#10B981" : status === "wrong" ? "#EF4444" : ACCENT,
+            fontFamily: "'JetBrains Mono', monospace", fontSize: 13, padding: "11px 0", caretColor: ACCENT,
           }}
         />
         {status === "correct" && <span style={{ color: "#10B981", fontSize: 14 }}>✓</span>}
@@ -368,7 +371,7 @@ function CommandInput({ command, onComplete }) {
         </button>
       )}
       {showHint && status === "typing" && (
-        <div style={{ marginTop: 2, marginLeft: 24, fontSize: 11.5, color: "rgba(232,200,114,0.55)", fontStyle: "italic" }}>
+        <div style={{ marginTop: 2, marginLeft: 24, fontSize: 11.5, color: hexToRgba(ACCENT, 0.55), fontStyle: "italic" }}>
           {command.hint}
         </div>
       )}
@@ -402,7 +405,7 @@ function TerminalSim({ commands, onAllComplete }) {
           <div key={`done-${i}`} style={{ marginBottom: 12 }}>
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12 }}>
               <span style={{ color: "#10B981" }}>$ </span>
-              <span style={{ color: "#E8C872" }}>{cmd.answer}</span>
+              <span style={{ color: ACCENT }}>{cmd.answer}</span>
               <span style={{ color: "#10B981", marginLeft: 8, fontSize: 11 }}>✓</span>
             </div>
             {cmd.output && <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11.5, color: "rgba(255,255,255,0.4)", whiteSpace: "pre-wrap", marginTop: 3, lineHeight: 1.5 }}>{cmd.output}</div>}
@@ -432,8 +435,8 @@ function Quiz({ quiz, onComplete }) {
     if (quiz.options[i].correct) setTimeout(onComplete, 700);
   };
   return (
-    <div style={{ margin: "20px 0 0", padding: "18px", background: "rgba(232,200,114,0.04)", borderRadius: 12, border: "1px solid rgba(232,200,114,0.12)" }}>
-      <div style={{ fontSize: 12.5, fontWeight: 700, color: "#E8C872", marginBottom: 12 }}>💡 觀念確認</div>
+    <div style={{ margin: "20px 0 0", padding: "18px", background: hexToRgba(ACCENT, 0.04), borderRadius: 12, border: `1px solid ${hexToRgba(ACCENT, 0.12)}` }}>
+      <div style={{ fontSize: 12.5, fontWeight: 700, color: ACCENT, marginBottom: 12 }}>💡 觀念確認</div>
       <div style={{ fontSize: 13.5, color: "rgba(255,255,255,0.85)", marginBottom: 12, lineHeight: 1.6 }}>{quiz.question}</div>
       <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
         {quiz.options.map((opt, i) => {
@@ -484,8 +487,8 @@ function InfoPage({ step }) {
       </div>
 
       {/* Git Flow */}
-      <div style={{ margin: "24px 0", padding: "20px", background: "rgba(232,200,114,0.04)", borderRadius: 14, border: "1px solid rgba(232,200,114,0.1)" }}>
-        <div style={{ fontSize: 15, fontWeight: 800, color: "#E8C872", marginBottom: 14 }}>{step.workflow.title}</div>
+      <div style={{ margin: "24px 0", padding: "20px", background: hexToRgba(ACCENT, 0.04), borderRadius: 14, border: `1px solid ${hexToRgba(ACCENT, 0.1)}` }}>
+        <div style={{ fontSize: 15, fontWeight: 800, color: ACCENT, marginBottom: 14 }}>{step.workflow.title}</div>
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {step.workflow.steps.map((ws, i) => (
             <div key={i}>
@@ -561,15 +564,15 @@ function NamingChallenge({ step, onQuizComplete }) {
 
   return (
     <div>
-      <div style={{ padding: "14px 16px", background: "rgba(232,200,114,0.05)", borderLeft: "3px solid #E8C872", borderRadius: "0 10px 10px 0", fontSize: 13, color: "rgba(255,255,255,0.7)", lineHeight: 1.8, marginBottom: 16 }}>
-        <span style={{ fontWeight: 700, color: "#E8C872" }}>🎯 終極命名挑戰：</span>綜合前幾堂學到的所有命名規範。每題會給你「好的」和「壞的」兩個選項，選出正確的那個！
+      <div style={{ padding: "14px 16px", background: hexToRgba(ACCENT, 0.05), borderLeft: `3px solid ${ACCENT}`, borderRadius: "0 10px 10px 0", fontSize: 13, color: "rgba(255,255,255,0.7)", lineHeight: 1.8, marginBottom: 16 }}>
+        <span style={{ fontWeight: 700, color: ACCENT }}>🎯 終極命名挑戰：</span>綜合前幾堂學到的所有命名規範。每題會給你「好的」和「壞的」兩個選項，選出正確的那個！
       </div>
 
       {allCategories.map((cat, catIdx) => (
         <div key={catIdx} style={{ marginBottom: 20 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
             <span style={{ fontSize: 18 }}>{cat.icon}</span>
-            <span style={{ fontSize: 14, fontWeight: 700, color: "#E8C872" }}>{cat.category}</span>
+            <span style={{ fontSize: 14, fontWeight: 700, color: ACCENT }}>{cat.category}</span>
             <span style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", marginLeft: "auto", fontFamily: "'JetBrains Mono', monospace" }}>
               {categoryScores[catIdx] || 0}/{cat.challenges.length}
             </span>
@@ -585,7 +588,7 @@ function NamingChallenge({ step, onQuizComplete }) {
               return (
                 <div key={chalIdx} style={{ background: "rgba(0,0,0,0.2)", borderRadius: 10, padding: "12px 14px", border: `1px solid ${result ? (result.correct ? "rgba(16,185,129,0.2)" : "rgba(239,68,68,0.2)") : "rgba(255,255,255,0.05)"}` }}>
                   <div style={{ fontSize: 12.5, color: "rgba(255,255,255,0.65)", marginBottom: 10, lineHeight: 1.6 }}>
-                    <span style={{ color: "#E8C872", fontWeight: 600 }}>情境：</span>{chal.scenario}
+                    <span style={{ color: ACCENT, fontWeight: 600 }}>情境：</span>{chal.scenario}
                   </div>
                   <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                     {shuffled.map((opt, oi) => {
@@ -604,7 +607,7 @@ function NamingChallenge({ step, onQuizComplete }) {
                   </div>
                   {result && (
                     <div style={{ marginTop: 6, fontSize: 11, color: "rgba(255,255,255,0.35)", lineHeight: 1.6 }}>
-                      {result.correct ? "✅ " : "❌ "}<span style={{ color: "#E8C872" }}>{chal.rule}</span>
+                      {result.correct ? "✅ " : "❌ "}<span style={{ color: ACCENT }}>{chal.rule}</span>
                     </div>
                   )}
                 </div>
@@ -635,7 +638,7 @@ function NamingChallenge({ step, onQuizComplete }) {
 function FinalScreen({ score, total }) {
   const pct = Math.round((score / total) * 100);
   const grade = pct === 100 ? "S" : pct >= 80 ? "A" : pct >= 60 ? "B" : "C";
-  const gradeColor = { S: "#E8C872", A: "#10B981", B: "#3B82F6", C: "#F59E0B" }[grade];
+  const gradeColor = { S: ACCENT, A: "#10B981", B: "#3B82F6", C: "#F59E0B" }[grade];
 
   const skills = [
     "Git Flow 團隊工作流程",
@@ -657,7 +660,7 @@ function FinalScreen({ score, total }) {
       <div style={{
         display: "inline-block", fontSize: 48, fontWeight: 900, color: gradeColor,
         fontFamily: "'JetBrains Mono', monospace", lineHeight: 1,
-        textShadow: `0 0 40px ${gradeColor}44`,
+        textShadow: `0 0 40px ${hexToRgba(gradeColor, 0.267)}`,
       }}>{grade}</div>
       <div style={{ fontSize: 20, fontWeight: 800, marginTop: 8, color: "rgba(255,255,255,0.9)" }}>
         總複習完成！
@@ -666,7 +669,7 @@ function FinalScreen({ score, total }) {
         答對 {score}/{total} 題（{pct}%）
       </div>
       <div style={{ marginTop: 24, textAlign: "left", maxWidth: 380, margin: "24px auto 0" }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: "#E8C872", marginBottom: 12 }}>📋 你已掌握的技能：</div>
+        <div style={{ fontSize: 13, fontWeight: 700, color: ACCENT, marginBottom: 12 }}>📋 你已掌握的技能：</div>
         {skills.map((s, i) => (
           <div key={i} style={{
             display: "flex", alignItems: "center", gap: 10, padding: "8px 0",
@@ -678,11 +681,11 @@ function FinalScreen({ score, total }) {
         ))}
       </div>
       <div style={{
-        marginTop: 28, padding: "16px", background: "rgba(232,200,114,0.06)",
-        borderRadius: 12, border: "1px solid rgba(232,200,114,0.15)",
+        marginTop: 28, padding: "16px", background: hexToRgba(ACCENT, 0.06),
+        borderRadius: 12, border: `1px solid ${hexToRgba(ACCENT, 0.15)}`,
         fontSize: 13, color: "rgba(255,255,255,0.55)", lineHeight: 1.7,
       }}>
-        🚀 <strong style={{ color: "#E8C872" }}>下一步建議：</strong>在真實專案中使用 Git Flow，嘗試為開源專案發一個 Pull Request，或是設定 CI/CD 自動化部署流程。
+        🚀 <strong style={{ color: ACCENT }}>下一步建議：</strong>在真實專案中使用 Git Flow，嘗試為開源專案發一個 Pull Request，或是設定 CI/CD 自動化部署流程。
       </div>
     </div>
   );
@@ -721,16 +724,16 @@ export default function GitReview() {
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{
               width: 38, height: 38, borderRadius: 10,
-              background: "linear-gradient(135deg, #E8C872, #D4A843)",
+              background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`,
               display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: 15, fontWeight: 900, color: "#0D1117", fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 15, fontWeight: 900, color: colors.bg, fontFamily: "'JetBrains Mono', monospace",
             }}>G★</div>
             <div>
               <div style={{ fontSize: 15, fontWeight: 700 }}>Git 總複習：從觀念到實戰</div>
               <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>Git 課程系列 · 第九堂</div>
             </div>
           </div>
-          <div style={{ fontSize: 12, color: "#E8C872", fontFamily: "'JetBrains Mono', monospace", background: "rgba(232,200,114,0.1)", padding: "4px 10px", borderRadius: 6 }}>
+          <div style={{ fontSize: 12, color: ACCENT, fontFamily: "'JetBrains Mono', monospace", background: hexToRgba(ACCENT, 0.1), padding: "4px 10px", borderRadius: 6 }}>
             ⭐ {score}/{totalQuizzes}
           </div>
         </div>
@@ -740,7 +743,7 @@ export default function GitReview() {
           {SECTIONS.map((_, i) => (
             <div key={i} onClick={() => setCurrentStep(i)} style={{
               flex: 1, height: 4, borderRadius: 2, cursor: "pointer",
-              background: i <= currentStep ? "linear-gradient(90deg, #E8C872, #D4A843)" : "rgba(255,255,255,0.06)",
+              background: i <= currentStep ? `linear-gradient(90deg, ${ACCENT}, ${ACCENT2})` : "rgba(255,255,255,0.06)",
               transition: "background 0.4s ease",
               animation: i <= currentStep ? "goldGlow 3s ease-in-out infinite" : "none",
             }} />
@@ -760,7 +763,7 @@ export default function GitReview() {
             <span style={{ fontSize: 28 }}>{step.emoji}</span>
             <h2 style={{
               margin: 0, fontSize: 20, fontWeight: 900,
-              background: "linear-gradient(135deg, #E8C872, #D4A843)",
+              background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`,
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
             }}>{step.title}</h2>
           </div>
@@ -772,11 +775,11 @@ export default function GitReview() {
           {step.type === "scenario" && (
             <>
               <div style={{
-                padding: "14px 16px", background: "rgba(232,200,114,0.05)",
-                borderLeft: "3px solid #E8C872", borderRadius: "0 10px 10px 0",
+                padding: "14px 16px", background: hexToRgba(ACCENT, 0.05),
+                borderLeft: `3px solid ${ACCENT}`, borderRadius: "0 10px 10px 0",
                 fontSize: 13, color: "rgba(255,255,255,0.7)", lineHeight: 1.8, marginBottom: 8,
               }}>
-                <span style={{ fontWeight: 700, color: "#E8C872" }}>📖 情境：</span>{step.story}
+                <span style={{ fontWeight: 700, color: ACCENT }}>📖 情境：</span>{step.story}
               </div>
               <div style={{
                 padding: "14px 16px", background: "rgba(16,185,129,0.04)",
@@ -805,9 +808,9 @@ export default function GitReview() {
             <button onClick={goPrev} style={{ padding: "12px 24px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10, color: "rgba(255,255,255,0.6)", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>← 上一課</button>
           )}
           {currentStep === SECTIONS.length - 1 ? (
-            nextPath ? <button onClick={() => navigate(nextPath)} style={{ padding: "12px 24px", background: "linear-gradient(135deg, #E8C872, #D4A843)", border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一章 →</button> : <div />
+            nextPath ? <button onClick={() => navigate(nextPath)} style={{ padding: "12px 24px", background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, border: "none", borderRadius: 10, color: colors.bg, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一章 →</button> : <div />
           ) : (
-            <button onClick={goNext} style={{ padding: "12px 24px", background: "linear-gradient(135deg, #E8C872, #D4A843)", border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一課 →</button>
+            <button onClick={goNext} style={{ padding: "12px 24px", background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, border: "none", borderRadius: 10, color: colors.bg, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一課 →</button>
           )}
         </div>
       </div>
