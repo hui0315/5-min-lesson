@@ -20,9 +20,8 @@
 
 </div>
 
-<!-- 🎬 Hero 預覽圖：未來可替換為 screenshots/demo-hero.gif -->
 <p align="center">
-  <img src="./screenshots/preview.png" alt="課程預覽" width="800" />
+  <img src="./screenshots/demo-hero.gif" alt="課程預覽" width="800" />
 </p>
 
 ## 為什麼做這個？
@@ -30,20 +29,19 @@
 大部分 Git 教學不是要你讀一整本書，就是丟一堆指令叫你背。我們反過來——從「你剛做完一個專案，怕改壞又不敢亂動」這個真實場景出發，讓你在模擬終端機裡親手打指令、即時看結果，搞懂每個指令到底在幹嘛。
 
 ## 功能亮點
-
 <table>
   <tr>
-    <td align="center" width="33%">
+    <td align="center" valign="top" width="33%">
       <img src="./screenshots/demo-terminal.gif" width="100%" alt="互動式模擬終端機" />
       <br /><b>🖥️ 互動式模擬終端機</b>
       <br /><sub>在安全環境裡動手練習，打錯了會提示你哪裡不對，不會搞壞任何東西</sub>
     </td>
-    <td align="center" width="33%">
+    <td align="center" valign="top" width="33%">
       <img src="./screenshots/demo-cheatsheet.gif" width="100%" alt="Git 速查表" />
       <br /><b>🔍 Git 速查表</b>
       <br /><sub>浮動面板涵蓋 8 大類常用指令，支援關鍵字搜尋與一鍵複製</sub>
     </td>
-    <td align="center" width="33%">
+    <td align="center" valign="top" width="33%">
       <img src="./screenshots/demo-lessons.gif" width="100%" alt="情境驅動學習" />
       <br /><b>📖 情境驅動學習</b>
       <br /><sub>每堂課從一個具體問題開始，10 堂課層層遞進</sub>
