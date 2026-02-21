@@ -31,25 +31,20 @@
 
 ## 功能亮點
 
-<!-- 🎬 未來可將各欄的 preview.png 替換為對應的 GIF 動圖：
-     - demo-terminal.gif：互動終端機操作畫面
-     - demo-cheatsheet.gif：速查表面板搜尋與複製
-     - demo-lessons.gif：切換不同課程展示主題色
--->
 <table>
   <tr>
     <td align="center" width="33%">
-      <img src="./screenshots/preview.png" width="100%" alt="互動式模擬終端機" />
+      <img src="./screenshots/demo-terminal.gif" width="100%" alt="互動式模擬終端機" />
       <br /><b>🖥️ 互動式模擬終端機</b>
       <br /><sub>在安全環境裡動手練習，打錯了會提示你哪裡不對，不會搞壞任何東西</sub>
     </td>
     <td align="center" width="33%">
-      <img src="./screenshots/preview.png" width="100%" alt="Git 速查表" />
+      <img src="./screenshots/demo-cheatsheet.gif" width="100%" alt="Git 速查表" />
       <br /><b>🔍 Git 速查表</b>
       <br /><sub>浮動面板涵蓋 8 大類常用指令，支援關鍵字搜尋與一鍵複製</sub>
     </td>
     <td align="center" width="33%">
-      <img src="./screenshots/preview.png" width="100%" alt="情境驅動學習" />
+      <img src="./screenshots/demo-lessons.gif" width="100%" alt="情境驅動學習" />
       <br /><b>📖 情境驅動學習</b>
       <br /><sub>每堂課從一個具體問題開始，10 堂課層層遞進</sub>
     </td>
