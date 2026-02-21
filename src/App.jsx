@@ -9,6 +9,7 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import { ChapterContext } from "./chapter-context";
 import CheatsheetPanel from "./git-cheatsheet-panel";
+import { colors, lessonThemes, hexToRgba } from "./theme";
 import GitTutorial from "./git-tutorial";
 import GitGithubSetup from "./git-github-setup";
 import GitDailyWorkflow from "./git-daily-workflow";
@@ -23,20 +24,17 @@ import GitHandsOn from "./git-hands-on";
 /* ─────────────────────────────────────
    Course metadata
    ───────────────────────────────────── */
-const GOLD = "#E8C872";
-const GOLD_DARK = "#D4A843";
-
 const COURSES = [
-  { path: "/tutorial",       label: "Git 入門",   subtitle: "版本控制基礎",           accent: GOLD, badge: "1", element: <GitTutorial /> },
-  { path: "/github-setup",   label: "本地到雲端", subtitle: "init · commit · push",    accent: GOLD, badge: "2", element: <GitGithubSetup /> },
-  { path: "/daily-workflow",  label: "日常工作流", subtitle: "改 Bug · 推送 · 循環",   accent: GOLD, badge: "3", element: <GitDailyWorkflow /> },
-  { path: "/branching",      label: "分支管理",   subtitle: "feature · merge · hotfix", accent: GOLD, badge: "4", element: <GitBranching /> },
-  { path: "/collaboration",  label: "團隊協作",   subtitle: "clone · fetch · pull",    accent: GOLD, badge: "5", element: <GitBridge1 /> },
-  { path: "/merge-advanced",  label: "合併進階",   subtitle: "rebase · conflict · tag", accent: GOLD, badge: "6", element: <GitBridge2 /> },
-  { path: "/advanced",       label: "進階技巧",   subtitle: "stash · reset · bisect",  accent: GOLD, badge: "7", element: <GitAdvanced /> },
-  { path: "/commands-ref",    label: "觀念澄清",   subtitle: "易混淆指令 · 情境決策",    accent: GOLD, badge: "8", element: <GitCommandsRef /> },
-  { path: "/review",         label: "總複習",     subtitle: "情境實戰演練",             accent: GOLD, badge: "9", element: <GitReview /> },
-  { path: "/hands-on",       label: "實戰演練",   subtitle: "從零到 GitHub 三日旅程",   accent: GOLD, badge: "10", element: <GitHandsOn /> },
+  { path: "/tutorial",       label: "Git 入門",   subtitle: "版本控制基礎",           accent: lessonThemes["/tutorial"].accent,      accent2: lessonThemes["/tutorial"].accent2,      badge: "1",  element: <GitTutorial /> },
+  { path: "/github-setup",   label: "本地到雲端", subtitle: "init · commit · push",    accent: lessonThemes["/github-setup"].accent,   accent2: lessonThemes["/github-setup"].accent2,   badge: "2",  element: <GitGithubSetup /> },
+  { path: "/daily-workflow",  label: "日常工作流", subtitle: "改 Bug · 推送 · 循環",   accent: lessonThemes["/daily-workflow"].accent,  accent2: lessonThemes["/daily-workflow"].accent2,  badge: "3",  element: <GitDailyWorkflow /> },
+  { path: "/branching",      label: "分支管理",   subtitle: "feature · merge · hotfix", accent: lessonThemes["/branching"].accent,      accent2: lessonThemes["/branching"].accent2,      badge: "4",  element: <GitBranching /> },
+  { path: "/collaboration",  label: "團隊協作",   subtitle: "clone · fetch · pull",    accent: lessonThemes["/collaboration"].accent,  accent2: lessonThemes["/collaboration"].accent2,  badge: "5",  element: <GitBridge1 /> },
+  { path: "/merge-advanced",  label: "合併進階",   subtitle: "rebase · conflict · tag", accent: lessonThemes["/merge-advanced"].accent,  accent2: lessonThemes["/merge-advanced"].accent2,  badge: "6",  element: <GitBridge2 /> },
+  { path: "/advanced",       label: "進階技巧",   subtitle: "stash · reset · bisect",  accent: lessonThemes["/advanced"].accent,       accent2: lessonThemes["/advanced"].accent2,       badge: "7",  element: <GitAdvanced /> },
+  { path: "/commands-ref",    label: "觀念澄清",   subtitle: "易混淆指令 · 情境決策",    accent: lessonThemes["/commands-ref"].accent,    accent2: lessonThemes["/commands-ref"].accent2,    badge: "8",  element: <GitCommandsRef /> },
+  { path: "/review",         label: "總複習",     subtitle: "情境實戰演練",             accent: lessonThemes["/review"].accent,         accent2: lessonThemes["/review"].accent2,         badge: "9",  element: <GitReview /> },
+  { path: "/hands-on",       label: "實戰演練",   subtitle: "從零到 GitHub 三日旅程",   accent: lessonThemes["/hands-on"].accent,       accent2: lessonThemes["/hands-on"].accent2,       badge: "10", element: <GitHandsOn /> },
 ];
 
 /* ─────────────────────────────────────
@@ -89,7 +87,7 @@ function Sidebar({ open, onClose, onOpenCheatsheet }) {
           left: 0,
           bottom: 0,
           width: 270,
-          background: "#0A0E17",
+          background: colors.bgDeep,
           borderRight: "1px solid rgba(255,255,255,0.06)",
           zIndex: 100,
           transform: open ? "translateX(0)" : "translateX(-100%)",
@@ -115,13 +113,13 @@ function Sidebar({ open, onClose, onOpenCheatsheet }) {
                 width: 34,
                 height: 34,
                 borderRadius: 9,
-                background: "linear-gradient(135deg, #E8C872, #D4A843)",
+                background: `linear-gradient(135deg, ${colors.gold}, ${colors.goldDark})`,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 fontSize: 14,
                 fontWeight: 900,
-                color: "#0D1117",
+                color: colors.bg,
                 fontFamily: "'JetBrains Mono', monospace",
               }}
             >
@@ -200,7 +198,7 @@ function Sidebar({ open, onClose, onOpenCheatsheet }) {
                   padding: "12px 12px",
                   marginBottom: 4,
                   background: isActive
-                    ? `${c.accent}15`
+                    ? hexToRgba(c.accent, 0.08)
                     : "transparent",
                   border: "none",
                   borderRadius: 10,
@@ -235,7 +233,7 @@ function Sidebar({ open, onClose, onOpenCheatsheet }) {
                     justifyContent: "center",
                     fontSize: 11,
                     fontWeight: 900,
-                    color: isActive ? "#0D1117" : "rgba(255,255,255,0.35)",
+                    color: isActive ? colors.bg : "rgba(255,255,255,0.35)",
                     fontFamily: "'JetBrains Mono', monospace",
                     flexShrink: 0,
                     transition: "all 0.25s ease",
@@ -265,7 +263,7 @@ function Sidebar({ open, onClose, onOpenCheatsheet }) {
                     style={{
                       fontSize: 11,
                       color: isActive
-                        ? `${c.accent}88`
+                        ? hexToRgba(c.accent, 0.53)
                         : "rgba(255,255,255,0.25)",
                       fontFamily: "'JetBrains Mono', monospace",
                       whiteSpace: "nowrap",
@@ -296,27 +294,27 @@ function Sidebar({ open, onClose, onOpenCheatsheet }) {
               alignItems: "center",
               gap: 12,
               padding: "12px 12px",
-              background: "rgba(232,200,114,0.04)",
-              border: "1px dashed rgba(232,200,114,0.2)",
+              background: hexToRgba(colors.gold, 0.04),
+              border: `1px dashed ${hexToRgba(colors.gold, 0.2)}`,
               borderRadius: 10,
               cursor: "pointer",
               textAlign: "left",
               transition: "all 0.25s ease",
             }}
             onMouseOver={(e) => {
-              e.currentTarget.style.background = "rgba(232,200,114,0.1)";
-              e.currentTarget.style.borderColor = "rgba(232,200,114,0.35)";
+              e.currentTarget.style.background = hexToRgba(colors.gold, 0.1);
+              e.currentTarget.style.borderColor = hexToRgba(colors.gold, 0.35);
             }}
             onMouseOut={(e) => {
-              e.currentTarget.style.background = "rgba(232,200,114,0.04)";
-              e.currentTarget.style.borderColor = "rgba(232,200,114,0.2)";
+              e.currentTarget.style.background = hexToRgba(colors.gold, 0.04);
+              e.currentTarget.style.borderColor = hexToRgba(colors.gold, 0.2);
             }}
           >
             <div style={{
               width: 32,
               height: 32,
               borderRadius: 8,
-              background: "rgba(232,200,114,0.12)",
+              background: hexToRgba(colors.gold, 0.12),
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -329,14 +327,14 @@ function Sidebar({ open, onClose, onOpenCheatsheet }) {
               <div style={{
                 fontSize: 13,
                 fontWeight: 600,
-                color: "#E8C872",
+                color: colors.gold,
                 whiteSpace: "nowrap",
               }}>
                 指令速查表
               </div>
               <div style={{
                 fontSize: 11,
-                color: "rgba(232,200,114,0.5)",
+                color: hexToRgba(colors.gold, 0.5),
                 fontFamily: "'JetBrains Mono', monospace",
                 whiteSpace: "nowrap",
               }}>
@@ -432,7 +430,7 @@ function AppContent() {
       style={{
         display: "flex",
         minHeight: "100vh",
-        background: "#0D1117",
+        background: colors.bg,
       }}
     >
       <Sidebar
@@ -535,22 +533,22 @@ function AppContent() {
               alignItems: "center",
               gap: 6,
               padding: "6px 12px",
-              background: "rgba(232,200,114,0.06)",
-              border: "1px solid rgba(232,200,114,0.15)",
+              background: hexToRgba(colors.gold, 0.06),
+              border: `1px solid ${hexToRgba(colors.gold, 0.15)}`,
               borderRadius: 8,
               cursor: "pointer",
               transition: "all 0.2s",
-              color: "rgba(232,200,114,0.6)",
+              color: hexToRgba(colors.gold, 0.6),
               fontSize: 12,
               fontFamily: "'JetBrains Mono', monospace",
             }}
             onMouseOver={(e) => {
-              e.currentTarget.style.background = "rgba(232,200,114,0.12)";
-              e.currentTarget.style.color = "#E8C872";
+              e.currentTarget.style.background = hexToRgba(colors.gold, 0.12);
+              e.currentTarget.style.color = colors.gold;
             }}
             onMouseOut={(e) => {
-              e.currentTarget.style.background = "rgba(232,200,114,0.06)";
-              e.currentTarget.style.color = "rgba(232,200,114,0.6)";
+              e.currentTarget.style.background = hexToRgba(colors.gold, 0.06);
+              e.currentTarget.style.color = hexToRgba(colors.gold, 0.6);
             }}
             title="指令速查表"
           >

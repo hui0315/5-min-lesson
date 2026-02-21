@@ -5,12 +5,22 @@
 }
 
 :root {
+  /* ── Color tokens ── */
+  --color-bg: #0D1117;
+  --color-bg-deep: #0A0E17;
+  --color-text: #E6EDF3;
+  --color-text-muted: #8B949E;
+  --color-gold: #E8C872;
+  --color-gold-dark: #D4A843;
+  --color-accent: #E8C872;
+  --color-accent2: #D4A843;
+
   font-family: 'Noto Sans TC', 'Segoe UI', system-ui, sans-serif;
   line-height: 1.5;
   font-weight: 400;
   color-scheme: dark;
-  color: #E6EDF3;
-  background-color: #0D1117;
+  color: var(--color-text);
+  background-color: var(--color-bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -21,7 +31,7 @@ html, body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  background: #0D1117;
+  background: var(--color-bg);
 }
 
 body {
@@ -30,7 +40,7 @@ body {
 
 a {
   font-weight: 500;
-  color: #E8C872;
+  color: var(--color-gold);
   text-decoration: none;
 }
 a:hover {
@@ -78,7 +88,7 @@ input::placeholder {
   color: rgba(255,255,255,0.18);
 }
 
-/* Gold glow pulse for progress bars */
+/* Accent glow pulse for progress bars */
 @keyframes goldGlow {
   0%, 100% { filter: brightness(1); }
   50% { filter: brightness(1.25); }

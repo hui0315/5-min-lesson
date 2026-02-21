@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useChapterNav } from "./chapter-context";
+import { colors, lessonThemes, hexToRgba } from "./theme";
 
 /* ══════════════════════════════════════════════
    第八堂：觀念澄清 — 易混淆指令 · 情境決策
    ══════════════════════════════════════════════ */
 
-const ACCENT = "#E8C872";
-const ACCENT2 = "#D4A843";
+const { accent: ACCENT, accent2: ACCENT2 } = lessonThemes["/commands-ref"];
 
 const STEPS = [
   /* ──── Step 1: 經典易混淆指令 ──── */
@@ -417,7 +417,7 @@ function CommandInput({ command, onComplete }) {
         {status === "wrong" && <span style={{ color: "#EF4444", fontSize: 11 }}>再試一次</span>}
       </div>
       {status === "typing" && <button onClick={() => setShowHint(!showHint)} style={{ marginTop: 4, marginLeft: 24, background: "none", border: "none", color: "rgba(255,255,255,0.22)", fontSize: 11, cursor: "pointer", fontFamily: "'JetBrains Mono', monospace" }}>{showHint ? "隱藏提示" : "💡 提示"}</button>}
-      {showHint && status === "typing" && <div style={{ marginTop: 2, marginLeft: 24, fontSize: 11.5, color: `${ACCENT}88`, fontStyle: "italic" }}>{command.hint}</div>}
+      {showHint && status === "typing" && <div style={{ marginTop: 2, marginLeft: 24, fontSize: 11.5, color: hexToRgba(ACCENT, 0.533), fontStyle: "italic" }}>{command.hint}</div>}
     </div>
   );
 }
@@ -426,7 +426,7 @@ function Quiz({ quiz, onComplete }) {
   const [sel, setSel] = useState(null);
   const pick = (i) => { if (sel !== null) return; setSel(i); if (quiz.options[i].correct) setTimeout(onComplete, 700); };
   return (
-    <div style={{ margin: "20px 0 0", padding: "18px", background: "rgba(232,200,114,0.04)", borderRadius: 12, border: "1px solid rgba(232,200,114,0.12)" }}>
+    <div style={{ margin: "20px 0 0", padding: "18px", background: hexToRgba(ACCENT, 0.04), borderRadius: 12, border: `1px solid ${hexToRgba(ACCENT, 0.12)}` }}>
       <div style={{ fontSize: 12.5, fontWeight: 700, color: ACCENT, marginBottom: 12 }}>💡 觀念確認</div>
       <div style={{ fontSize: 13.5, color: "rgba(255,255,255,0.85)", marginBottom: 12, lineHeight: 1.6 }}>{quiz.question}</div>
       <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
@@ -497,8 +497,8 @@ function TripleCompare({ groups }) {
 
       {/* Golden rule */}
       <div style={{
-        padding: "14px 16px", background: "rgba(232,200,114,0.06)", borderRadius: 10,
-        border: "1px solid rgba(232,200,114,0.15)", textAlign: "center",
+        padding: "14px 16px", background: hexToRgba(ACCENT, 0.06), borderRadius: 10,
+        border: `1px solid ${hexToRgba(ACCENT, 0.15)}`, textAlign: "center",
       }}>
         <div style={{ fontSize: 12, fontWeight: 800, color: ACCENT, marginBottom: 4 }}>🏆 口訣</div>
         <div style={{ fontSize: 13, color: "rgba(255,255,255,0.65)", lineHeight: 1.7 }}>{g.rule}</div>
@@ -552,8 +552,8 @@ function DecisionTree({ trees }) {
         {trees.map((t, i) => (
           <button key={i} onClick={() => reset(i)} style={{
             padding: "12px 14px", textAlign: "left",
-            background: activeTree === i ? "rgba(232,200,114,0.08)" : "rgba(255,255,255,0.02)",
-            border: `1.5px solid ${activeTree === i ? "rgba(232,200,114,0.3)" : "rgba(255,255,255,0.06)"}`,
+            background: activeTree === i ? hexToRgba(ACCENT, 0.08) : "rgba(255,255,255,0.02)",
+            border: `1.5px solid ${activeTree === i ? hexToRgba(ACCENT, 0.3) : "rgba(255,255,255,0.06)"}`,
             borderRadius: 10, cursor: "pointer", transition: "all 0.3s",
             fontSize: 13.5, fontWeight: activeTree === i ? 700 : 500,
             color: activeTree === i ? ACCENT : "rgba(255,255,255,0.6)",
@@ -570,7 +570,7 @@ function DecisionTree({ trees }) {
             {/* Chosen label */}
             {node.label && (
               <div style={{
-                display: "inline-block", padding: "3px 10px", background: "rgba(232,200,114,0.1)",
+                display: "inline-block", padding: "3px 10px", background: hexToRgba(ACCENT, 0.1),
                 borderRadius: 6, fontSize: 11.5, color: ACCENT, fontWeight: 600, marginBottom: 8,
               }}>
                 ✓ {node.label}
@@ -587,13 +587,13 @@ function DecisionTree({ trees }) {
                   <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                     {node.options.map((opt, oi) => (
                       <button key={oi} onClick={() => selectOption(node.level, oi)} style={{
-                        padding: "10px 16px", background: "rgba(232,200,114,0.06)",
-                        border: "1.5px solid rgba(232,200,114,0.2)", borderRadius: 8,
+                        padding: "10px 16px", background: hexToRgba(ACCENT, 0.06),
+                        border: `1.5px solid ${hexToRgba(ACCENT, 0.2)}`, borderRadius: 8,
                         color: ACCENT, fontSize: 13, fontWeight: 600, cursor: "pointer",
                         transition: "all 0.2s", flex: 1, minWidth: 140, textAlign: "center",
                       }}
-                        onMouseOver={e => { e.currentTarget.style.background = "rgba(232,200,114,0.12)"; e.currentTarget.style.borderColor = "rgba(232,200,114,0.4)"; }}
-                        onMouseOut={e => { e.currentTarget.style.background = "rgba(232,200,114,0.06)"; e.currentTarget.style.borderColor = "rgba(232,200,114,0.2)"; }}
+                        onMouseOver={e => { e.currentTarget.style.background = hexToRgba(ACCENT, 0.12); e.currentTarget.style.borderColor = hexToRgba(ACCENT, 0.4); }}
+                        onMouseOut={e => { e.currentTarget.style.background = hexToRgba(ACCENT, 0.06); e.currentTarget.style.borderColor = hexToRgba(ACCENT, 0.2); }}
                       >
                         {opt.label}
                       </button>
@@ -623,7 +623,7 @@ function DecisionTree({ trees }) {
 
             {/* Connector line */}
             {ni < nodes.length - 1 && (
-              <div style={{ width: 2, height: 16, background: "rgba(232,200,114,0.15)", marginLeft: 20, marginTop: 8 }} />
+              <div style={{ width: 2, height: 16, background: hexToRgba(ACCENT, 0.15), marginLeft: 20, marginTop: 8 }} />
             )}
           </div>
         ))}
@@ -796,7 +796,7 @@ function MultiQuiz({ quizzes, onAllComplete }) {
 
       {/* Explanation */}
       {answers[current] !== undefined && q.explanation && (
-        <div style={{ padding: "12px 14px", background: "rgba(232,200,114,0.04)", borderRadius: 8, border: "1px solid rgba(232,200,114,0.12)", fontSize: 12.5, color: "rgba(255,255,255,0.55)", lineHeight: 1.7, marginBottom: 12 }}>
+        <div style={{ padding: "12px 14px", background: hexToRgba(ACCENT, 0.04), borderRadius: 8, border: `1px solid ${hexToRgba(ACCENT, 0.12)}`, fontSize: 12.5, color: "rgba(255,255,255,0.55)", lineHeight: 1.7, marginBottom: 12 }}>
           <span style={{ fontWeight: 700, color: ACCENT }}>💡 解說：</span>{q.explanation}
         </div>
       )}
@@ -813,7 +813,7 @@ function MultiQuiz({ quizzes, onAllComplete }) {
 
       {/* Final score */}
       {allDone && (
-        <div style={{ marginTop: 16, textAlign: "center", padding: "18px", background: "rgba(232,200,114,0.08)", border: "1px solid rgba(232,200,114,0.2)", borderRadius: 12 }}>
+        <div style={{ marginTop: 16, textAlign: "center", padding: "18px", background: hexToRgba(ACCENT, 0.08), border: `1px solid ${hexToRgba(ACCENT, 0.2)}`, borderRadius: 12 }}>
           <div style={{ fontSize: 28, marginBottom: 6 }}>🎯</div>
           <div style={{ fontSize: 16, fontWeight: 800, color: ACCENT }}>{score}/{quizzes.length} 答對</div>
           <div style={{ fontSize: 12.5, color: "rgba(255,255,255,0.4)", marginTop: 4 }}>
@@ -934,7 +934,7 @@ export default function GitCommandsRef() {
 
         {/* Completion celebration */}
         {cur === total - 1 && quizDone[cur] && (
-          <div style={{ marginTop: 24, textAlign: "center", padding: "24px", background: `rgba(232,200,114,0.08)`, border: `1px solid rgba(232,200,114,0.22)`, borderRadius: 14 }}>
+          <div style={{ marginTop: 24, textAlign: "center", padding: "24px", background: hexToRgba(ACCENT, 0.08), border: `1px solid ${hexToRgba(ACCENT, 0.22)}`, borderRadius: 14 }}>
             <div style={{ fontSize: 32, marginBottom: 8 }}>🎉</div>
             <div style={{ fontSize: 17, fontWeight: 800, color: ACCENT, marginBottom: 6 }}>觀念澄清完成！</div>
             <div style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", lineHeight: 1.7 }}>你已掌握易混淆指令、情境決策、和 Git 救援技巧。<br />接下來進入總複習！</div>

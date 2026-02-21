@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useChapterNav } from "./chapter-context";
+import { colors, lessonThemes, hexToRgba } from "./theme";
 
 /* ══════════════════════════════════════════════
    第三堂：日常工作流
    ══════════════════════════════════════════════ */
 
-const ACCENT = "#E8C872";
-const ACCENT2 = "#D4A843";
+const { accent: ACCENT, accent2: ACCENT2 } = lessonThemes["/daily-workflow"];
 
 const STEPS = [
   {
@@ -330,11 +330,11 @@ function CommandInput({ command, onComplete }) {
   const getCharColor = (i) => {
     if (status !== "typing" || i >= input.length)
       return "rgba(255,255,255,0.12)";
-    return input[i] === expectedNorm[i] ? "#E8C872" : "#EF4444";
+    return input[i] === expectedNorm[i] ? ACCENT : "#EF4444";
   };
   const borderColor =
     status === "correct"
-      ? "#E8C872"
+      ? ACCENT
       : status === "wrong"
       ? "#EF4444"
       : "rgba(255,255,255,0.15)";
@@ -351,7 +351,7 @@ function CommandInput({ command, onComplete }) {
           lineHeight: 1.6,
         }}
       >
-        <span style={{ color: "#E8C872", fontWeight: 700, flexShrink: 0 }}>
+        <span style={{ color: ACCENT, fontWeight: 700, flexShrink: 0 }}>
           ▸
         </span>
         <span>{command.prompt}</span>
@@ -391,7 +391,7 @@ function CommandInput({ command, onComplete }) {
       >
         <span
           style={{
-            color: "#E8C872",
+            color: ACCENT,
             fontFamily: "'JetBrains Mono', monospace",
             fontSize: 13,
             marginRight: 8,
@@ -422,18 +422,18 @@ function CommandInput({ command, onComplete }) {
             outline: "none",
             color:
               status === "correct"
-                ? "#E8C872"
+                ? ACCENT
                 : status === "wrong"
                 ? "#EF4444"
-                : "#E8C872",
+                : ACCENT,
             fontFamily: "'JetBrains Mono', monospace",
             fontSize: 13,
             padding: "11px 0",
-            caretColor: "#E8C872",
+            caretColor: ACCENT,
           }}
         />
         {status === "correct" && (
-          <span style={{ color: "#E8C872", fontSize: 14 }}>✓</span>
+          <span style={{ color: ACCENT, fontSize: 14 }}>✓</span>
         )}
         {status === "wrong" && (
           <span style={{ color: "#EF4444", fontSize: 11 }}>再試一次</span>
@@ -462,7 +462,7 @@ function CommandInput({ command, onComplete }) {
             marginTop: 2,
             marginLeft: 24,
             fontSize: 11.5,
-            color: "rgba(232,200,114,0.53)",
+            color: hexToRgba(ACCENT, 0.53),
             fontStyle: "italic",
           }}
         >
@@ -524,8 +524,8 @@ function TerminalSim({ commands, onAllComplete }) {
           <div key={`done-${i}`} style={{ marginBottom: 12 }}>
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12 }}>
               <span style={{ color: "#10B981" }}>$ </span>
-              <span style={{ color: "#E8C872" }}>{cmd.answer}</span>
-              <span style={{ color: "#E8C872", marginLeft: 8, fontSize: 11 }}>✓</span>
+              <span style={{ color: ACCENT }}>{cmd.answer}</span>
+              <span style={{ color: ACCENT, marginLeft: 8, fontSize: 11 }}>✓</span>
             </div>
             {cmd.output && (
               <div
@@ -555,7 +555,7 @@ function TerminalSim({ commands, onAllComplete }) {
             style={{
               textAlign: "center",
               padding: "10px 0 2px",
-              color: "#E8C872",
+              color: ACCENT,
               fontWeight: 700,
               fontSize: 13,
               fontFamily: "'JetBrains Mono', monospace",
@@ -581,12 +581,12 @@ function Quiz({ quiz, onComplete }) {
       style={{
         margin: "20px 0 0",
         padding: "18px",
-        background: "rgba(232,200,114,0.04)",
+        background: hexToRgba(ACCENT, 0.04),
         borderRadius: 12,
-        border: "1px solid rgba(232,200,114,0.12)",
+        border: `1px solid ${hexToRgba(ACCENT, 0.12)}`,
       }}
     >
-      <div style={{ fontSize: 12.5, fontWeight: 700, color: "#E8C872", marginBottom: 12 }}>
+      <div style={{ fontSize: 12.5, fontWeight: 700, color: ACCENT, marginBottom: 12 }}>
         💡 觀念確認
       </div>
       <div
@@ -606,18 +606,18 @@ function Quiz({ quiz, onComplete }) {
             tc = "rgba(255,255,255,0.65)";
           if (selected === i) {
             if (opt.correct) {
-              bg = "rgba(232,200,114,0.12)";
-              bc = "#E8C872";
-              tc = "#E8C872";
+              bg = hexToRgba(ACCENT, 0.12);
+              bc = ACCENT;
+              tc = ACCENT;
             } else {
               bg = "rgba(239,68,68,0.12)";
               bc = "#EF4444";
               tc = "#EF4444";
             }
           } else if (selected !== null && opt.correct) {
-            bg = "rgba(232,200,114,0.08)";
-            bc = "#E8C872";
-            tc = "#E8C872";
+            bg = hexToRgba(ACCENT, 0.08);
+            bc = ACCENT;
+            tc = ACCENT;
           }
           return (
             <button
@@ -648,7 +648,7 @@ function Quiz({ quiz, onComplete }) {
         </div>
       )}
       {selected !== null && quiz.options[selected].correct && (
-        <div style={{ marginTop: 10, fontSize: 11.5, color: "#E8C872", fontWeight: 600 }}>
+        <div style={{ marginTop: 10, fontSize: 11.5, color: ACCENT, fontWeight: 600 }}>
           ✅ 正確！
         </div>
       )}
@@ -664,7 +664,7 @@ function ConceptBlocks({ blocks }) {
           key={i}
           style={{
             padding: "14px 16px",
-            background: `${b.color}08`,
+            background: hexToRgba(b.color, 0.031),
             borderLeft: `3px solid ${b.color}`,
             borderRadius: "0 10px 10px 0",
           }}
@@ -739,13 +739,13 @@ export default function GitDailyWorkflow() {
                 width: 38,
                 height: 38,
                 borderRadius: 10,
-                background: "linear-gradient(135deg, #E8C872, #D4A843)",
+                background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 fontSize: 14,
                 fontWeight: 900,
-                color: "#0D1117",
+                color: colors.bg,
                 fontFamily: "'JetBrains Mono', monospace",
               }}
             >
@@ -763,9 +763,9 @@ export default function GitDailyWorkflow() {
           <div
             style={{
               fontSize: 12,
-              color: "#E8C872",
+              color: ACCENT,
               fontFamily: "'JetBrains Mono', monospace",
-              background: "rgba(232,200,114,0.1)",
+              background: hexToRgba(ACCENT, 0.1),
               padding: "4px 10px",
               borderRadius: 6,
             }}
@@ -787,7 +787,7 @@ export default function GitDailyWorkflow() {
                 cursor: "pointer",
                 background:
                   i <= currentStep
-                    ? "linear-gradient(90deg, #E8C872, #D4A843)"
+                    ? `linear-gradient(90deg, ${ACCENT}, ${ACCENT2})`
                     : "rgba(255,255,255,0.06)",
                 transition: "background 0.4s",
                 animation: i <= currentStep ? "goldGlow 3s ease-in-out infinite" : "none",
@@ -823,7 +823,7 @@ export default function GitDailyWorkflow() {
                 margin: 0,
                 fontSize: 20,
                 fontWeight: 900,
-                background: "linear-gradient(135deg, #E8C872, #D4A843)",
+                background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`,
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
               }}
@@ -854,8 +854,8 @@ export default function GitDailyWorkflow() {
             <div
               style={{
                 padding: "14px 16px",
-                background: "rgba(232,200,114,0.04)",
-                borderLeft: "3px solid #E8C872",
+                background: hexToRgba(ACCENT, 0.04),
+                borderLeft: `3px solid ${ACCENT}`,
                 borderRadius: "0 10px 10px 0",
                 fontSize: 12.5,
                 color: "rgba(255,255,255,0.55)",
@@ -863,7 +863,7 @@ export default function GitDailyWorkflow() {
                 marginBottom: 4,
               }}
             >
-              <span style={{ fontWeight: 700, color: "#E8C872" }}>💼 實務觀點：</span>
+              <span style={{ fontWeight: 700, color: ACCENT }}>💼 實務觀點：</span>
               {step.tip}
             </div>
           )}
@@ -871,8 +871,8 @@ export default function GitDailyWorkflow() {
             <div
               style={{
                 padding: "14px 16px",
-                background: "rgba(232,200,114,0.04)",
-                borderLeft: "3px solid #E8C872",
+                background: hexToRgba(ACCENT, 0.04),
+                borderLeft: `3px solid ${ACCENT}`,
                 borderRadius: "0 10px 10px 0",
                 fontSize: 12.5,
                 color: "rgba(255,255,255,0.6)",
@@ -904,10 +904,10 @@ export default function GitDailyWorkflow() {
           )}
           {currentStep === STEPS.length - 1 ? (
             nextPath ? (
-              <button onClick={() => navigate(nextPath)} style={{ padding: "12px 24px", background: "linear-gradient(135deg, #E8C872, #D4A843)", border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一章 →</button>
+              <button onClick={() => navigate(nextPath)} style={{ padding: "12px 24px", background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, border: "none", borderRadius: 10, color: colors.bg, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一章 →</button>
             ) : <div />
           ) : (
-            <button onClick={goNext} style={{ padding: "12px 24px", background: "linear-gradient(135deg, #E8C872, #D4A843)", border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一課 →</button>
+            <button onClick={goNext} style={{ padding: "12px 24px", background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, border: "none", borderRadius: 10, color: colors.bg, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一課 →</button>
           )}
         </div>
 
@@ -918,13 +918,13 @@ export default function GitDailyWorkflow() {
               marginTop: 24,
               textAlign: "center",
               padding: "24px",
-              background: "rgba(232,200,114,0.08)",
-              border: "1px solid rgba(232,200,114,0.22)",
+              background: hexToRgba(ACCENT, 0.08),
+              border: `1px solid ${hexToRgba(ACCENT, 0.22)}`,
               borderRadius: 14,
             }}
           >
             <div style={{ fontSize: 32, marginBottom: 8 }}>🎉</div>
-            <div style={{ fontSize: 17, fontWeight: 800, color: "#E8C872", marginBottom: 6 }}>
+            <div style={{ fontSize: 17, fontWeight: 800, color: ACCENT, marginBottom: 6 }}>
               恭喜！你掌握了 Git 的日常節奏！
             </div>
             <div

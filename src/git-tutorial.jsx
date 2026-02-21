@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useChapterNav } from "./chapter-context";
+import { colors, lessonThemes, hexToRgba } from "./theme";
+
+const { accent: ACCENT, accent2: ACCENT2 } = lessonThemes["/tutorial"];
 
 const STEPS = [
   {
@@ -160,7 +163,7 @@ function ProgressBar({ current, total }) {
             flex: 1,
             height: 4,
             borderRadius: 2,
-            background: i <= current ? "#E8C872" : "rgba(255,255,255,0.12)",
+            background: i <= current ? ACCENT : "rgba(255,255,255,0.12)",
             transition: "background 0.4s ease",
           }}
         />
@@ -334,8 +337,8 @@ function ZonesDemo({ zones }) {
             display: "block",
             margin: "20px auto 0",
             padding: "10px 24px",
-            background: zones[filePos]?.color || "#E8C872",
-            color: "#0D1117",
+            background: zones[filePos]?.color || ACCENT,
+            color: colors.bg,
             border: "none",
             borderRadius: 8,
             fontWeight: 700,
@@ -393,7 +396,7 @@ function TerminalDemo() {
     <div style={{ margin: "20px 0" }}>
       <div
         style={{
-          background: "#0D1117",
+          background: colors.bg,
           borderRadius: 12,
           border: "1px solid rgba(255,255,255,0.1)",
           overflow: "hidden",
@@ -460,7 +463,7 @@ function TerminalDemo() {
             <div key={i} style={{ marginBottom: 6 }}>
               <div>
                 <span style={{ color: "#10B981" }}>$ </span>
-                <span style={{ color: "#E8C872" }}>{item.cmd}</span>
+                <span style={{ color: ACCENT }}>{item.cmd}</span>
               </div>
               {item.output && (
                 <div
@@ -490,8 +493,8 @@ function TerminalDemo() {
             display: "block",
             margin: "14px auto 0",
             padding: "10px 20px",
-            background: "#E8C872",
-            color: "#0D1117",
+            background: ACCENT,
+            color: colors.bg,
             border: "none",
             borderRadius: 8,
             fontWeight: 700,
@@ -548,12 +551,12 @@ function BranchDemo() {
     <div style={{ margin: "24px 0" }}>
       <svg viewBox="0 0 500 160" style={{ width: "100%", maxWidth: 500, display: "block", margin: "0 auto" }}>
         {/* Main branch */}
-        <line x1="40" y1="50" x2="460" y2="50" stroke="#E8C872" strokeWidth="3" strokeLinecap="round" />
-        <text x="20" y="28" fill="#E8C872" fontSize="11" fontFamily="JetBrains Mono, monospace" fontWeight="700">main</text>
+        <line x1="40" y1="50" x2="460" y2="50" stroke={ACCENT} strokeWidth="3" strokeLinecap="round" />
+        <text x="20" y="28" fill={ACCENT} fontSize="11" fontFamily="JetBrains Mono, monospace" fontWeight="700">main</text>
         
         {/* Main branch commits */}
         {[80, 160, 400].map((cx, i) => (
-          <circle key={i} cx={cx} cy={50} r={8} fill={i <= (step >= 3 ? 2 : 0) ? "#E8C872" : "#1a1f2e"} stroke="#E8C872" strokeWidth="2" />
+          <circle key={i} cx={cx} cy={50} r={8} fill={i <= (step >= 3 ? 2 : 0) ? ACCENT : "#1a1f2e"} stroke={ACCENT} strokeWidth="2" />
         ))}
 
         {/* Feature branch */}
@@ -617,10 +620,10 @@ function BranchDemo() {
             onClick={() => setStep(i)}
             style={{
               padding: "8px 14px",
-              background: step === i ? "rgba(232,200,114,0.15)" : "rgba(255,255,255,0.04)",
-              border: `1px solid ${step === i ? "#E8C872" : "rgba(255,255,255,0.08)"}`,
+              background: step === i ? hexToRgba(ACCENT, 0.15) : "rgba(255,255,255,0.04)",
+              border: `1px solid ${step === i ? ACCENT : "rgba(255,255,255,0.08)"}`,
               borderRadius: 8,
-              color: step === i ? "#E8C872" : "rgba(255,255,255,0.5)",
+              color: step === i ? ACCENT : "rgba(255,255,255,0.5)",
               fontSize: 12,
               cursor: "pointer",
               fontFamily: "'JetBrains Mono', monospace",
@@ -662,16 +665,16 @@ function Quiz({ quiz, onComplete }) {
       style={{
         margin: "24px 0 0",
         padding: "20px",
-        background: "rgba(232,200,114,0.05)",
+        background: hexToRgba(ACCENT, 0.05),
         borderRadius: 12,
-        border: "1px solid rgba(232,200,114,0.15)",
+        border: `1px solid ${hexToRgba(ACCENT, 0.15)}`,
       }}
     >
       <div
         style={{
           fontSize: 13,
           fontWeight: 700,
-          color: "#E8C872",
+          color: ACCENT,
           marginBottom: 14,
           display: "flex",
           alignItems: "center",
@@ -792,9 +795,9 @@ function SummaryView({ points }) {
             alignItems: "center",
             gap: 14,
             padding: "14px 18px",
-            background: "rgba(232,200,114,0.06)",
+            background: hexToRgba(ACCENT, 0.06),
             borderRadius: 10,
-            border: "1px solid rgba(232,200,114,0.12)",
+            border: `1px solid ${hexToRgba(ACCENT, 0.12)}`,
           }}
         >
           <span style={{ fontSize: 22 }}>{p.icon}</span>
@@ -838,8 +841,8 @@ export default function GitTutorial() {
     <div
       style={{
         minHeight: "100%",
-        background: "#0D1117",
-        color: "#E6EDF3",
+        background: colors.bg,
+        color: colors.text,
         fontFamily: "'Noto Sans TC', 'Segoe UI', sans-serif",
         display: "flex",
         flexDirection: "column",
@@ -863,13 +866,13 @@ export default function GitTutorial() {
                 width: 36,
                 height: 36,
                 borderRadius: 10,
-                background: "linear-gradient(135deg, #E8C872, #D4A843)",
+                background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 fontSize: 18,
                 fontWeight: 900,
-                color: "#0D1117",
+                color: colors.bg,
                 fontFamily: "'JetBrains Mono', monospace",
               }}
             >
@@ -883,9 +886,9 @@ export default function GitTutorial() {
           <div
             style={{
               fontSize: 12,
-              color: "#E8C872",
+              color: ACCENT,
               fontFamily: "'JetBrains Mono', monospace",
-              background: "rgba(232,200,114,0.1)",
+              background: hexToRgba(ACCENT, 0.1),
               padding: "4px 10px",
               borderRadius: 6,
             }}
@@ -919,7 +922,7 @@ export default function GitTutorial() {
                 margin: 0,
                 fontSize: 22,
                 fontWeight: 900,
-                background: "linear-gradient(135deg, #E8C872, #F5E6B8)",
+                background: `linear-gradient(135deg, ${ACCENT}, #F5E6B8)`,
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
               }}
@@ -988,10 +991,10 @@ export default function GitTutorial() {
           )}
           {currentStep === STEPS.length - 1 ? (
             nextPath ? (
-              <button onClick={() => navigate(nextPath)} style={{ padding: "12px 24px", background: "linear-gradient(135deg, #E8C872, #D4A843)", border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all 0.3s" }}>下一章 →</button>
+              <button onClick={() => navigate(nextPath)} style={{ padding: "12px 24px", background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, border: "none", borderRadius: 10, color: colors.bg, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all 0.3s" }}>下一章 →</button>
             ) : <div />
           ) : (
-            <button onClick={goNext} style={{ padding: "12px 24px", background: "linear-gradient(135deg, #E8C872, #D4A843)", border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all 0.3s" }}>下一課 →</button>
+            <button onClick={goNext} style={{ padding: "12px 24px", background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, border: "none", borderRadius: 10, color: colors.bg, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all 0.3s" }}>下一課 →</button>
           )}
         </div>
       </div>

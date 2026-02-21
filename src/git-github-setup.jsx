@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useChapterNav } from "./chapter-context";
+import { colors, lessonThemes, hexToRgba } from "./theme";
+
+const { accent: ACCENT, accent2: ACCENT2 } = lessonThemes["/github-setup"];
 
 /* ══════════════════════════════════════════════
    第二堂：本地到雲端
@@ -15,13 +18,13 @@ const STEPS = [
     conceptBlocks: [
       {
         title: "什麼是 Repository？",
-        color: "#E8C872",
+        color: ACCENT,
         content:
           "Repository（簡稱 repo）就是你專案在雲端的「家」。目前你所有的 commit 都在你自己的電腦上，建立 GitHub repo 後，就能把程式碼推到雲端，讓別人看到、備份也不怕電腦壞掉。",
       },
       {
         title: "建立 repo 時的四個選項",
-        color: "#E8C872",
+        color: ACCENT,
         content:
           "Description（專案簡介）、Visibility（Public 公開 / Private 私有）、Add a README（專案說明書）、License（授權條款，MIT 最常用）。如果本地已經有專案，README 和 License 建議不要勾，避免和本地歷史衝突。",
       },
@@ -213,28 +216,28 @@ function SettingsDemo() {
       desc: "專案簡介（選填）",
       example: "Interactive 5-minute micro-lessons built with React",
       icon: "📝",
-      color: "#E8C872",
+      color: ACCENT,
     },
     {
       name: "Visibility",
       desc: "誰能看到你的 repo",
       example: "Public（公開）→ 建立作品集　Private（私有）→ 個人專案",
       icon: "👁️",
-      color: "#E8C872",
+      color: ACCENT,
     },
     {
       name: "README",
       desc: "專案的「首頁說明書」",
       example: "本地已有專案 → 不勾　從零開始 → 可以勾",
       icon: "📄",
-      color: "#E8C872",
+      color: ACCENT,
     },
     {
       name: "License",
       desc: "授權條款，決定別人能怎麼用你的程式碼",
       example: "MIT → 最寬鬆，別人可以自由使用　不選 → 保留所有權利",
       icon: "⚖️",
-      color: "#E8C872",
+      color: ACCENT,
     },
   ];
 
@@ -242,7 +245,7 @@ function SettingsDemo() {
     <div style={{ margin: "20px 0" }}>
       <div
         style={{
-          background: "#0A0E17",
+          background: colors.bgDeep,
           borderRadius: 12,
           border: "1px solid rgba(255,255,255,0.08)",
           overflow: "hidden",
@@ -297,8 +300,8 @@ function SettingsDemo() {
                 padding: "12px 14px",
                 marginBottom: 6,
                 background:
-                  step === i ? `${s.color}10` : "rgba(255,255,255,0.02)",
-                border: `1px solid ${step === i ? `${s.color}33` : "rgba(255,255,255,0.04)"}`,
+                  step === i ? hexToRgba(s.color, 0.063) : "rgba(255,255,255,0.02)",
+                border: `1px solid ${step === i ? hexToRgba(s.color, 0.2) : "rgba(255,255,255,0.04)"}`,
                 borderRadius: 10,
                 cursor: "pointer",
                 transition: "all 0.3s",
@@ -333,9 +336,9 @@ function SettingsDemo() {
                   <div
                     style={{
                       fontSize: 11.5,
-                      color: `${s.color}cc`,
+                      color: hexToRgba(s.color, 0.8),
                       fontFamily: "'JetBrains Mono', monospace",
-                      background: `${s.color}0a`,
+                      background: hexToRgba(s.color, 0.039),
                       padding: "8px 10px",
                       borderRadius: 6,
                       lineHeight: 1.6,
@@ -408,7 +411,7 @@ function CommandInput({ command, onComplete }) {
       return "rgba(255,255,255,0.12)";
     return input[i] === expectedNorm[i] ? "#10B981" : "#EF4444";
   };
-  const accent = "#E8C872";
+  const accent = ACCENT;
   const borderColor =
     status === "correct"
       ? "#10B981"
@@ -539,7 +542,7 @@ function CommandInput({ command, onComplete }) {
             marginTop: 2,
             marginLeft: 24,
             fontSize: 11.5,
-            color: `${accent}88`,
+            color: hexToRgba(accent, 0.533),
             fontStyle: "italic",
           }}
         >
@@ -601,7 +604,7 @@ function TerminalSim({ commands, onAllComplete }) {
           <div key={`done-${i}`} style={{ marginBottom: 12 }}>
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12 }}>
               <span style={{ color: "#10B981" }}>$ </span>
-              <span style={{ color: "#E8C872" }}>{cmd.answer}</span>
+              <span style={{ color: ACCENT }}>{cmd.answer}</span>
               <span style={{ color: "#10B981", marginLeft: 8, fontSize: 11 }}>✓</span>
             </div>
             {cmd.output && (
@@ -658,12 +661,12 @@ function Quiz({ quiz, onComplete }) {
       style={{
         margin: "20px 0 0",
         padding: "18px",
-        background: "rgba(232,200,114,0.04)",
+        background: hexToRgba(ACCENT, 0.04),
         borderRadius: 12,
-        border: "1px solid rgba(232,200,114,0.12)",
+        border: `1px solid ${hexToRgba(ACCENT, 0.12)}`,
       }}
     >
-      <div style={{ fontSize: 12.5, fontWeight: 700, color: "#E8C872", marginBottom: 12 }}>
+      <div style={{ fontSize: 12.5, fontWeight: 700, color: ACCENT, marginBottom: 12 }}>
         💡 觀念確認
       </div>
       <div

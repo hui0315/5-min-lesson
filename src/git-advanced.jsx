@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useChapterNav } from "./chapter-context";
+import { colors, lessonThemes, hexToRgba } from "./theme";
+
+const { accent: ACCENT, accent2: ACCENT2 } = lessonThemes["/advanced"];
 
 /* ─────────────────────────────────────────────
    COURSE DATA
@@ -301,7 +304,7 @@ function CommandInput({ command, onComplete }) {
       ? "#10B981"
       : status === "wrong"
       ? "#EF4444"
-      : "rgba(232,200,114,0.3)";
+      : hexToRgba(ACCENT, 0.3);
 
   return (
     <div style={{ marginBottom: 8 }}>
@@ -315,7 +318,7 @@ function CommandInput({ command, onComplete }) {
           gap: 8,
         }}
       >
-        <span style={{ color: "#E8C872", fontWeight: 700 }}>▸</span>
+        <span style={{ color: ACCENT, fontWeight: 700 }}>▸</span>
         {command.prompt}
       </div>
 
@@ -345,7 +348,7 @@ function CommandInput({ command, onComplete }) {
         style={{
           display: "flex",
           alignItems: "center",
-          background: "#0D1117",
+          background: colors.bg,
           border: `1.5px solid ${borderColor}`,
           borderRadius: 10,
           padding: "0 14px",
@@ -387,11 +390,11 @@ function CommandInput({ command, onComplete }) {
                 ? "#10B981"
                 : status === "wrong"
                 ? "#EF4444"
-                : "#E8C872",
+                : ACCENT,
             fontFamily: "'JetBrains Mono', monospace",
             fontSize: 13,
             padding: "12px 0",
-            caretColor: "#E8C872",
+            caretColor: ACCENT,
           }}
         />
         {status === "correct" && (
@@ -427,7 +430,7 @@ function CommandInput({ command, onComplete }) {
           style={{
             marginTop: 4,
             fontSize: 12,
-            color: "rgba(232,200,114,0.6)",
+            color: hexToRgba(ACCENT, 0.6),
             fontStyle: "italic",
             paddingLeft: 4,
           }}
@@ -462,7 +465,7 @@ function TerminalSim({ commands, onAllComplete }) {
   return (
     <div
       style={{
-        background: "#0D1117",
+        background: colors.bg,
         borderRadius: 12,
         border: "1px solid rgba(255,255,255,0.1)",
         overflow: "hidden",
@@ -502,7 +505,7 @@ function TerminalSim({ commands, onAllComplete }) {
           <div key={`done-${i}`} style={{ marginBottom: 14 }}>
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12.5 }}>
               <span style={{ color: "#10B981" }}>$ </span>
-              <span style={{ color: "#E8C872" }}>{cmd.answer}</span>
+              <span style={{ color: ACCENT }}>{cmd.answer}</span>
               <span style={{ color: "#10B981", marginLeft: 8 }}>✓</span>
             </div>
             {cmd.output && (
@@ -570,16 +573,16 @@ function Quiz({ quiz, onComplete }) {
       style={{
         margin: "24px 0 0",
         padding: "20px",
-        background: "rgba(232,200,114,0.05)",
+        background: hexToRgba(ACCENT, 0.05),
         borderRadius: 12,
-        border: "1px solid rgba(232,200,114,0.15)",
+        border: `1px solid ${hexToRgba(ACCENT, 0.15)}`,
       }}
     >
       <div
         style={{
           fontSize: 13,
           fontWeight: 700,
-          color: "#E8C872",
+          color: ACCENT,
           marginBottom: 14,
           display: "flex",
           alignItems: "center",
@@ -645,7 +648,7 @@ function ProgressBar({ current, total, score }) {
           style={{
             flex: 1, height: 4, borderRadius: 2,
             background: i <= current
-              ? "linear-gradient(90deg, #E8C872, #D4A843)"
+              ? `linear-gradient(90deg, ${ACCENT}, ${ACCENT2})`
               : "rgba(255,255,255,0.08)",
             transition: "background 0.4s ease",
           }}
@@ -717,9 +720,9 @@ export default function GitAdvanced() {
             <div
               style={{
                 width: 38, height: 38, borderRadius: 10,
-                background: "linear-gradient(135deg, #E8C872, #D4A843)",
+                background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`,
                 display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 16, fontWeight: 900, color: "#0D1117",
+                fontSize: 16, fontWeight: 900, color: colors.bg,
                 fontFamily: "'JetBrains Mono', monospace",
               }}
             >
@@ -734,9 +737,9 @@ export default function GitAdvanced() {
           </div>
           <div
             style={{
-              fontSize: 12, color: "#E8C872",
+              fontSize: 12, color: ACCENT,
               fontFamily: "'JetBrains Mono', monospace",
-              background: "rgba(232,200,114,0.1)",
+              background: hexToRgba(ACCENT, 0.1),
               padding: "4px 10px", borderRadius: 6,
             }}
           >
@@ -760,7 +763,7 @@ export default function GitAdvanced() {
             <h2
               style={{
                 margin: 0, fontSize: 22, fontWeight: 900,
-                background: "linear-gradient(135deg, #E8C872, #D4A843)",
+                background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`,
                 WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
               }}
             >
@@ -818,10 +821,10 @@ export default function GitAdvanced() {
           )}
           {currentStep === STEPS.length - 1 ? (
             nextPath ? (
-              <button onClick={() => navigate(nextPath)} style={{ padding: "12px 24px", background: "linear-gradient(135deg, #E8C872, #D4A843)", border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一章 →</button>
+              <button onClick={() => navigate(nextPath)} style={{ padding: "12px 24px", background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, border: "none", borderRadius: 10, color: colors.bg, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一章 →</button>
             ) : <div />
           ) : (
-            <button onClick={goNext} style={{ padding: "12px 24px", background: "linear-gradient(135deg, #E8C872, #D4A843)", border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一課 →</button>
+            <button onClick={goNext} style={{ padding: "12px 24px", background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, border: "none", borderRadius: 10, color: colors.bg, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一課 →</button>
           )}
         </div>
 

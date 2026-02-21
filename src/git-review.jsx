@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useChapterNav } from "./chapter-context";
+import { colors, lessonThemes, hexToRgba } from "./theme";
+
+const { accent: ACCENT, accent2: ACCENT2 } = lessonThemes["/review"];
 
 /* ══════════════════════════════════════════════
    COURSE DATA — 總複習：從基礎到實戰
@@ -331,7 +334,7 @@ function CommandInput({ command, onComplete }) {
   return (
     <div style={{ marginBottom: 6 }}>
       <div style={{ fontSize: 13, color: "rgba(255,255,255,0.55)", marginBottom: 8, display: "flex", gap: 8, lineHeight: 1.6 }}>
-        <span style={{ color: "#E8C872", fontWeight: 700, flexShrink: 0 }}>▸</span>
+        <span style={{ color: ACCENT, fontWeight: 700, flexShrink: 0 }}>▸</span>
         <span>{command.prompt}</span>
       </div>
       {/* Ghost preview */}
@@ -368,7 +371,7 @@ function CommandInput({ command, onComplete }) {
         </button>
       )}
       {showHint && status === "typing" && (
-        <div style={{ marginTop: 2, marginLeft: 24, fontSize: 11.5, color: "rgba(232,200,114,0.55)", fontStyle: "italic" }}>
+        <div style={{ marginTop: 2, marginLeft: 24, fontSize: 11.5, color: hexToRgba(ACCENT, 0.55), fontStyle: "italic" }}>
           {command.hint}
         </div>
       )}
@@ -432,7 +435,7 @@ function Quiz({ quiz, onComplete }) {
     if (quiz.options[i].correct) setTimeout(onComplete, 700);
   };
   return (
-    <div style={{ margin: "20px 0 0", padding: "18px", background: "rgba(232,200,114,0.04)", borderRadius: 12, border: "1px solid rgba(232,200,114,0.12)" }}>
+    <div style={{ margin: "20px 0 0", padding: "18px", background: hexToRgba(ACCENT, 0.04), borderRadius: 12, border: `1px solid ${hexToRgba(ACCENT, 0.12)}` }}>
       <div style={{ fontSize: 12.5, fontWeight: 700, color: "#E8C872", marginBottom: 12 }}>💡 觀念確認</div>
       <div style={{ fontSize: 13.5, color: "rgba(255,255,255,0.85)", marginBottom: 12, lineHeight: 1.6 }}>{quiz.question}</div>
       <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
@@ -484,7 +487,7 @@ function InfoPage({ step }) {
       </div>
 
       {/* Git Flow */}
-      <div style={{ margin: "24px 0", padding: "20px", background: "rgba(232,200,114,0.04)", borderRadius: 14, border: "1px solid rgba(232,200,114,0.1)" }}>
+      <div style={{ margin: "24px 0", padding: "20px", background: hexToRgba(ACCENT, 0.04), borderRadius: 14, border: `1px solid ${hexToRgba(ACCENT, 0.1)}` }}>
         <div style={{ fontSize: 15, fontWeight: 800, color: "#E8C872", marginBottom: 14 }}>{step.workflow.title}</div>
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {step.workflow.steps.map((ws, i) => (
@@ -561,7 +564,7 @@ function NamingChallenge({ step, onQuizComplete }) {
 
   return (
     <div>
-      <div style={{ padding: "14px 16px", background: "rgba(232,200,114,0.05)", borderLeft: "3px solid #E8C872", borderRadius: "0 10px 10px 0", fontSize: 13, color: "rgba(255,255,255,0.7)", lineHeight: 1.8, marginBottom: 16 }}>
+      <div style={{ padding: "14px 16px", background: hexToRgba(ACCENT, 0.05), borderLeft: `3px solid ${ACCENT}`, borderRadius: "0 10px 10px 0", fontSize: 13, color: "rgba(255,255,255,0.7)", lineHeight: 1.8, marginBottom: 16 }}>
         <span style={{ fontWeight: 700, color: "#E8C872" }}>🎯 終極命名挑戰：</span>綜合前幾堂學到的所有命名規範。每題會給你「好的」和「壞的」兩個選項，選出正確的那個！
       </div>
 
@@ -678,8 +681,8 @@ function FinalScreen({ score, total }) {
         ))}
       </div>
       <div style={{
-        marginTop: 28, padding: "16px", background: "rgba(232,200,114,0.06)",
-        borderRadius: 12, border: "1px solid rgba(232,200,114,0.15)",
+        marginTop: 28, padding: "16px", background: hexToRgba(ACCENT, 0.06),
+        borderRadius: 12, border: `1px solid ${hexToRgba(ACCENT, 0.15)}`,
         fontSize: 13, color: "rgba(255,255,255,0.55)", lineHeight: 1.7,
       }}>
         🚀 <strong style={{ color: "#E8C872" }}>下一步建議：</strong>在真實專案中使用 Git Flow，嘗試為開源專案發一個 Pull Request，或是設定 CI/CD 自動化部署流程。
@@ -730,7 +733,7 @@ export default function GitReview() {
               <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>Git 課程系列 · 第九堂</div>
             </div>
           </div>
-          <div style={{ fontSize: 12, color: "#E8C872", fontFamily: "'JetBrains Mono', monospace", background: "rgba(232,200,114,0.1)", padding: "4px 10px", borderRadius: 6 }}>
+          <div style={{ fontSize: 12, color: "#E8C872", fontFamily: "'JetBrains Mono', monospace", background: hexToRgba(ACCENT, 0.1), padding: "4px 10px", borderRadius: 6 }}>
             ⭐ {score}/{totalQuizzes}
           </div>
         </div>
@@ -772,8 +775,8 @@ export default function GitReview() {
           {step.type === "scenario" && (
             <>
               <div style={{
-                padding: "14px 16px", background: "rgba(232,200,114,0.05)",
-                borderLeft: "3px solid #E8C872", borderRadius: "0 10px 10px 0",
+                padding: "14px 16px", background: hexToRgba(ACCENT, 0.05),
+                borderLeft: `3px solid ${ACCENT}`, borderRadius: "0 10px 10px 0",
                 fontSize: 13, color: "rgba(255,255,255,0.7)", lineHeight: 1.8, marginBottom: 8,
               }}>
                 <span style={{ fontWeight: 700, color: "#E8C872" }}>📖 情境：</span>{step.story}

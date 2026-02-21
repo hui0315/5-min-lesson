@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useChapterNav } from "./chapter-context";
+import { colors, lessonThemes, hexToRgba } from "./theme";
 
 /* ══════════════════════════════════════════════
    第十堂：實戰演練 — 從零到 GitHub 的三日旅程
    ══════════════════════════════════════════════ */
 
-const ACCENT = "#E8C872";
-const ACCENT2 = "#D4A843";
+const { accent: ACCENT, accent2: ACCENT2 } = lessonThemes["/hands-on"];
 
 const STEPS = [
   /* ──── Day 1 ──── */
@@ -250,7 +250,7 @@ function CommandInput({ command, onComplete }) {
         {status === "wrong" && <span style={{ color: "#EF4444", fontSize: 11 }}>再試一次</span>}
       </div>
       {status === "typing" && <button onClick={() => setShowHint(!showHint)} style={{ marginTop: 4, marginLeft: 24, background: "none", border: "none", color: "rgba(255,255,255,0.25)", fontSize: 11, cursor: "pointer", fontFamily: "'JetBrains Mono', monospace" }}>{showHint ? "隱藏提示" : "💡 提示"}</button>}
-      {showHint && status === "typing" && <div style={{ marginTop: 2, marginLeft: 24, fontSize: 11.5, color: "rgba(232,200,114,0.55)", fontStyle: "italic" }}>{command.hint}</div>}
+      {showHint && status === "typing" && <div style={{ marginTop: 2, marginLeft: 24, fontSize: 11.5, color: hexToRgba(ACCENT, 0.55), fontStyle: "italic" }}>{command.hint}</div>}
     </div>
   );
 }
@@ -290,7 +290,7 @@ function Quiz({ quiz, onComplete }) {
   const [selected, setSelected] = useState(null);
   const handleSelect = (i) => { if (selected !== null) return; setSelected(i); if (quiz.options[i].correct) setTimeout(onComplete, 700); };
   return (
-    <div style={{ margin: "20px 0 0", padding: "18px", background: "rgba(232,200,114,0.04)", borderRadius: 12, border: "1px solid rgba(232,200,114,0.12)" }}>
+    <div style={{ margin: "20px 0 0", padding: "18px", background: hexToRgba(ACCENT, 0.04), borderRadius: 12, border: `1px solid ${hexToRgba(ACCENT, 0.12)}` }}>
       <div style={{ fontSize: 12.5, fontWeight: 700, color: ACCENT, marginBottom: 12 }}>💡 觀念確認</div>
       <div style={{ fontSize: 13.5, color: "rgba(255,255,255,0.85)", marginBottom: 12, lineHeight: 1.6 }}>{quiz.question}</div>
       <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
@@ -537,7 +537,7 @@ function BugFixFlow({ onAllComplete }) {
                   </div>
                 ))}
                 <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", padding: "2px 0" }}>
-                  <span style={{ color: "rgba(232,200,114,0.4)" }}>a1b2c3d</span> feat: initial project setup
+                  <span style={{ color: hexToRgba(ACCENT, 0.4) }}>a1b2c3d</span> feat: initial project setup
                 </div>
               </div>
             )}
@@ -666,7 +666,7 @@ function PullDemo() {
         )}
       </div>
       {/* Remote */}
-      <div style={{ flex: 1, minWidth: 200, padding: "12px", background: "rgba(232,200,114,0.04)", border: "1px solid rgba(232,200,114,0.15)", borderRadius: 10 }}>
+      <div style={{ flex: 1, minWidth: 200, padding: "12px", background: hexToRgba(ACCENT, 0.04), border: `1px solid ${hexToRgba(ACCENT, 0.15)}`, borderRadius: 10 }}>
         <div style={{ fontSize: 11, fontWeight: 700, color: ACCENT, marginBottom: 8, textAlign: "center" }}>☁️ GitHub (origin/main)</div>
         <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginBottom: 4, fontFamily: "'JetBrains Mono', monospace" }}>main: {localCommits.length + amyCommits.length} commits</div>
         {step >= 1 && amyCommits.slice().reverse().map((c, i) => (

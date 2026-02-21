@@ -1,18 +1,19 @@
 import { useState, useEffect, useRef } from "react";
+import { colors, hexToRgba } from "./theme";
 
 const CHEATSHEET = [
-  { title: "🏗️ 建立與設定", color: "#E8C872", cmds: [
+  { title: "🏗️ 建立與設定", color: colors.gold, cmds: [
     ["git init", "初始化新的本地儲存庫"], ["git clone <url>", "複製遠端儲存庫到本地"],
     ["git remote -v", "查看遠端連結"], ["git remote add <n> <url>", "新增遠端連結"],
     ["git remote show <n>", "查看遠端詳細資訊"],
   ]},
-  { title: "📝 暫存與提交", color: "#E8C872", cmds: [
+  { title: "📝 暫存與提交", color: colors.gold, cmds: [
     ["git status", "查看工作區狀態"], ["git status -s", "精簡狀態"],
     ["git add <file>", "加入暫存區"], ["git add .", "所有變更加入暫存區"],
     ["git commit -m \"msg\"", "提交變更"], ["git commit -am \"msg\"", "auto add 已追蹤檔 + 提交"],
     ["git commit --amend -m \"msg\"", "修改上一次 commit 訊息"],
   ]},
-  { title: "🌿 分支管理", color: "#10B981", cmds: [
+  { title: "🌿 分支管理", color: colors.green, cmds: [
     ["git branch", "列出本地分支"], ["git branch -a", "列出所有分支"], ["git branch -vv", "顯示追蹤關係"],
     ["git checkout <branch>", "切換分支"], ["git checkout -b <new> <base>", "建立新分支並切換"],
     ["git switch <branch>", "切換分支（新語法）"], ["git switch -c <new>", "建立新分支並切換（新語法）"],
@@ -23,19 +24,19 @@ const CHEATSHEET = [
     ["git push origin <branch>", "推送"], ["git push -u origin <branch>", "推送+建立追蹤"],
     ["git push --force-with-lease", "安全強制推送"], ["git push origin --tags", "推送所有標籤"],
   ]},
-  { title: "🔀 合併與整合", color: "#E8C872", cmds: [
+  { title: "🔀 合併與整合", color: colors.gold, cmds: [
     ["git merge <branch>", "合併分支"], ["git rebase <branch>", "Rebase 到目標分支"],
     ["git rebase --continue", "解衝突後繼續 rebase"], ["git rebase --abort", "放棄 rebase"],
     ["git cherry-pick <hash>", "撿取特定 commit"],
   ]},
-  { title: "🔍 檢視歷史", color: "#F59E0B", cmds: [
+  { title: "🔍 檢視歷史", color: colors.orange, cmds: [
     ["git log --oneline", "精簡歷史"], ["git log --oneline -n", "最近 n 筆"],
     ["git log A..B", "比較兩分支差異"], ["git diff", "未暫存的修改"],
     ["git diff --staged", "已暫存的修改"], ["git diff HEAD~1", "與上一 commit 比較"],
     ["git reflog", "查看所有 HEAD 移動紀錄"],
     ["git show <tag>", "查看標籤/commit 詳情"],
   ]},
-  { title: "⏪ 撤銷與修復", color: "#EF4444", cmds: [
+  { title: "⏪ 撤銷與修復", color: colors.red, cmds: [
     ["git stash", "暫存未提交的修改"], ["git stash pop", "取回 stash"],
     ["git stash list", "查看 stash 列表"],
     ["git reset --soft HEAD~1", "撤銷 commit，保留暫存"], ["git reset --hard HEAD~1", "撤銷 commit，丟棄修改"],
@@ -43,7 +44,7 @@ const CHEATSHEET = [
     ["git restore <file>", "丟棄檔案的修改"],
     ["git bisect start/bad/good/reset", "二分搜尋找 bug"],
   ]},
-  { title: "🏷️ 標籤", color: "#E8C872", cmds: [
+  { title: "🏷️ 標籤", color: colors.gold, cmds: [
     ["git tag", "列出標籤"], ["git tag -a v1.0 -m \"msg\"", "建立附註標籤"], ["git tag v1.0", "建立輕量標籤"],
   ]},
   { title: "📝 Commit Type 規範", color: "#A78BFA", cmds: [
@@ -128,8 +129,8 @@ export default function CheatsheetPanel({ open, onClose }) {
           maxWidth: 640,
           maxHeight: "calc(100vh - 100px)",
           overflowY: "auto",
-          background: "#0D1117",
-          border: "1px solid rgba(232,200,114,0.2)",
+          background: colors.bg,
+          border: `1px solid ${hexToRgba(colors.gold, 0.2)}`,
           borderRadius: 16,
           padding: "22px 20px",
           margin: "0 16px",
@@ -142,7 +143,7 @@ export default function CheatsheetPanel({ open, onClose }) {
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <span style={{ fontSize: 22 }}>⚡</span>
             <div>
-              <div style={{ fontSize: 16, fontWeight: 800, background: "linear-gradient(135deg, #E8C872, #D4A843)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+              <div style={{ fontSize: 16, fontWeight: 800, background: `linear-gradient(135deg, ${colors.gold}, ${colors.goldDark})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                 Git 指令速查表
               </div>
               <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", fontFamily: "'JetBrains Mono', monospace" }}>
@@ -271,7 +272,7 @@ export default function CheatsheetPanel({ open, onClose }) {
                         cursor: "pointer",
                         transition: "background 0.2s",
                       }}
-                      onMouseOver={e => e.currentTarget.style.background = "rgba(232,200,114,0.06)"}
+                      onMouseOver={e => e.currentTarget.style.background = hexToRgba(colors.gold, 0.06)}
                       onMouseOut={e => e.currentTarget.style.background = i % 2 === 0 ? "rgba(255,255,255,0.01)" : "rgba(255,255,255,0.025)"}
                     >
                       <code style={{
@@ -289,7 +290,7 @@ export default function CheatsheetPanel({ open, onClose }) {
                       </span>
                       <span style={{
                         fontSize: 10,
-                        color: copied === cmd ? "#10B981" : "rgba(255,255,255,0.15)",
+                        color: copied === cmd ? colors.green : "rgba(255,255,255,0.15)",
                         fontFamily: "'JetBrains Mono', monospace",
                         flexShrink: 0,
                         transition: "color 0.3s",

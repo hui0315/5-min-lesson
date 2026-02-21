@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useChapterNav } from "./chapter-context";
+import { colors, lessonThemes, hexToRgba } from "./theme";
+
+const { accent: ACCENT, accent2: ACCENT2 } = lessonThemes["/merge-advanced"];
 
 const STEPS = [
   {
@@ -139,7 +142,6 @@ function CommandInput({ command, onComplete }) {
   const [showHint, setShowHint] = useState(false);
   const [shakeKey, setShakeKey] = useState(0);
   const inputRef = useRef(null);
-  const accent = "#E8C872";
 
   useEffect(() => { setInput(""); setStatus("typing"); setShowHint(false); setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 100); }, [command.answer]);
 
@@ -158,19 +160,19 @@ function CommandInput({ command, onComplete }) {
   return (
     <div style={{ marginBottom: 6 }}>
       <div style={{ fontSize: 13, color: "rgba(255,255,255,0.55)", marginBottom: 8, display: "flex", gap: 8, lineHeight: 1.6 }}>
-        <span style={{ color: accent, fontWeight: 700, flexShrink: 0 }}>▸</span><span>{command.prompt}</span>
+        <span style={{ color: ACCENT, fontWeight: 700, flexShrink: 0 }}>▸</span><span>{command.prompt}</span>
       </div>
       <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11.5, height: 16, overflow: "hidden", marginBottom: 4, marginLeft: 24 }}>
         {status === "typing" && exp.split("").map((ch, i) => <span key={i} style={{ color: cc(i) }}>{ch}</span>)}
       </div>
       <div key={shakeKey} style={{ display: "flex", alignItems: "center", background: "rgba(0,0,0,0.3)", border: `1.5px solid ${bc}`, borderRadius: 8, padding: "0 12px", marginLeft: 24, transition: "border-color 0.3s", animation: status === "wrong" ? "shake 0.4s ease" : "none" }}>
-        <span style={{ color: "#E8C872", fontFamily: "'JetBrains Mono', monospace", fontSize: 13, marginRight: 8 }}>$</span>
-        <input ref={inputRef} value={input} onChange={e => status === "typing" && setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && input.trim() && checkAnswer()} disabled={status === "correct"} placeholder="輸入指令..." autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false} style={{ flex: 1, background: "transparent", border: "none", outline: "none", color: status === "correct" ? "#10B981" : status === "wrong" ? "#EF4444" : accent, fontFamily: "'JetBrains Mono', monospace", fontSize: 13, padding: "11px 0", caretColor: accent }} />
+        <span style={{ color: ACCENT, fontFamily: "'JetBrains Mono', monospace", fontSize: 13, marginRight: 8 }}>$</span>
+        <input ref={inputRef} value={input} onChange={e => status === "typing" && setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && input.trim() && checkAnswer()} disabled={status === "correct"} placeholder="輸入指令..." autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false} style={{ flex: 1, background: "transparent", border: "none", outline: "none", color: status === "correct" ? "#10B981" : status === "wrong" ? "#EF4444" : ACCENT, fontFamily: "'JetBrains Mono', monospace", fontSize: 13, padding: "11px 0", caretColor: ACCENT }} />
         {status === "correct" && <span style={{ color: "#10B981", fontSize: 14 }}>✓</span>}
         {status === "wrong" && <span style={{ color: "#EF4444", fontSize: 11 }}>再試一次</span>}
       </div>
       {status === "typing" && <button onClick={() => setShowHint(!showHint)} style={{ marginTop: 4, marginLeft: 24, background: "none", border: "none", color: "rgba(255,255,255,0.22)", fontSize: 11, cursor: "pointer", fontFamily: "'JetBrains Mono', monospace" }}>{showHint ? "隱藏提示" : "💡 提示"}</button>}
-      {showHint && status === "typing" && <div style={{ marginTop: 2, marginLeft: 24, fontSize: 11.5, color: `${accent}88`, fontStyle: "italic" }}>{command.hint}</div>}
+      {showHint && status === "typing" && <div style={{ marginTop: 2, marginLeft: 24, fontSize: 11.5, color: hexToRgba(ACCENT, 0.533), fontStyle: "italic" }}>{command.hint}</div>}
     </div>
   );
 }
@@ -190,7 +192,7 @@ function TerminalSim({ commands, onAllComplete }) {
         {commands.slice(0, ci + 1).map((cmd, i) => (
           <div key={i} style={{ marginBottom: 12 }}>
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12 }}>
-              <span style={{ color: "#10B981" }}>$ </span><span style={{ color: "#E8C872" }}>{cmd.answer}</span><span style={{ color: "#10B981", marginLeft: 8, fontSize: 11 }}>✓</span>
+              <span style={{ color: "#10B981" }}>$ </span><span style={{ color: ACCENT }}>{cmd.answer}</span><span style={{ color: "#10B981", marginLeft: 8, fontSize: 11 }}>✓</span>
             </div>
             {cmd.output && <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11.5, color: "rgba(255,255,255,0.35)", whiteSpace: "pre-wrap", marginTop: 3, lineHeight: 1.5 }}>{cmd.output}</div>}
           </div>
@@ -206,8 +208,8 @@ function Quiz({ quiz, onComplete }) {
   const [sel, setSel] = useState(null);
   const pick = (i) => { if (sel !== null) return; setSel(i); if (quiz.options[i].correct) setTimeout(onComplete, 700); };
   return (
-    <div style={{ margin: "20px 0 0", padding: "18px", background: "rgba(232,200,114,0.04)", borderRadius: 12, border: "1px solid rgba(232,200,114,0.12)" }}>
-      <div style={{ fontSize: 12.5, fontWeight: 700, color: "#E8C872", marginBottom: 12 }}>💡 觀念確認</div>
+    <div style={{ margin: "20px 0 0", padding: "18px", background: hexToRgba(ACCENT, 0.04), borderRadius: 12, border: `1px solid ${hexToRgba(ACCENT, 0.12)}` }}>
+      <div style={{ fontSize: 12.5, fontWeight: 700, color: ACCENT, marginBottom: 12 }}>💡 觀念確認</div>
       <div style={{ fontSize: 13.5, color: "rgba(255,255,255,0.85)", marginBottom: 12, lineHeight: 1.6 }}>{quiz.question}</div>
       <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
         {quiz.options.map((o, i) => {
@@ -238,8 +240,8 @@ function ConceptPage({ step }) {
         ))}
       </div>
       {step.goldenRule && (
-        <div style={{ margin: "16px 0", padding: "16px", background: "rgba(232,200,114,0.06)", borderRadius: 12, border: "1px solid rgba(232,200,114,0.15)", textAlign: "center" }}>
-          <div style={{ fontSize: 14, fontWeight: 800, color: "#E8C872", marginBottom: 6 }}>{step.goldenRule.title}</div>
+        <div style={{ margin: "16px 0", padding: "16px", background: hexToRgba(ACCENT, 0.06), borderRadius: 12, border: `1px solid ${hexToRgba(ACCENT, 0.15)}`, textAlign: "center" }}>
+          <div style={{ fontSize: 14, fontWeight: 800, color: ACCENT, marginBottom: 6 }}>{step.goldenRule.title}</div>
           <div style={{ fontSize: 13, color: "rgba(255,255,255,0.65)", lineHeight: 1.7 }}>{step.goldenRule.text}</div>
         </div>
       )}
@@ -267,8 +269,8 @@ function SemverDemo() {
   const typeColor = { PATCH: "#10B981", MINOR: "#60A5FA", MAJOR: "#EF4444" };
 
   return (
-    <div style={{ margin: "16px 0", padding: "18px", background: "rgba(232,200,114,0.04)", borderRadius: 12, border: "1px solid rgba(232,200,114,0.12)" }}>
-      <div style={{ fontSize: 13, fontWeight: 700, color: "#E8C872", marginBottom: 6 }}>🏷️ Semantic Versioning 練習</div>
+    <div style={{ margin: "16px 0", padding: "18px", background: hexToRgba(ACCENT, 0.04), borderRadius: 12, border: `1px solid ${hexToRgba(ACCENT, 0.12)}` }}>
+      <div style={{ fontSize: 13, fontWeight: 700, color: ACCENT, marginBottom: 6 }}>🏷️ Semantic Versioning 練習</div>
       <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", marginBottom: 14, lineHeight: 1.6 }}>
         格式：v<span style={{ color: "#EF4444" }}>MAJOR</span>.<span style={{ color: "#60A5FA" }}>MINOR</span>.<span style={{ color: "#10B981" }}>PATCH</span>
         — 不相容改動 / 新功能 / Bug修復
@@ -287,7 +289,7 @@ function SemverDemo() {
                   <input value={inputs[i] || ""} onChange={e => setInputs(p => ({ ...p, [i]: e.target.value }))}
                     onKeyDown={e => e.key === "Enter" && checkAnswer(i)}
                     placeholder="v?.?.?" autoComplete="off"
-                    style={{ width: 80, padding: "5px 8px", background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 6, color: "#E8C872", fontFamily: "'JetBrains Mono', monospace", fontSize: 12, outline: "none" }} />
+                    style={{ width: 80, padding: "5px 8px", background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 6, color: ACCENT, fontFamily: "'JetBrains Mono', monospace", fontSize: 12, outline: "none" }} />
                   <button onClick={() => checkAnswer(i)} style={{ padding: "5px 12px", fontSize: 11, background: "rgba(232,200,114,0.1)", border: "1px solid rgba(232,200,114,0.2)", borderRadius: 6, color: "#E8C872", cursor: "pointer", fontFamily: "inherit" }}>確認</button>
                 </>
               ) : (

@@ -1,13 +1,14 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useChapterNav } from "./chapter-context";
+import { colors, lessonThemes, hexToRgba } from "./theme";
 
 /* ── Animations ── */
 const styles = document.createElement("style");
 styles.textContent = `
   @keyframes goldGlow {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(232, 200, 114, 0.3); }
-    50% { box-shadow: 0 0 0 8px rgba(232, 200, 114, 0); }
+    0%, 100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.3); }
+    50% { box-shadow: 0 0 0 8px rgba(52, 211, 153, 0); }
   }
 `;
 if (typeof document !== "undefined") document.head.appendChild(styles);
@@ -16,8 +17,7 @@ if (typeof document !== "undefined") document.head.appendChild(styles);
    第四堂：分支管理：安全地開發新功能
    ══════════════════════════════════════════════ */
 
-const ACCENT = "#E8C872";
-const ACCENT2 = "#D4A843";
+const { accent: ACCENT, accent2: ACCENT2 } = lessonThemes["/branching"];
 
 const STEPS = [
   {
@@ -342,7 +342,7 @@ function BranchNamingDemo() {
     <div style={{ margin: "20px 0" }}>
       <div
         style={{
-          background: "#0A0E17",
+          background: colors.bgDeep,
           borderRadius: 12,
           border: "1px solid rgba(255,255,255,0.08)",
           overflow: "hidden",
@@ -385,8 +385,8 @@ function BranchNamingDemo() {
                 padding: "12px 14px",
                 marginBottom: 8,
                 background:
-                  expanded === ex.id ? "#E8C87210" : "rgba(255,255,255,0.02)",
-                border: `1px solid ${expanded === ex.id ? "#E8C87233" : "rgba(255,255,255,0.04)"}`,
+                  expanded === ex.id ? hexToRgba(ACCENT, 0.063) : "rgba(255,255,255,0.02)",
+                border: `1px solid ${expanded === ex.id ? hexToRgba(ACCENT, 0.2) : "rgba(255,255,255,0.04)"}`,
                 borderRadius: 10,
                 cursor: "pointer",
                 transition: "all 0.3s",
@@ -398,7 +398,7 @@ function BranchNamingDemo() {
                   style={{
                     fontSize: 12,
                     fontWeight: 700,
-                    color: expanded === ex.id ? "#E8C872" : "rgba(255,255,255,0.7)",
+                    color: expanded === ex.id ? ACCENT : "rgba(255,255,255,0.7)",
                     marginBottom: expanded === ex.id ? 8 : 0,
                     transition: "color 0.3s",
                   }}
@@ -542,7 +542,7 @@ function CommandInput({ command, onComplete }) {
           lineHeight: 1.6,
         }}
       >
-        <span style={{ color: "#E8C872", fontWeight: 700, flexShrink: 0 }}>
+        <span style={{ color: ACCENT, fontWeight: 700, flexShrink: 0 }}>
           ▸
         </span>
         <span>{command.prompt}</span>
@@ -616,11 +616,11 @@ function CommandInput({ command, onComplete }) {
                 ? "#10B981"
                 : status === "wrong"
                 ? "#EF4444"
-                : "#E8C872",
+                : ACCENT,
             fontFamily: "'JetBrains Mono', monospace",
             fontSize: 13,
             padding: "11px 0",
-            caretColor: "#E8C872",
+            caretColor: ACCENT,
           }}
         />
         {status === "correct" && (
@@ -653,7 +653,7 @@ function CommandInput({ command, onComplete }) {
             marginTop: 2,
             marginLeft: 24,
             fontSize: 11.5,
-            color: "#E8C87288",
+            color: hexToRgba(ACCENT, 0.533),
             fontStyle: "italic",
           }}
         >
@@ -715,7 +715,7 @@ function TerminalSim({ commands, onAllComplete }) {
           <div key={`done-${i}`} style={{ marginBottom: 12 }}>
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12 }}>
               <span style={{ color: "#10B981" }}>$ </span>
-              <span style={{ color: "#E8C872" }}>{cmd.answer}</span>
+              <span style={{ color: ACCENT }}>{cmd.answer}</span>
               <span style={{ color: "#10B981", marginLeft: 8, fontSize: 11 }}>✓</span>
             </div>
             {cmd.output && (
@@ -772,12 +772,12 @@ function Quiz({ quiz, onComplete }) {
       style={{
         margin: "20px 0 0",
         padding: "18px",
-        background: "#E8C87204",
+        background: hexToRgba(ACCENT, 0.016),
         borderRadius: 12,
-        border: "#E8C87212",
+        border: hexToRgba(ACCENT, 0.07),
       }}
     >
-      <div style={{ fontSize: 12.5, fontWeight: 700, color: "#E8C872", marginBottom: 12 }}>
+      <div style={{ fontSize: 12.5, fontWeight: 700, color: ACCENT, marginBottom: 12 }}>
         💡 觀念確認
       </div>
       <div
@@ -932,13 +932,13 @@ export default function GitBranching() {
                 width: 38,
                 height: 38,
                 borderRadius: 10,
-                background: "linear-gradient(135deg, #E8C872, #D4A843)",
+                background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 fontSize: 14,
                 fontWeight: 900,
-                color: "#0D1117",
+                color: colors.bg,
                 fontFamily: "'JetBrains Mono', monospace",
               }}
             >
@@ -956,9 +956,9 @@ export default function GitBranching() {
           <div
             style={{
               fontSize: 12,
-              color: "#E8C872",
+              color: ACCENT,
               fontFamily: "'JetBrains Mono', monospace",
-              background: "#E8C87215",
+              background: hexToRgba(ACCENT, 0.08),
               padding: "4px 10px",
               borderRadius: 6,
             }}
@@ -980,7 +980,7 @@ export default function GitBranching() {
                 cursor: "pointer",
                 background:
                   i <= currentStep
-                    ? `linear-gradient(90deg, #E8C872, #D4A843)`
+                    ? `linear-gradient(90deg, ${ACCENT}, ${ACCENT2})`
                     : "rgba(255,255,255,0.06)",
                 transition: "background 0.4s",
                 animation: i === currentStep ? "goldGlow 3s ease-in-out infinite" : "none",

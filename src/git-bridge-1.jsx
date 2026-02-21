@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useChapterNav } from "./chapter-context";
+import { colors, lessonThemes, hexToRgba } from "./theme";
+
+const { accent: ACCENT, accent2: ACCENT2 } = lessonThemes["/collaboration"];
 
 /* ══════════════════════════════════════════════
    團隊協作：遠端與協作基礎
@@ -20,7 +23,7 @@ const STEPS = [
       },
       {
         title: "GitHub / GitLab / Bitbucket",
-        color: "#E8C872",
+        color: ACCENT,
         content: "這些平台提供遠端儲存庫的託管服務。Git 是工具，它們是存放 Git 儲存庫的「雲端空間」。就像 Word 是工具，Google Drive 是存放文件的地方。",
       },
     ],
@@ -172,7 +175,7 @@ const STEPS = [
     conceptBlocks: [
       {
         title: "什麼是 Pull Request（PR）？",
-        color: "#E8C872",
+        color: ACCENT,
         content: "Push 只是把程式碼推上遠端，但不會自動合併到主分支。你需要發一個 Pull Request（PR），請隊友幫你審查（Code Review）後才合併。PR 是團隊協作的核心流程。",
       },
       {
@@ -233,7 +236,7 @@ function CommandInput({ command, onComplete }) {
   return (
     <div style={{ marginBottom: 6 }}>
       <div style={{ fontSize: 13, color: "rgba(255,255,255,0.55)", marginBottom: 8, display: "flex", gap: 8, lineHeight: 1.6 }}>
-        <span style={{ color: "#E8C872", fontWeight: 700, flexShrink: 0 }}>▸</span><span>{command.prompt}</span>
+        <span style={{ color: ACCENT, fontWeight: 700, flexShrink: 0 }}>▸</span><span>{command.prompt}</span>
       </div>
       <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11.5, height: 16, overflow: "hidden", marginBottom: 4, marginLeft: 24 }}>
         {status === "typing" && expectedNorm.split("").map((ch, i) => <span key={i} style={{ color: getCharColor(i) }}>{ch}</span>)}
@@ -241,12 +244,12 @@ function CommandInput({ command, onComplete }) {
       <div key={shakeKey} style={{ display: "flex", alignItems: "center", background: "rgba(0,0,0,0.3)", border: `1.5px solid ${borderColor}`, borderRadius: 8, padding: "0 12px", marginLeft: 24, transition: "border-color 0.3s", animation: status === "wrong" ? "shake 0.4s ease" : "none" }}>
         <span style={{ color: "#10B981", fontFamily: "'JetBrains Mono', monospace", fontSize: 13, marginRight: 8, userSelect: "none" }}>$</span>
         <input ref={inputRef} value={input} onChange={e => { if (status === "typing") setInput(e.target.value); }} onKeyDown={e => { if (e.key === "Enter" && input.trim()) checkAnswer(); }} disabled={status === "correct"} placeholder="輸入指令..." autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false}
-          style={{ flex: 1, background: "transparent", border: "none", outline: "none", color: status === "correct" ? "#10B981" : status === "wrong" ? "#EF4444" : "#E8C872", fontFamily: "'JetBrains Mono', monospace", fontSize: 13, padding: "11px 0", caretColor: "#E8C872" }} />
+          style={{ flex: 1, background: "transparent", border: "none", outline: "none", color: status === "correct" ? "#10B981" : status === "wrong" ? "#EF4444" : ACCENT, fontFamily: "'JetBrains Mono', monospace", fontSize: 13, padding: "11px 0", caretColor: ACCENT }} />
         {status === "correct" && <span style={{ color: "#10B981", fontSize: 14 }}>✓</span>}
         {status === "wrong" && <span style={{ color: "#EF4444", fontSize: 11 }}>再試一次</span>}
       </div>
       {status === "typing" && <button onClick={() => setShowHint(!showHint)} style={{ marginTop: 4, marginLeft: 24, background: "none", border: "none", color: "rgba(255,255,255,0.25)", fontSize: 11, cursor: "pointer", fontFamily: "'JetBrains Mono', monospace" }}>{showHint ? "隱藏提示" : "💡 提示"}</button>}
-      {showHint && status === "typing" && <div style={{ marginTop: 2, marginLeft: 24, fontSize: 11.5, color: "rgba(232,200,114,0.55)", fontStyle: "italic" }}>{command.hint}</div>}
+      {showHint && status === "typing" && <div style={{ marginTop: 2, marginLeft: 24, fontSize: 11.5, color: hexToRgba(ACCENT, 0.55), fontStyle: "italic" }}>{command.hint}</div>}
     </div>
   );
 }
@@ -272,7 +275,7 @@ function TerminalSim({ commands, onAllComplete }) {
         {commands.slice(0, completedIdx + 1).map((cmd, i) => (
           <div key={`done-${i}`} style={{ marginBottom: 12 }}>
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12 }}>
-              <span style={{ color: "#10B981" }}>$ </span><span style={{ color: "#E8C872" }}>{cmd.answer}</span><span style={{ color: "#10B981", marginLeft: 8, fontSize: 11 }}>✓</span>
+              <span style={{ color: "#10B981" }}>$ </span><span style={{ color: ACCENT }}>{cmd.answer}</span><span style={{ color: "#10B981", marginLeft: 8, fontSize: 11 }}>✓</span>
             </div>
             {cmd.output && <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11.5, color: "rgba(255,255,255,0.4)", whiteSpace: "pre-wrap", marginTop: 3, lineHeight: 1.5 }}>{cmd.output}</div>}
           </div>
@@ -288,8 +291,8 @@ function Quiz({ quiz, onComplete }) {
   const [selected, setSelected] = useState(null);
   const handleSelect = (i) => { if (selected !== null) return; setSelected(i); if (quiz.options[i].correct) setTimeout(onComplete, 700); };
   return (
-    <div style={{ margin: "20px 0 0", padding: "18px", background: "rgba(232,200,114,0.04)", borderRadius: 12, border: "1px solid rgba(232,200,114,0.12)" }}>
-      <div style={{ fontSize: 12.5, fontWeight: 700, color: "#E8C872", marginBottom: 12 }}>💡 觀念確認</div>
+    <div style={{ margin: "20px 0 0", padding: "18px", background: hexToRgba(ACCENT, 0.04), borderRadius: 12, border: `1px solid ${hexToRgba(ACCENT, 0.12)}` }}>
+      <div style={{ fontSize: 12.5, fontWeight: 700, color: ACCENT, marginBottom: 12 }}>💡 觀念確認</div>
       <div style={{ fontSize: 13.5, color: "rgba(255,255,255,0.85)", marginBottom: 12, lineHeight: 1.6 }}>{quiz.question}</div>
       <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
         {quiz.options.map((opt, i) => {
@@ -329,8 +332,8 @@ function PRNamingDemo() {
     { pr: "refactor: extract auth middleware (#67)", good: true, why: "說明重構的內容" },
   ];
   return (
-    <div style={{ margin: "16px 0", padding: "18px", background: "rgba(232,200,114,0.04)", borderRadius: 12, border: "1px solid rgba(232,200,114,0.12)" }}>
-      <div style={{ fontSize: 13, fontWeight: 700, color: "#E8C872", marginBottom: 12 }}>🎯 PR 命名判斷練習：點擊判斷好壞</div>
+    <div style={{ margin: "16px 0", padding: "18px", background: hexToRgba(ACCENT, 0.04), borderRadius: 12, border: `1px solid ${hexToRgba(ACCENT, 0.12)}` }}>
+      <div style={{ fontSize: 13, fontWeight: 700, color: ACCENT, marginBottom: 12 }}>🎯 PR 命名判斷練習：點擊判斷好壞</div>
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
         {examples.map((ex, i) => {
           const answered = selected[i] !== undefined;
@@ -353,8 +356,8 @@ function PRNamingDemo() {
         })}
       </div>
       {Object.keys(selected).length === examples.length && (
-        <div style={{ marginTop: 12, padding: "10px 14px", background: "rgba(232,200,114,0.06)", borderRadius: 8, fontSize: 12, color: "rgba(255,255,255,0.55)", lineHeight: 1.7 }}>
-          💡 <strong style={{ color: "#E8C872" }}>記住公式：</strong>type: 簡短動詞描述 (#ticket)。好的 PR 標題讓審查者一眼就知道這個 PR 在做什麼。
+        <div style={{ marginTop: 12, padding: "10px 14px", background: hexToRgba(ACCENT, 0.06), borderRadius: 8, fontSize: 12, color: "rgba(255,255,255,0.55)", lineHeight: 1.7 }}>
+          💡 <strong style={{ color: ACCENT }}>記住公式：</strong>type: 簡短動詞描述 (#ticket)。好的 PR 標題讓審查者一眼就知道這個 PR 在做什麼。
         </div>
       )}
     </div>
@@ -372,11 +375,11 @@ function RemoteDiagram({ diagram }) {
       </div>
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
         {diagram.bridge.map((b, i) => (
-          <div key={i} style={{ fontSize: 11, color: "#E8C872", fontFamily: "'JetBrains Mono', monospace", whiteSpace: "nowrap" }}>{b}</div>
+          <div key={i} style={{ fontSize: 11, color: ACCENT, fontFamily: "'JetBrains Mono', monospace", whiteSpace: "nowrap" }}>{b}</div>
         ))}
       </div>
-      <div style={{ background: "rgba(232,200,114,0.06)", border: "1px solid rgba(232,200,114,0.2)", borderRadius: 12, padding: "14px 16px", minWidth: 150 }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: "#E8C872", marginBottom: 10, textAlign: "center" }}>☁️ 遠端</div>
+      <div style={{ background: hexToRgba(ACCENT, 0.06), border: `1px solid ${hexToRgba(ACCENT, 0.2)}`, borderRadius: 12, padding: "14px 16px", minWidth: 150 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: ACCENT, marginBottom: 10, textAlign: "center" }}>☁️ 遠端</div>
         {diagram.remote.map((r, i) => (
           <div key={i} style={{ fontSize: 11.5, color: "rgba(255,255,255,0.55)", padding: "4px 8px", background: "rgba(255,255,255,0.04)", borderRadius: 6, marginBottom: 4, textAlign: "center", fontFamily: "'JetBrains Mono', monospace" }}>{r}</div>
         ))}
@@ -414,7 +417,7 @@ export default function GitBridge1() {
               <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>Git 課程系列 · 第五堂</div>
             </div>
           </div>
-          <div style={{ fontSize: 12, color: "#E8C872", fontFamily: "'JetBrains Mono', monospace", background: "rgba(232,200,114,0.1)", padding: "4px 10px", borderRadius: 6 }}>⭐ {score}/{STEPS.length}</div>
+          <div style={{ fontSize: 12, color: ACCENT, fontFamily: "'JetBrains Mono', monospace", background: hexToRgba(ACCENT, 0.1), padding: "4px 10px", borderRadius: 6 }}>⭐ {score}/{STEPS.length}</div>
         </div>
 
         <div style={{ display: "flex", gap: 4, alignItems: "center", marginBottom: 28 }}>
