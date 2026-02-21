@@ -78,6 +78,39 @@ input::placeholder {
   color: rgba(255,255,255,0.18);
 }
 
+/* Gold glow pulse for progress bars */
+@keyframes goldGlow {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.25); }
+}
+
+/* Content fade-in-up */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Subtle float for completion badges */
+@keyframes gentleFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* Button hover glow */
+.btn-gold:hover {
+  box-shadow: 0 4px 20px rgba(232, 200, 114, 0.2);
+  transform: translateY(-1px);
+}
+.btn-gold {
+  transition: all 0.25s ease;
+}
+.btn-nav:hover {
+  background: rgba(255,255,255,0.08) !important;
+}
+.btn-nav {
+  transition: all 0.25s ease;
+}
+
 /* Hide sidebar close button on desktop */
 @media (min-width: 900px) {
   .sidebar-close-btn {
