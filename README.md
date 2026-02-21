@@ -62,4 +62,9 @@ React · React Router · Framer Motion · Vite
 
 ## License
 
-MIT
+本專案採用雙授權：
+
+- **程式碼**（原始碼、元件、設定檔）：© 2026 hui0315，保留所有權利（All Rights Reserved）
+- **教學內容**（課程文字、測驗、說明）：[CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/)
+
+詳見 [LICENSE](./LICENSE) 檔案。
