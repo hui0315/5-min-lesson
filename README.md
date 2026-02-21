@@ -7,15 +7,20 @@
 專為「會寫一點程式、但從沒碰過版本控制」的人設計的 10 堂互動課程。
 不用背指令——每一步都在解決一個你真的會遇到的問題。
 
-<a href="https://5-min-git.netlify.app/">
-  <img src="https://img.shields.io/badge/%F0%9F%9A%80_Live_Demo-點我體驗-blue?style=for-the-badge" alt="Live Demo" />
-</a>
+<p align="center">
+  <a href="https://5-min-git.netlify.app/">
+    <img src="./screenshots/btn-demo.svg" alt="Live Demo" height="48" />
+  </a>
+</p>
 
-<p>
-  <img src="https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=white" alt="React" />
-  <img src="https://img.shields.io/badge/Vite-7-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite" />
-  <img src="https://img.shields.io/badge/Framer_Motion-12-FF0055?style=flat-square&logo=framer&logoColor=white" alt="Framer Motion" />
-  <img src="https://img.shields.io/badge/Netlify-deployed-00C7B7?style=flat-square&logo=netlify&logoColor=white" alt="Netlify" />
+<p align="center">
+  <img src="./screenshots/badge-react.svg" alt="React" height="36" />
+  &nbsp;
+  <img src="./screenshots/badge-vite.svg" alt="Vite" height="36" />
+  &nbsp;
+  <img src="./screenshots/badge-framer.svg" alt="Framer Motion" height="36" />
+  &nbsp;
+  <img src="./screenshots/badge-netlify.svg" alt="Netlify" height="36" />
 </p>
 
 </div>
