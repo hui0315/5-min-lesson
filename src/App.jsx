@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -7,71 +7,35 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
+import { ChapterContext } from "./chapter-context";
 import GitTutorial from "./git-tutorial";
-import GitAdvanced from "./git-advanced";
+import GitGithubSetup from "./git-github-setup";
+import GitDailyWorkflow from "./git-daily-workflow";
+import GitBranching from "./git-branching";
 import GitBridge1 from "./git-bridge-1";
 import GitBridge2 from "./git-bridge-2";
+import GitAdvanced from "./git-advanced";
 import GitCommandsRef from "./git-commands-ref";
 import GitReview from "./git-review";
+import GitHandsOn from "./git-hands-on";
 
 /* ─────────────────────────────────────
    Course metadata
    ───────────────────────────────────── */
+const GOLD = "#E8C872";
+const GOLD_DARK = "#D4A843";
+
 const COURSES = [
-  {
-    path: "/tutorial",
-    label: "Git 入門",
-    subtitle: "版本控制基礎",
-    icon: "G",
-    accent: "#E8C872",
-    badge: "1",
-    element: <GitTutorial />,
-  },
-  {
-    path: "/advanced",
-    label: "Git 進階",
-    subtitle: "stash · log · rebase",
-    icon: "G+",
-    accent: "#3B82F6",
-    badge: "2",
-    element: <GitAdvanced />,
-  },
-  {
-    path: "/bridge-1",
-    label: "遠端與協作",
-    subtitle: "clone · fetch · push",
-    icon: "G3",
-    accent: "#8B5CF6",
-    badge: "3",
-    element: <GitBridge1 />,
-  },
-  {
-    path: "/bridge-2",
-    label: "合併與衝突",
-    subtitle: "merge · rebase · tag",
-    icon: "4",
-    accent: "#A78BFA",
-    badge: "4",
-    element: <GitBridge2 />,
-  },
-  {
-    path: "/commands-ref",
-    label: "指令總覽",
-    subtitle: "比較 · 速查表",
-    icon: "5",
-    accent: "#F472B6",
-    badge: "5",
-    element: <GitCommandsRef />,
-  },
-  {
-    path: "/review",
-    label: "總複習",
-    subtitle: "情境實戰演練",
-    icon: "G★",
-    accent: "#F59E0B",
-    badge: "6",
-    element: <GitReview />,
-  },
+  { path: "/tutorial",       label: "Git 入門",   subtitle: "版本控制基礎",           accent: GOLD, badge: "1", element: <GitTutorial /> },
+  { path: "/github-setup",   label: "本地到雲端", subtitle: "init · commit · push",    accent: GOLD, badge: "2", element: <GitGithubSetup /> },
+  { path: "/daily-workflow",  label: "日常工作流", subtitle: "改 Bug · 推送 · 循環",   accent: GOLD, badge: "3", element: <GitDailyWorkflow /> },
+  { path: "/branching",      label: "分支管理",   subtitle: "feature · merge · hotfix", accent: GOLD, badge: "4", element: <GitBranching /> },
+  { path: "/collaboration",  label: "團隊協作",   subtitle: "clone · fetch · pull",    accent: GOLD, badge: "5", element: <GitBridge1 /> },
+  { path: "/merge-advanced",  label: "合併進階",   subtitle: "rebase · conflict · tag", accent: GOLD, badge: "6", element: <GitBridge2 /> },
+  { path: "/advanced",       label: "進階技巧",   subtitle: "stash · reset · bisect",  accent: GOLD, badge: "7", element: <GitAdvanced /> },
+  { path: "/commands-ref",    label: "指令總覽",   subtitle: "比較 · 速查表",           accent: GOLD, badge: "8", element: <GitCommandsRef /> },
+  { path: "/review",         label: "總複習",     subtitle: "情境實戰演練",             accent: GOLD, badge: "9", element: <GitReview /> },
+  { path: "/hands-on",       label: "實戰演練",   subtitle: "從零到 GitHub 三日旅程",   accent: GOLD, badge: "10", element: <GitHandsOn /> },
 ];
 
 /* ─────────────────────────────────────
@@ -340,25 +304,43 @@ function Sidebar({ open, onClose }) {
 function AnimatedRoutes() {
   const location = useLocation();
 
+  /* Scroll to top on route change (chapter navigation) */
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
+  /* Determine prev / next chapter for current route */
+  const currentIdx = COURSES.findIndex(
+    (c) => c.path === location.pathname || (location.pathname === "/" && c.path === "/tutorial")
+  );
+  const chapterNav = {
+    prevPath: currentIdx > 0 ? COURSES[currentIdx - 1].path : null,
+    nextPath: currentIdx < COURSES.length - 1 ? COURSES[currentIdx + 1].path : null,
+    prevLabel: currentIdx > 0 ? COURSES[currentIdx - 1].label : null,
+    nextLabel: currentIdx < COURSES.length - 1 ? COURSES[currentIdx + 1].label : null,
+  };
+
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={location.pathname}
-        variants={pageVariants}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-        transition={pageTransition}
-        style={{ width: "100%", minHeight: "100%" }}
-      >
-        <Routes location={location}>
-          {COURSES.map((c) => (
-            <Route key={c.path} path={c.path} element={c.element} />
-          ))}
-          <Route path="*" element={<GitTutorial />} />
-        </Routes>
-      </motion.div>
-    </AnimatePresence>
+    <ChapterContext.Provider value={chapterNav}>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={location.pathname}
+          variants={pageVariants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          transition={pageTransition}
+          style={{ width: "100%", minHeight: "100%" }}
+        >
+          <Routes location={location}>
+            {COURSES.map((c) => (
+              <Route key={c.path} path={c.path} element={c.element} />
+            ))}
+            <Route path="*" element={<GitTutorial />} />
+          </Routes>
+        </motion.div>
+      </AnimatePresence>
+    </ChapterContext.Provider>
   );
 }
 
