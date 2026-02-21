@@ -1,26 +1,60 @@
+<div align="center">
+
 # 5 Minutes Git — 互動式 Git 入門課程
 
 **在瀏覽器裡打 `git commit`，不用怕搞壞任何東西。**
 
-專為「會寫一點程式、但從沒碰過版本控制」的人設計的 10 堂互動課程。不用背指令——每一步都在解決一個你真的會遇到的問題。
+專為「會寫一點程式、但從沒碰過版本控制」的人設計的 10 堂互動課程。
+不用背指令——每一步都在解決一個你真的會遇到的問題。
 
-![課程截圖](./screenshots/preview.png)
+<a href="https://5-min-git.netlify.app/">
+  <img src="https://img.shields.io/badge/%F0%9F%9A%80_Live_Demo-點我體驗-blue?style=for-the-badge" alt="Live Demo" />
+</a>
+
+<p>
+  <img src="https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=white" alt="React" />
+  <img src="https://img.shields.io/badge/Vite-7-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite" />
+  <img src="https://img.shields.io/badge/Framer_Motion-12-FF0055?style=flat-square&logo=framer&logoColor=white" alt="Framer Motion" />
+  <img src="https://img.shields.io/badge/Netlify-deployed-00C7B7?style=flat-square&logo=netlify&logoColor=white" alt="Netlify" />
+</p>
+
+</div>
+
+<!-- 🎬 Hero 預覽圖：未來可替換為 screenshots/demo-hero.gif -->
+<p align="center">
+  <img src="./screenshots/preview.png" alt="課程預覽" width="800" />
+</p>
 
 ## 為什麼做這個？
 
 大部分 Git 教學不是要你讀一整本書，就是丟一堆指令叫你背。我們反過來——從「你剛做完一個專案，怕改壞又不敢亂動」這個真實場景出發，讓你在模擬終端機裡親手打指令、即時看結果，搞懂每個指令到底在幹嘛。
 
-## 課程特色
+## 功能亮點
 
-🖥️ **互動式模擬終端機** — 在安全環境裡動手練習，打錯了會提示你哪裡不對，不會搞壞任何東西
-
-📖 **情境驅動，不是指令清單** — 每堂課從一個具體問題開始：「怎麼把專案推上 GitHub？」「同事改了同一個檔案怎麼辦？」
-
-📝 **命名規範融入實作** — branch 怎麼命名、commit message 怎麼寫，直接在練習中學會，不是另外開一頁叫你背
-
-📈 **難度曲線經過設計** — 從個人使用到團隊協作，10 堂課層層遞進，不會突然跳級
-
-🔍 **Git 速查表** — 隨時可開啟的浮動面板，涵蓋 8 大類常用指令 + Conventional Commit Type 規範，支援關鍵字搜尋與一鍵複製
+<!-- 🎬 未來可將各欄的 preview.png 替換為對應的 GIF 動圖：
+     - demo-terminal.gif：互動終端機操作畫面
+     - demo-cheatsheet.gif：速查表面板搜尋與複製
+     - demo-lessons.gif：切換不同課程展示主題色
+-->
+<table>
+  <tr>
+    <td align="center" width="33%">
+      <img src="./screenshots/preview.png" width="100%" alt="互動式模擬終端機" />
+      <br /><b>🖥️ 互動式模擬終端機</b>
+      <br /><sub>在安全環境裡動手練習，打錯了會提示你哪裡不對，不會搞壞任何東西</sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="./screenshots/preview.png" width="100%" alt="Git 速查表" />
+      <br /><b>🔍 Git 速查表</b>
+      <br /><sub>浮動面板涵蓋 8 大類常用指令，支援關鍵字搜尋與一鍵複製</sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="./screenshots/preview.png" width="100%" alt="情境驅動學習" />
+      <br /><b>📖 情境驅動學習</b>
+      <br /><sub>每堂課從一個具體問題開始，10 堂課層層遞進</sub>
+    </td>
+  </tr>
+</table>
 
 ## 課程大綱
 
@@ -38,6 +72,10 @@
 | 10 | 實戰演練 | 從零到 GitHub 的三日旅程 |
 
 ## 快速開始
+
+👉 直接前往 **[線上版](https://5-min-git.netlify.app/)** 開始學習！
+
+或在本地執行：
 
 ```bash
 git clone https://github.com/hui0315/5-minutes-lesson.git
