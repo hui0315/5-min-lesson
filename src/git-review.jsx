@@ -660,7 +660,7 @@ function FinalScreen({ score, total }) {
       <div style={{
         display: "inline-block", fontSize: 48, fontWeight: 900, color: gradeColor,
         fontFamily: "'JetBrains Mono', monospace", lineHeight: 1,
-        textShadow: `0 0 40px ${gradeColor}44`,
+        textShadow: `0 0 40px ${hexToRgba(gradeColor, 0.267)}`,
       }}>{grade}</div>
       <div style={{ fontSize: 20, fontWeight: 800, marginTop: 8, color: "rgba(255,255,255,0.9)" }}>
         總複習完成！
