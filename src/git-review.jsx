@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { useChapterNav } from "./chapter-context";
 
 /* ══════════════════════════════════════════════
    COURSE DATA — 總複習：從基礎到實戰
@@ -52,7 +54,7 @@ const SECTIONS = [
         {
           name: "feature/*",
           desc: "每個新功能一條分支",
-          color: "#8B5CF6",
+          color: "#60A5FA",
           detail: "命名慣例如 feature/login、feature/search。開發完成後發 PR 合併回 develop。",
         },
         {
@@ -225,6 +227,53 @@ const SECTIONS = [
     },
   },
   {
+    id: "naming-challenge",
+    title: "命名大挑戰：你能全部答對嗎？",
+    emoji: "🏅",
+    type: "naming",
+    namingCategories: [
+      {
+        category: "Commit 訊息",
+        icon: "💬",
+        color: "#10B981",
+        challenges: [
+          { scenario: "你修復了導覽列在手機版跑版的 bug", good: "fix: resolve navbar overflow on mobile", bad: "fixed stuff", rule: "fix: 開頭 + 說明修了什麼" },
+          { scenario: "你新增了使用者頭像上傳功能", good: "feat: add avatar upload to profile page", bad: "update profile", rule: "feat: 開頭 + 描述新功能" },
+          { scenario: "你把重複的驗證邏輯抽成共用函式", good: "refactor: extract shared validation utils", bad: "clean up code", rule: "refactor: 說明重構了什麼" },
+        ],
+      },
+      {
+        category: "分支命名",
+        icon: "🌿",
+        color: "#F59E0B",
+        challenges: [
+          { scenario: "你要開發一個新的搜尋功能", good: "feature/search-filter", bad: "my-branch", rule: "feature/ + 功能描述（kebab-case）" },
+          { scenario: "線上的結帳流程壞了，需要緊急修復", good: "hotfix/checkout-crash", bad: "fix", rule: "hotfix/ + 問題描述" },
+          { scenario: "要更新 README 文件", good: "chore/update-readme", bad: "docs", rule: "chore/ + 任務描述" },
+        ],
+      },
+      {
+        category: "PR 標題",
+        icon: "📋",
+        color: "#60A5FA",
+        challenges: [
+          { scenario: "你完成了購物車的折扣碼功能，ticket 編號 #301", good: "feat: add discount code to cart (#301)", bad: "Cart changes", rule: "type: 描述 (#ticket)" },
+          { scenario: "你修了 API 回傳格式導致前端崩潰的 bug，ticket #455", good: "fix: correct API response format (#455)", bad: "Fix bug", rule: "fix: 具體說明 (#ticket)" },
+        ],
+      },
+      {
+        category: "版本號（Semver）",
+        icon: "🏷️",
+        color: "#3B82F6",
+        challenges: [
+          { scenario: "從 v1.4.2 出發，修復了兩個小 bug", good: "v1.4.3", bad: "v2.0.0", rule: "Bug 修復 → PATCH +1" },
+          { scenario: "從 v2.1.0 出發，新增了匯出 PDF 功能（不影響現有功能）", good: "v2.2.0", bad: "v3.0.0", rule: "新功能向下相容 → MINOR +1, PATCH 歸零" },
+          { scenario: "從 v3.2.1 出發，整個資料庫從 MySQL 換成 MongoDB，API 全部重寫", good: "v4.0.0", bad: "v3.3.0", rule: "不向下相容 → MAJOR +1, 其餘歸零" },
+        ],
+      },
+    ],
+  },
+  {
     id: "final",
     title: "🎓 總複習完成！",
     emoji: "🏆",
@@ -244,7 +293,7 @@ function CommandInput({ command, onComplete }) {
 
   useEffect(() => {
     setInput(""); setStatus("typing"); setShowHint(false);
-    setTimeout(() => { if (inputRef.current) inputRef.current.focus(); }, 100);
+    setTimeout(() => { if (inputRef.current) inputRef.current.focus({ preventScroll: true }); }, 100);
   }, [command.answer]);
 
   const normalize = (s) => s.trim().replace(/\s+/g, " ").replace(/[""'']/g, (c) => {
@@ -486,6 +535,101 @@ function InfoPage({ step }) {
 }
 
 /* ══════════════════════════════════════════════
+   NAMING CHALLENGE
+   ══════════════════════════════════════════════ */
+function NamingChallenge({ step, onQuizComplete }) {
+  const [revealed, setRevealed] = useState({});
+  const [categoryScores, setCategoryScores] = useState({});
+  const allCategories = step.namingCategories;
+
+  const totalChallenges = allCategories.reduce((sum, c) => sum + c.challenges.length, 0);
+  const totalCorrect = Object.values(categoryScores).reduce((sum, s) => sum + s, 0);
+
+  const handleReveal = (catIdx, chalIdx, isGood) => {
+    const key = `${catIdx}-${chalIdx}`;
+    if (revealed[key] !== undefined) return;
+    const correct = isGood;
+    setRevealed(p => ({ ...p, [key]: { picked: isGood, correct } }));
+    if (correct) setCategoryScores(p => ({ ...p, [catIdx]: (p[catIdx] || 0) + 1 }));
+  };
+
+  const allDone = Object.keys(revealed).length === totalChallenges;
+
+  useEffect(() => {
+    if (allDone && totalCorrect >= totalChallenges * 0.5) onQuizComplete?.();
+  }, [allDone, totalCorrect, totalChallenges, onQuizComplete]);
+
+  return (
+    <div>
+      <div style={{ padding: "14px 16px", background: "rgba(232,200,114,0.05)", borderLeft: "3px solid #E8C872", borderRadius: "0 10px 10px 0", fontSize: 13, color: "rgba(255,255,255,0.7)", lineHeight: 1.8, marginBottom: 16 }}>
+        <span style={{ fontWeight: 700, color: "#E8C872" }}>🎯 終極命名挑戰：</span>綜合前幾堂學到的所有命名規範。每題會給你「好的」和「壞的」兩個選項，選出正確的那個！
+      </div>
+
+      {allCategories.map((cat, catIdx) => (
+        <div key={catIdx} style={{ marginBottom: 20 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+            <span style={{ fontSize: 18 }}>{cat.icon}</span>
+            <span style={{ fontSize: 14, fontWeight: 700, color: "#E8C872" }}>{cat.category}</span>
+            <span style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", marginLeft: "auto", fontFamily: "'JetBrains Mono', monospace" }}>
+              {categoryScores[catIdx] || 0}/{cat.challenges.length}
+            </span>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {cat.challenges.map((chal, chalIdx) => {
+              const key = `${catIdx}-${chalIdx}`;
+              const result = revealed[key];
+              const shuffled = (catIdx + chalIdx) % 2 === 0
+                ? [{ text: chal.good, isGood: true }, { text: chal.bad, isGood: false }]
+                : [{ text: chal.bad, isGood: false }, { text: chal.good, isGood: true }];
+
+              return (
+                <div key={chalIdx} style={{ background: "rgba(0,0,0,0.2)", borderRadius: 10, padding: "12px 14px", border: `1px solid ${result ? (result.correct ? "rgba(16,185,129,0.2)" : "rgba(239,68,68,0.2)") : "rgba(255,255,255,0.05)"}` }}>
+                  <div style={{ fontSize: 12.5, color: "rgba(255,255,255,0.65)", marginBottom: 10, lineHeight: 1.6 }}>
+                    <span style={{ color: "#E8C872", fontWeight: 600 }}>情境：</span>{chal.scenario}
+                  </div>
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                    {shuffled.map((opt, oi) => {
+                      let bg = "rgba(255,255,255,0.03)", bc = "rgba(255,255,255,0.08)", tc = "rgba(255,255,255,0.6)";
+                      if (result) {
+                        if (opt.isGood) { bg = "rgba(16,185,129,0.1)"; bc = "rgba(16,185,129,0.3)"; tc = "#10B981"; }
+                        else { bg = "rgba(239,68,68,0.06)"; bc = "rgba(239,68,68,0.2)"; tc = "rgba(239,68,68,0.5)"; }
+                      }
+                      return (
+                        <button key={oi} onClick={() => handleReveal(catIdx, chalIdx, opt.isGood)}
+                          style={{ flex: 1, minWidth: 180, padding: "8px 12px", background: bg, border: `1px solid ${bc}`, borderRadius: 8, color: tc, fontFamily: "'JetBrains Mono', monospace", fontSize: 11.5, textAlign: "left", cursor: result ? "default" : "pointer", transition: "all 0.3s", lineHeight: 1.5 }}>
+                          {opt.text}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {result && (
+                    <div style={{ marginTop: 6, fontSize: 11, color: "rgba(255,255,255,0.35)", lineHeight: 1.6 }}>
+                      {result.correct ? "✅ " : "❌ "}<span style={{ color: "#E8C872" }}>{chal.rule}</span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+
+      {allDone && (
+        <div style={{ marginTop: 16, padding: "16px", background: totalCorrect >= totalChallenges * 0.8 ? "rgba(16,185,129,0.06)" : "rgba(245,158,11,0.06)", borderRadius: 12, border: `1px solid ${totalCorrect >= totalChallenges * 0.8 ? "rgba(16,185,129,0.15)" : "rgba(245,158,11,0.15)"}`, textAlign: "center" }}>
+          <div style={{ fontSize: 28, marginBottom: 6 }}>{totalCorrect >= totalChallenges * 0.8 ? "🎉" : "💪"}</div>
+          <div style={{ fontSize: 15, fontWeight: 700, color: totalCorrect >= totalChallenges * 0.8 ? "#10B981" : "#F59E0B" }}>
+            {totalCorrect}/{totalChallenges} 題正確
+          </div>
+          <div style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", marginTop: 4, lineHeight: 1.6 }}>
+            {totalCorrect >= totalChallenges * 0.8 ? "太厲害了！你已經掌握了 Git 命名規範！" : "繼續加油！好的命名習慣需要反覆練習才能內化。"}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════
    FINAL SCREEN
    ══════════════════════════════════════════════ */
 function FinalScreen({ score, total }) {
@@ -495,7 +639,10 @@ function FinalScreen({ score, total }) {
 
   const skills = [
     "Git Flow 團隊工作流程",
-    "Commit 訊息慣例",
+    "Commit 訊息慣例（feat / fix / refactor...）",
+    "分支命名規範（feature / hotfix / chore...）",
+    "PR 標題與描述撰寫",
+    "語意化版本號（Semantic Versioning）",
     "Clone → Branch → Commit → Push",
     "Stash 暫存與復原",
     "Rebase 與合併衝突處理",
@@ -531,11 +678,11 @@ function FinalScreen({ score, total }) {
         ))}
       </div>
       <div style={{
-        marginTop: 28, padding: "16px", background: "rgba(59,130,246,0.06)",
-        borderRadius: 12, border: "1px solid rgba(59,130,246,0.15)",
+        marginTop: 28, padding: "16px", background: "rgba(232,200,114,0.06)",
+        borderRadius: 12, border: "1px solid rgba(232,200,114,0.15)",
         fontSize: 13, color: "rgba(255,255,255,0.55)", lineHeight: 1.7,
       }}>
-        🚀 <strong style={{ color: "#60A5FA" }}>下一步建議：</strong>在真實專案中使用 Git Flow，嘗試為開源專案發一個 Pull Request，或是設定 CI/CD 自動化部署流程。
+        🚀 <strong style={{ color: "#E8C872" }}>下一步建議：</strong>在真實專案中使用 Git Flow，嘗試為開源專案發一個 Pull Request，或是設定 CI/CD 自動化部署流程。
       </div>
     </div>
   );
@@ -546,9 +693,12 @@ function FinalScreen({ score, total }) {
    ══════════════════════════════════════════════ */
 export default function GitReview() {
   const [currentStep, setCurrentStep] = useState(0);
+  useEffect(() => { window.scrollTo(0, 0); }, [currentStep]);
   const [termDone, setTermDone] = useState({});
   const [quizDone, setQuizDone] = useState({});
   const [score, setScore] = useState(0);
+  const navigate = useNavigate();
+  const { prevPath, nextPath } = useChapterNav();
 
   const step = SECTIONS[currentStep];
   const totalQuizzes = SECTIONS.filter((s) => s.quiz).length;
@@ -571,16 +721,16 @@ export default function GitReview() {
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{
               width: 38, height: 38, borderRadius: 10,
-              background: "linear-gradient(135deg, #F59E0B, #EF4444)",
+              background: "linear-gradient(135deg, #E8C872, #D4A843)",
               display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: 15, fontWeight: 900, color: "#fff", fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 15, fontWeight: 900, color: "#0D1117", fontFamily: "'JetBrains Mono', monospace",
             }}>G★</div>
             <div>
               <div style={{ fontSize: 15, fontWeight: 700 }}>Git 總複習：從觀念到實戰</div>
-              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>結合基礎 + 進階 · 情境式練習</div>
+              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>Git 課程系列 · 第九堂</div>
             </div>
           </div>
-          <div style={{ fontSize: 12, color: "#F59E0B", fontFamily: "'JetBrains Mono', monospace", background: "rgba(245,158,11,0.1)", padding: "4px 10px", borderRadius: 6 }}>
+          <div style={{ fontSize: 12, color: "#E8C872", fontFamily: "'JetBrains Mono', monospace", background: "rgba(232,200,114,0.1)", padding: "4px 10px", borderRadius: 6 }}>
             ⭐ {score}/{totalQuizzes}
           </div>
         </div>
@@ -590,8 +740,9 @@ export default function GitReview() {
           {SECTIONS.map((_, i) => (
             <div key={i} onClick={() => setCurrentStep(i)} style={{
               flex: 1, height: 4, borderRadius: 2, cursor: "pointer",
-              background: i <= currentStep ? "linear-gradient(90deg, #F59E0B, #EF4444)" : "rgba(255,255,255,0.06)",
+              background: i <= currentStep ? "linear-gradient(90deg, #E8C872, #D4A843)" : "rgba(255,255,255,0.06)",
               transition: "background 0.4s ease",
+              animation: i <= currentStep ? "goldGlow 3s ease-in-out infinite" : "none",
             }} />
           ))}
           <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginLeft: 8, fontFamily: "'JetBrains Mono', monospace", whiteSpace: "nowrap" }}>
@@ -609,7 +760,7 @@ export default function GitReview() {
             <span style={{ fontSize: 28 }}>{step.emoji}</span>
             <h2 style={{
               margin: 0, fontSize: 20, fontWeight: 900,
-              background: "linear-gradient(135deg, #F59E0B, #EF4444)",
+              background: "linear-gradient(135deg, #E8C872, #D4A843)",
               WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
             }}>{step.title}</h2>
           </div>
@@ -621,11 +772,11 @@ export default function GitReview() {
           {step.type === "scenario" && (
             <>
               <div style={{
-                padding: "14px 16px", background: "rgba(245,158,11,0.05)",
-                borderLeft: "3px solid #F59E0B", borderRadius: "0 10px 10px 0",
+                padding: "14px 16px", background: "rgba(232,200,114,0.05)",
+                borderLeft: "3px solid #E8C872", borderRadius: "0 10px 10px 0",
                 fontSize: 13, color: "rgba(255,255,255,0.7)", lineHeight: 1.8, marginBottom: 8,
               }}>
-                <span style={{ fontWeight: 700, color: "#F59E0B" }}>📖 情境：</span>{step.story}
+                <span style={{ fontWeight: 700, color: "#E8C872" }}>📖 情境：</span>{step.story}
               </div>
               <div style={{
                 padding: "14px 16px", background: "rgba(16,185,129,0.04)",
@@ -639,27 +790,25 @@ export default function GitReview() {
             </>
           )}
 
+          {/* === NAMING CHALLENGE === */}
+          {step.type === "naming" && <NamingChallenge step={step} onQuizComplete={handleQuizDone} />}
+
           {/* === FINAL PAGE === */}
           {step.type === "final" && <FinalScreen score={score} total={totalQuizzes} />}
         </div>
 
         {/* Navigation */}
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: 20, gap: 12 }}>
-          <button onClick={goPrev} disabled={currentStep === 0}
-            style={{
-              padding: "12px 24px", background: currentStep === 0 ? "rgba(255,255,255,0.02)" : "rgba(255,255,255,0.05)",
-              border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10,
-              color: currentStep === 0 ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.6)",
-              fontSize: 13, fontWeight: 600, cursor: currentStep === 0 ? "default" : "pointer",
-            }}>← 上一課</button>
-          <button onClick={goNext} disabled={currentStep === SECTIONS.length - 1}
-            style={{
-              padding: "12px 24px",
-              background: currentStep === SECTIONS.length - 1 ? "rgba(255,255,255,0.02)" : "linear-gradient(135deg, #F59E0B, #EF4444)",
-              border: "none", borderRadius: 10,
-              color: currentStep === SECTIONS.length - 1 ? "rgba(255,255,255,0.12)" : "#fff",
-              fontSize: 13, fontWeight: 700, cursor: currentStep === SECTIONS.length - 1 ? "default" : "pointer",
-            }}>下一課 →</button>
+          {currentStep === 0 ? (
+            prevPath ? <button onClick={() => navigate(prevPath)} style={{ padding: "12px 24px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.10)", borderRadius: 10, color: "rgba(255,255,255,0.5)", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>← 上一章</button> : <div />
+          ) : (
+            <button onClick={goPrev} style={{ padding: "12px 24px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10, color: "rgba(255,255,255,0.6)", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>← 上一課</button>
+          )}
+          {currentStep === SECTIONS.length - 1 ? (
+            nextPath ? <button onClick={() => navigate(nextPath)} style={{ padding: "12px 24px", background: "linear-gradient(135deg, #E8C872, #D4A843)", border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一章 →</button> : <div />
+          ) : (
+            <button onClick={goNext} style={{ padding: "12px 24px", background: "linear-gradient(135deg, #E8C872, #D4A843)", border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一課 →</button>
+          )}
         </div>
       </div>
     </div>

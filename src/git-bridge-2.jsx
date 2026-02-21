@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { useChapterNav } from "./chapter-context";
 
 const STEPS = [
   {
@@ -7,7 +9,7 @@ const STEPS = [
       { title: "Fast-Forward 合併", icon: "⏩", color: "#10B981",
         desc: "當目標分支沒有新的 commit 時，Git 直接把指標往前移。歷史是一條直線，最乾淨。",
         diagram: ["A ─ B ─ C (main)", "            └─ D ─ E (feature)", "合併後：", "A ─ B ─ C ─ D ─ E (main)"] },
-      { title: "Three-Way 合併", icon: "🔀", color: "#8B5CF6",
+      { title: "Three-Way 合併", icon: "🔀", color: "#E8C872",
         desc: "當兩邊都有新 commit 時，Git 會建立一個「合併 commit」把兩條線接起來。",
         diagram: ["A ─ B ─ C ─ F (main)", "        └─ D ─ E (feature)", "合併後：", "A ─ B ─ C ─ F ─ G (main)", "        └─ D ─ E ─┘"] },
     ],
@@ -21,7 +23,7 @@ const STEPS = [
   {
     id: "merge-vs-rebase", title: "merge vs rebase：兩種整合策略", emoji: "⚖️", type: "concept",
     conceptBlocks: [
-      { title: "git merge", icon: "🔀", color: "#3B82F6",
+      { title: "git merge", icon: "🔀", color: "#60A5FA",
         desc: "保留完整的分支歷史，建立合併節點。優點是歷史真實，缺點是歷史線會比較複雜。",
         points: ["✓ 不改寫歷史，安全", "✓ 適合已 push 到遠端的分支", "✓ 團隊協作的預設選擇", "✗ 歷史圖會有很多分叉"] },
       { title: "git rebase", icon: "📐", color: "#F59E0B",
@@ -72,9 +74,10 @@ const STEPS = [
       ] },
   },
   {
-    id: "tag-version", title: "版本標記：git tag", emoji: "🏷️", type: "scenario",
+    id: "tag-version", title: "版本標記：git tag 與語意化版本", emoji: "🏷️", type: "scenario",
     story: "專案要發布 v1.0.0 了！你需要為這個重要的 commit 打上標籤，方便未來隨時找到這個版本。",
     tip: "Tag 分兩種：輕量標籤只是指標；附註標籤（-a）包含作者、日期、訊息。正式發版用附註標籤。版本號慣例：v主版號.次版號.修訂號（Semantic Versioning）。",
+    semverDemo: true,
     commands: [
       { prompt: "為目前的 commit 建立一個附註標籤", answer: "git tag -a v1.0.0 -m \"Release version 1.0.0\"", output: "", hint: "tag -a 版本號 -m 訊息", flexible: true },
       { prompt: "查看所有標籤", answer: "git tag", output: "v0.1.0\nv0.2.0\nv1.0.0", hint: "直接輸入 git tag" },
@@ -136,9 +139,9 @@ function CommandInput({ command, onComplete }) {
   const [showHint, setShowHint] = useState(false);
   const [shakeKey, setShakeKey] = useState(0);
   const inputRef = useRef(null);
-  const accent = "#A78BFA";
+  const accent = "#E8C872";
 
-  useEffect(() => { setInput(""); setStatus("typing"); setShowHint(false); setTimeout(() => inputRef.current?.focus(), 100); }, [command.answer]);
+  useEffect(() => { setInput(""); setStatus("typing"); setShowHint(false); setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 100); }, [command.answer]);
 
   const normalize = (s) => s.trim().replace(/\s+/g, " ").replace(/[""'']/g, c => c === "\u201C" || c === "\u201D" ? '"' : c === "\u2018" || c === "\u2019" ? "'" : c);
 
@@ -161,7 +164,7 @@ function CommandInput({ command, onComplete }) {
         {status === "typing" && exp.split("").map((ch, i) => <span key={i} style={{ color: cc(i) }}>{ch}</span>)}
       </div>
       <div key={shakeKey} style={{ display: "flex", alignItems: "center", background: "rgba(0,0,0,0.3)", border: `1.5px solid ${bc}`, borderRadius: 8, padding: "0 12px", marginLeft: 24, transition: "border-color 0.3s", animation: status === "wrong" ? "shake 0.4s ease" : "none" }}>
-        <span style={{ color: "#10B981", fontFamily: "'JetBrains Mono', monospace", fontSize: 13, marginRight: 8 }}>$</span>
+        <span style={{ color: "#E8C872", fontFamily: "'JetBrains Mono', monospace", fontSize: 13, marginRight: 8 }}>$</span>
         <input ref={inputRef} value={input} onChange={e => status === "typing" && setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && input.trim() && checkAnswer()} disabled={status === "correct"} placeholder="輸入指令..." autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false} style={{ flex: 1, background: "transparent", border: "none", outline: "none", color: status === "correct" ? "#10B981" : status === "wrong" ? "#EF4444" : accent, fontFamily: "'JetBrains Mono', monospace", fontSize: 13, padding: "11px 0", caretColor: accent }} />
         {status === "correct" && <span style={{ color: "#10B981", fontSize: 14 }}>✓</span>}
         {status === "wrong" && <span style={{ color: "#EF4444", fontSize: 11 }}>再試一次</span>}
@@ -187,7 +190,7 @@ function TerminalSim({ commands, onAllComplete }) {
         {commands.slice(0, ci + 1).map((cmd, i) => (
           <div key={i} style={{ marginBottom: 12 }}>
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12 }}>
-              <span style={{ color: "#10B981" }}>$ </span><span style={{ color: "#A78BFA" }}>{cmd.answer}</span><span style={{ color: "#10B981", marginLeft: 8, fontSize: 11 }}>✓</span>
+              <span style={{ color: "#10B981" }}>$ </span><span style={{ color: "#E8C872" }}>{cmd.answer}</span><span style={{ color: "#10B981", marginLeft: 8, fontSize: 11 }}>✓</span>
             </div>
             {cmd.output && <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11.5, color: "rgba(255,255,255,0.35)", whiteSpace: "pre-wrap", marginTop: 3, lineHeight: 1.5 }}>{cmd.output}</div>}
           </div>
@@ -203,8 +206,8 @@ function Quiz({ quiz, onComplete }) {
   const [sel, setSel] = useState(null);
   const pick = (i) => { if (sel !== null) return; setSel(i); if (quiz.options[i].correct) setTimeout(onComplete, 700); };
   return (
-    <div style={{ margin: "20px 0 0", padding: "18px", background: "rgba(167,139,250,0.04)", borderRadius: 12, border: "1px solid rgba(167,139,250,0.12)" }}>
-      <div style={{ fontSize: 12.5, fontWeight: 700, color: "#A78BFA", marginBottom: 12 }}>💡 觀念確認</div>
+    <div style={{ margin: "20px 0 0", padding: "18px", background: "rgba(232,200,114,0.04)", borderRadius: 12, border: "1px solid rgba(232,200,114,0.12)" }}>
+      <div style={{ fontSize: 12.5, fontWeight: 700, color: "#E8C872", marginBottom: 12 }}>💡 觀念確認</div>
       <div style={{ fontSize: 13.5, color: "rgba(255,255,255,0.85)", marginBottom: 12, lineHeight: 1.6 }}>{quiz.question}</div>
       <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
         {quiz.options.map((o, i) => {
@@ -244,6 +247,68 @@ function ConceptPage({ step }) {
   );
 }
 
+function SemverDemo() {
+  const scenarios = [
+    { desc: "修復了登入頁面的一個 CSS 跑版 bug", from: "v1.2.3", answers: ["v1.2.4"], type: "PATCH", explanation: "Bug 修復 → 修訂號 +1" },
+    { desc: "新增了「忘記密碼」功能，原有功能不受影響", from: "v1.2.4", answers: ["v1.3.0"], type: "MINOR", explanation: "新增功能且向下相容 → 次版號 +1，修訂號歸零" },
+    { desc: "把整個 API 從 REST 改成 GraphQL，舊的 endpoint 全部廢棄", from: "v1.3.0", answers: ["v2.0.0"], type: "MAJOR", explanation: "不向下相容的重大改動 → 主版號 +1，其餘歸零" },
+    { desc: "新增深色模式切換功能，不影響現有功能", from: "v2.0.0", answers: ["v2.1.0"], type: "MINOR", explanation: "新功能且向下相容 → 次版號 +1" },
+    { desc: "修復了購物車金額計算錯誤", from: "v2.1.0", answers: ["v2.1.1"], type: "PATCH", explanation: "Bug 修復 → 修訂號 +1" },
+  ];
+  const [inputs, setInputs] = useState({});
+  const [results, setResults] = useState({});
+
+  const checkAnswer = (i) => {
+    const val = (inputs[i] || "").trim().toLowerCase();
+    const correct = scenarios[i].answers.includes(val);
+    setResults(p => ({ ...p, [i]: correct }));
+  };
+
+  const typeColor = { PATCH: "#10B981", MINOR: "#60A5FA", MAJOR: "#EF4444" };
+
+  return (
+    <div style={{ margin: "16px 0", padding: "18px", background: "rgba(232,200,114,0.04)", borderRadius: 12, border: "1px solid rgba(232,200,114,0.12)" }}>
+      <div style={{ fontSize: 13, fontWeight: 700, color: "#E8C872", marginBottom: 6 }}>🏷️ Semantic Versioning 練習</div>
+      <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", marginBottom: 14, lineHeight: 1.6 }}>
+        格式：v<span style={{ color: "#EF4444" }}>MAJOR</span>.<span style={{ color: "#60A5FA" }}>MINOR</span>.<span style={{ color: "#10B981" }}>PATCH</span>
+        — 不相容改動 / 新功能 / Bug修復
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        {scenarios.map((s, i) => (
+          <div key={i} style={{ background: "rgba(0,0,0,0.2)", borderRadius: 10, padding: "12px 14px", border: `1px solid ${results[i] !== undefined ? (results[i] ? "rgba(16,185,129,0.3)" : "rgba(239,68,68,0.3)") : "rgba(255,255,255,0.06)"}` }}>
+            <div style={{ fontSize: 12.5, color: "rgba(255,255,255,0.7)", lineHeight: 1.6, marginBottom: 8 }}>
+              <span style={{ color: typeColor[s.type], fontWeight: 700, fontSize: 11, marginRight: 6, padding: "1px 6px", background: `${typeColor[s.type]}15`, borderRadius: 4 }}>{s.type}</span>
+              {s.desc}
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: "rgba(255,255,255,0.4)" }}>{s.from} →</span>
+              {results[i] === undefined ? (
+                <>
+                  <input value={inputs[i] || ""} onChange={e => setInputs(p => ({ ...p, [i]: e.target.value }))}
+                    onKeyDown={e => e.key === "Enter" && checkAnswer(i)}
+                    placeholder="v?.?.?" autoComplete="off"
+                    style={{ width: 80, padding: "5px 8px", background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 6, color: "#E8C872", fontFamily: "'JetBrains Mono', monospace", fontSize: 12, outline: "none" }} />
+                  <button onClick={() => checkAnswer(i)} style={{ padding: "5px 12px", fontSize: 11, background: "rgba(232,200,114,0.1)", border: "1px solid rgba(232,200,114,0.2)", borderRadius: 6, color: "#E8C872", cursor: "pointer", fontFamily: "inherit" }}>確認</button>
+                </>
+              ) : (
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: results[i] ? "#10B981" : "#EF4444" }}>
+                  {results[i] ? `${s.answers[0]} ✅` : `${inputs[i]} ✗ → 正確答案：${s.answers[0]}`}
+                </span>
+              )}
+            </div>
+            {results[i] !== undefined && <div style={{ marginTop: 4, fontSize: 11, color: "rgba(255,255,255,0.35)", fontStyle: "italic" }}>{s.explanation}</div>}
+          </div>
+        ))}
+      </div>
+      {Object.keys(results).length === scenarios.length && (
+        <div style={{ marginTop: 12, padding: "10px 14px", background: "rgba(232,200,114,0.06)", borderRadius: 8, fontSize: 12, color: "rgba(255,255,255,0.55)", lineHeight: 1.7 }}>
+          💡 <strong style={{ color: "#E8C872" }}>記住口訣：</strong>壞了修補 PATCH、加新的 MINOR、砍舊的 MAJOR。版本號不只是數字，它是對使用者的「承諾」。
+        </div>
+      )}
+    </div>
+  );
+}
+
 function ConflictDemo() {
   const [stage, setStage] = useState(0);
   const stages = [
@@ -253,10 +318,10 @@ function ConflictDemo() {
   return (
     <div style={{ margin: "16px 0" }}>
       <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
-        {stages.map((s, i) => <button key={i} onClick={() => setStage(i)} style={{ padding: "6px 14px", fontSize: 12, fontFamily: "'JetBrains Mono', monospace", cursor: "pointer", background: stage === i ? "rgba(167,139,250,0.15)" : "rgba(255,255,255,0.03)", border: `1px solid ${stage === i ? "#A78BFA" : "rgba(255,255,255,0.06)"}`, borderRadius: 6, color: stage === i ? "#A78BFA" : "rgba(255,255,255,0.4)", transition: "all 0.3s" }}>{s.label}</button>)}
+        {stages.map((s, i) => <button key={i} onClick={() => setStage(i)} style={{ padding: "6px 14px", fontSize: 12, fontFamily: "'JetBrains Mono', monospace", cursor: "pointer", background: stage === i ? "rgba(232,200,114,0.15)" : "rgba(255,255,255,0.03)", border: `1px solid ${stage === i ? "#E8C872" : "rgba(255,255,255,0.06)"}`, borderRadius: 6, color: stage === i ? "#E8C872" : "rgba(255,255,255,0.4)", transition: "all 0.3s" }}>{s.label}</button>)}
       </div>
       <div style={{ background: "#060A10", borderRadius: 10, padding: "16px", border: "1px solid rgba(255,255,255,0.06)", fontFamily: "'JetBrains Mono', monospace", fontSize: 12, whiteSpace: "pre-wrap", lineHeight: 1.7, color: stage === 0 ? "rgba(255,255,255,0.6)" : "#10B981" }}>{stages[stage].content}</div>
-      {stage === 0 && <div style={{ marginTop: 8, fontSize: 12, color: "rgba(255,255,255,0.4)", lineHeight: 1.7 }}><span style={{ color: "#EF4444" }}>{"<<<<<<<" }</span> 到 <span style={{ color: "#F59E0B" }}>{"======="}</span> 是<strong style={{ color: "#3B82F6" }}>你的修改</strong>，<span style={{ color: "#F59E0B" }}>{"======="}</span> 到 <span style={{ color: "#10B981" }}>{">>>>>>>"}</span> 是<strong style={{ color: "#8B5CF6" }}>對方的修改</strong></div>}
+      {stage === 0 && <div style={{ marginTop: 8, fontSize: 12, color: "rgba(255,255,255,0.4)", lineHeight: 1.7 }}><span style={{ color: "#EF4444" }}>{"<<<<<<<" }</span> 到 <span style={{ color: "#F59E0B" }}>{"======="}</span> 是<strong style={{ color: "#60A5FA" }}>你的修改</strong>，<span style={{ color: "#F59E0B" }}>{"======="}</span> 到 <span style={{ color: "#10B981" }}>{">>>>>>>"}</span> 是<strong style={{ color: "#E8C872" }}>對方的修改</strong></div>}
     </div>
   );
 }
@@ -264,10 +329,13 @@ function ConflictDemo() {
 /* ── MAIN ── */
 export default function GitBridge2() {
   const [cur, setCur] = useState(0);
+  useEffect(() => { window.scrollTo(0, 0); }, [cur]);
   const [termDone, setTermDone] = useState({});
   const [quizDone, setQuizDone] = useState({});
   const [score, setScore] = useState(0);
-  const step = STEPS[cur], total = STEPS.length, accent = "#A78BFA";
+  const navigate = useNavigate();
+  const { prevPath, nextPath } = useChapterNav();
+  const step = STEPS[cur], total = STEPS.length, accent = "#E8C872";
   const handleTermDone = useCallback(() => setTermDone(p => ({ ...p, [cur]: true })), [cur]);
   const handleQuizDone = () => { if (!quizDone[cur]) { setQuizDone(p => ({ ...p, [cur]: true })); setScore(s => s + 1); } };
 
@@ -276,37 +344,46 @@ export default function GitBridge2() {
       <div style={{ width: "100%", maxWidth: 900 }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ width: 38, height: 38, borderRadius: 10, background: `linear-gradient(135deg, ${accent}, #7C3AED)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 900, color: "#fff", fontFamily: "'JetBrains Mono', monospace" }}>4</div>
-            <div><div style={{ fontSize: 15, fontWeight: 700 }}>銜接二：合併、衝突與團隊協作</div><div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>Git 課程系列 · 第四堂</div></div>
+            <div style={{ width: 38, height: 38, borderRadius: 10, background: `linear-gradient(135deg, #E8C872, #D4A843)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 900, color: "#0D1117", fontFamily: "'JetBrains Mono', monospace" }}>6</div>
+            <div><div style={{ fontSize: 15, fontWeight: 700 }}>合併進階：衝突處理與版本標記</div><div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>Git 課程系列 · 第六堂</div></div>
           </div>
           <div style={{ fontSize: 12, color: accent, fontFamily: "'JetBrains Mono', monospace", background: `${accent}15`, padding: "4px 10px", borderRadius: 6 }}>⭐ {score}/{total}</div>
         </div>
         <div style={{ display: "flex", gap: 4, alignItems: "center", marginBottom: 28 }}>
-          {STEPS.map((_, i) => <div key={i} onClick={() => setCur(i)} style={{ flex: 1, height: 4, borderRadius: 2, cursor: "pointer", background: i <= cur ? `linear-gradient(90deg, ${accent}, #7C3AED)` : "rgba(255,255,255,0.06)", transition: "background 0.4s" }} />)}
+          {STEPS.map((_, i) => <div key={i} onClick={() => setCur(i)} style={{ flex: 1, height: 4, borderRadius: 2, cursor: "pointer", background: i <= cur ? `linear-gradient(90deg, #E8C872, #D4A843)` : "rgba(255,255,255,0.06)", transition: "background 0.4s" }} />)}
           <span style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", marginLeft: 8, fontFamily: "'JetBrains Mono', monospace", whiteSpace: "nowrap" }}>{cur + 1}/{total}</span>
         </div>
         <div style={{ background: "rgba(255,255,255,0.015)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 16, padding: "26px 22px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
             <span style={{ fontSize: 28 }}>{step.emoji}</span>
-            <h2 style={{ margin: 0, fontSize: 20, fontWeight: 900, background: `linear-gradient(135deg, ${accent}, #7C3AED)`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{step.title}</h2>
+            <h2 style={{ margin: 0, fontSize: 20, fontWeight: 900, background: `linear-gradient(135deg, #E8C872, #D4A843)`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{step.title}</h2>
           </div>
           {step.type === "concept" && <ConceptPage step={step} />}
           {step.type === "scenario" && (<>
-            <div style={{ padding: "14px 16px", background: `${accent}06`, borderLeft: `3px solid ${accent}`, borderRadius: "0 10px 10px 0", fontSize: 13, color: "rgba(255,255,255,0.7)", lineHeight: 1.8, marginBottom: 8 }}><span style={{ fontWeight: 700, color: accent }}>📖 情境：</span>{step.story}</div>
+            <div style={{ padding: "14px 16px", background: `rgba(232,200,114,0.04)`, borderLeft: `3px solid #E8C872`, borderRadius: "0 10px 10px 0", fontSize: 13, color: "rgba(255,255,255,0.7)", lineHeight: 1.8, marginBottom: 8 }}><span style={{ fontWeight: 700, color: "#E8C872" }}>📖 情境：</span>{step.story}</div>
             <div style={{ padding: "14px 16px", background: "rgba(16,185,129,0.04)", borderLeft: "3px solid #10B981", borderRadius: "0 10px 10px 0", fontSize: 12.5, color: "rgba(255,255,255,0.5)", lineHeight: 1.8, marginBottom: 4 }}><span style={{ fontWeight: 700, color: "#10B981" }}>💼 實務觀點：</span>{step.tip}</div>
             {step.conflictDemo && <ConflictDemo />}
+            {step.semverDemo && <SemverDemo />}
             <TerminalSim key={cur} commands={step.commands} onAllComplete={handleTermDone} />
           </>)}
           <Quiz key={`q-${cur}`} quiz={step.quiz} onComplete={handleQuizDone} />
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: 20, gap: 12 }}>
-          <button onClick={() => cur > 0 && setCur(s => s - 1)} disabled={cur === 0} style={{ padding: "12px 24px", background: cur === 0 ? "rgba(255,255,255,0.02)" : "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, color: cur === 0 ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.6)", fontSize: 13, fontWeight: 600, cursor: cur === 0 ? "default" : "pointer" }}>← 上一課</button>
-          <button onClick={() => cur < total - 1 && setCur(s => s + 1)} disabled={cur === total - 1} style={{ padding: "12px 24px", background: cur === total - 1 ? "rgba(255,255,255,0.02)" : `linear-gradient(135deg, ${accent}, #7C3AED)`, border: "none", borderRadius: 10, color: cur === total - 1 ? "rgba(255,255,255,0.12)" : "#fff", fontSize: 13, fontWeight: 700, cursor: cur === total - 1 ? "default" : "pointer" }}>下一課 →</button>
+          {cur === 0 ? (
+            prevPath ? <button onClick={() => navigate(prevPath)} style={{ padding: "12px 24px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, color: "rgba(255,255,255,0.6)", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>← 上一章</button> : <div />
+          ) : (
+            <button onClick={() => setCur(s => s - 1)} style={{ padding: "12px 24px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, color: "rgba(255,255,255,0.6)", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>← 上一課</button>
+          )}
+          {cur === total - 1 ? (
+            nextPath ? <button onClick={() => navigate(nextPath)} style={{ padding: "12px 24px", background: "linear-gradient(135deg, #E8C872, #D4A843)", border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一章 →</button> : <div />
+          ) : (
+            <button onClick={() => setCur(s => s + 1)} style={{ padding: "12px 24px", background: `linear-gradient(135deg, #E8C872, #D4A843)`, border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一課 →</button>
+          )}
         </div>
         {cur === total - 1 && quizDone[cur] && (
-          <div style={{ marginTop: 24, textAlign: "center", padding: "24px", background: `${accent}08`, border: `1px solid ${accent}22`, borderRadius: 14 }}>
+          <div style={{ marginTop: 24, textAlign: "center", padding: "24px", background: `rgba(232,200,114,0.08)`, border: `1px solid rgba(232,200,114,0.22)`, borderRadius: 14 }}>
             <div style={{ fontSize: 32, marginBottom: 8 }}>🎉</div>
-            <div style={{ fontSize: 17, fontWeight: 800, color: accent, marginBottom: 6 }}>銜接二完成！</div>
+            <div style={{ fontSize: 17, fontWeight: 800, color: "#E8C872", marginBottom: 6 }}>銜接二完成！</div>
             <div style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", lineHeight: 1.7 }}>你已掌握合併、衝突處理、rebase、tag 和 bisect。<br />接下來進入指令總覽與比較！</div>
           </div>
         )}

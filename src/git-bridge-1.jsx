@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { useChapterNav } from "./chapter-context";
 
 /* ══════════════════════════════════════════════
-   銜接一：Git 遠端與協作基礎
+   團隊協作：遠端與協作基礎
    ══════════════════════════════════════════════ */
 
 const STEPS = [
@@ -18,7 +20,7 @@ const STEPS = [
       },
       {
         title: "GitHub / GitLab / Bitbucket",
-        color: "#8B5CF6",
+        color: "#E8C872",
         content: "這些平台提供遠端儲存庫的託管服務。Git 是工具，它們是存放 Git 儲存庫的「雲端空間」。就像 Word 是工具，Google Drive 是存放文件的地方。",
       },
     ],
@@ -162,6 +164,38 @@ const STEPS = [
       ],
     },
   },
+  {
+    id: "pr-naming",
+    title: "Pull Request：命名與協作禮儀",
+    emoji: "📋",
+    type: "concept",
+    conceptBlocks: [
+      {
+        title: "什麼是 Pull Request（PR）？",
+        color: "#E8C872",
+        content: "Push 只是把程式碼推上遠端，但不會自動合併到主分支。你需要發一個 Pull Request（PR），請隊友幫你審查（Code Review）後才合併。PR 是團隊協作的核心流程。",
+      },
+      {
+        title: "PR 標題命名慣例",
+        color: "#3B82F6",
+        content: "好的 PR 標題跟 commit 一樣遵循語意化格式，但要更完整。格式：「type: 簡短描述（#ticket）」。例如：feat: add shopping cart (#123)、fix: resolve payment timeout (#456)。",
+      },
+      {
+        title: "PR 描述該寫什麼？",
+        color: "#10B981",
+        content: "三個必寫項目：1) What — 這個 PR 做了什麼（1-2 句話）、2) Why — 為什麼要做這個改動、3) How to test — 審查者如何測試你的修改。這不只是禮貌，是讓團隊有效率的關鍵。",
+      },
+    ],
+    prNamingDemo: true,
+    quiz: {
+      question: "以下哪個是最好的 PR 標題？",
+      options: [
+        { text: "Update code", correct: false },
+        { text: "feat: add user profile avatar upload (#234)", correct: true },
+        { text: "I fixed the thing that was broken yesterday", correct: false },
+      ],
+    },
+  },
 ];
 
 /* ── Shared Components ── */
@@ -174,7 +208,7 @@ function CommandInput({ command, onComplete }) {
 
   useEffect(() => {
     setInput(""); setStatus("typing"); setShowHint(false);
-    setTimeout(() => { if (inputRef.current) inputRef.current.focus(); }, 100);
+    setTimeout(() => { if (inputRef.current) inputRef.current.focus({ preventScroll: true }); }, 100);
   }, [command.answer]);
 
   const normalize = (s) => s.trim().replace(/\s+/g, " ").replace(/[""'']/g, (c) => ({ "\u201C": '"', "\u201D": '"', "\u2018": "'", "\u2019": "'" }[c] || c));
@@ -284,6 +318,49 @@ function ConceptBlocks({ blocks }) {
   );
 }
 
+function PRNamingDemo() {
+  const [selected, setSelected] = useState({});
+  const examples = [
+    { pr: "fix stuff", good: false, why: "太模糊，沒有說明修了什麼" },
+    { pr: "feat: add dark mode toggle (#89)", good: true, why: "語意清楚，有 ticket 編號" },
+    { pr: "update", good: false, why: "完全沒有資訊量" },
+    { pr: "fix: resolve crash on empty cart (#102)", good: true, why: "明確說明修了什麼 bug" },
+    { pr: "Changes", good: false, why: "不知道改了什麼" },
+    { pr: "refactor: extract auth middleware (#67)", good: true, why: "說明重構的內容" },
+  ];
+  return (
+    <div style={{ margin: "16px 0", padding: "18px", background: "rgba(232,200,114,0.04)", borderRadius: 12, border: "1px solid rgba(232,200,114,0.12)" }}>
+      <div style={{ fontSize: 13, fontWeight: 700, color: "#E8C872", marginBottom: 12 }}>🎯 PR 命名判斷練習：點擊判斷好壞</div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        {examples.map((ex, i) => {
+          const answered = selected[i] !== undefined;
+          const correct = selected[i] === ex.good;
+          return (
+            <div key={i} style={{ background: "rgba(0,0,0,0.2)", borderRadius: 10, padding: "12px 14px", border: `1px solid ${answered ? (correct ? "rgba(16,185,129,0.3)" : "rgba(239,68,68,0.3)") : "rgba(255,255,255,0.06)"}`, transition: "all 0.3s" }}>
+              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12.5, color: "rgba(255,255,255,0.75)", marginBottom: 8 }}>{ex.pr}</div>
+              {!answered ? (
+                <div style={{ display: "flex", gap: 8 }}>
+                  <button onClick={() => setSelected(p => ({ ...p, [i]: true }))} style={{ padding: "5px 14px", fontSize: 11.5, background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)", borderRadius: 6, color: "#10B981", cursor: "pointer", fontFamily: "inherit" }}>👍 好</button>
+                  <button onClick={() => setSelected(p => ({ ...p, [i]: false }))} style={{ padding: "5px 14px", fontSize: 11.5, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 6, color: "#EF4444", cursor: "pointer", fontFamily: "inherit" }}>👎 壞</button>
+                </div>
+              ) : (
+                <div style={{ fontSize: 11.5, color: correct ? "#10B981" : "#EF4444", lineHeight: 1.6 }}>
+                  {correct ? "✅ 正確！" : `❌ 這其實是${ex.good ? "好的" : "壞的"}命名。`} {ex.why}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+      {Object.keys(selected).length === examples.length && (
+        <div style={{ marginTop: 12, padding: "10px 14px", background: "rgba(232,200,114,0.06)", borderRadius: 8, fontSize: 12, color: "rgba(255,255,255,0.55)", lineHeight: 1.7 }}>
+          💡 <strong style={{ color: "#E8C872" }}>記住公式：</strong>type: 簡短動詞描述 (#ticket)。好的 PR 標題讓審查者一眼就知道這個 PR 在做什麼。
+        </div>
+      )}
+    </div>
+  );
+}
+
 function RemoteDiagram({ diagram }) {
   return (
     <div style={{ margin: "20px 0", display: "flex", alignItems: "center", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
@@ -298,8 +375,8 @@ function RemoteDiagram({ diagram }) {
           <div key={i} style={{ fontSize: 11, color: "#E8C872", fontFamily: "'JetBrains Mono', monospace", whiteSpace: "nowrap" }}>{b}</div>
         ))}
       </div>
-      <div style={{ background: "rgba(139,92,246,0.06)", border: "1px solid rgba(139,92,246,0.2)", borderRadius: 12, padding: "14px 16px", minWidth: 150 }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: "#8B5CF6", marginBottom: 10, textAlign: "center" }}>☁️ 遠端</div>
+      <div style={{ background: "rgba(232,200,114,0.06)", border: "1px solid rgba(232,200,114,0.2)", borderRadius: 12, padding: "14px 16px", minWidth: 150 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: "#E8C872", marginBottom: 10, textAlign: "center" }}>☁️ 遠端</div>
         {diagram.remote.map((r, i) => (
           <div key={i} style={{ fontSize: 11.5, color: "rgba(255,255,255,0.55)", padding: "4px 8px", background: "rgba(255,255,255,0.04)", borderRadius: 6, marginBottom: 4, textAlign: "center", fontFamily: "'JetBrains Mono', monospace" }}>{r}</div>
         ))}
@@ -313,9 +390,12 @@ function RemoteDiagram({ diagram }) {
    ══════════════════════════════════════════════ */
 export default function GitBridge1() {
   const [currentStep, setCurrentStep] = useState(0);
+  useEffect(() => { window.scrollTo(0, 0); }, [currentStep]);
   const [termDone, setTermDone] = useState({});
   const [quizDone, setQuizDone] = useState({});
   const [score, setScore] = useState(0);
+  const navigate = useNavigate();
+  const { prevPath, nextPath } = useChapterNav();
 
   const step = STEPS[currentStep];
   const goNext = () => { if (currentStep < STEPS.length - 1) setCurrentStep(s => s + 1); };
@@ -328,27 +408,28 @@ export default function GitBridge1() {
       <div style={{ width: "100%", maxWidth: 900 }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ width: 38, height: 38, borderRadius: 10, background: "linear-gradient(135deg, #3B82F6, #8B5CF6)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, fontWeight: 900, color: "#fff", fontFamily: "'JetBrains Mono', monospace" }}>G3</div>
+            <div style={{ width: 38, height: 38, borderRadius: 10, background: "linear-gradient(135deg, #E8C872, #D4A843)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, fontWeight: 900, color: "#0D1117", fontFamily: "'JetBrains Mono', monospace" }}>5</div>
             <div>
-              <div style={{ fontSize: 15, fontWeight: 700 }}>銜接一：遠端與協作基礎</div>
-              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>從本地走向團隊協作</div>
+              <div style={{ fontSize: 15, fontWeight: 700 }}>團隊協作：遠端與協作基礎</div>
+              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>Git 課程系列 · 第五堂</div>
             </div>
           </div>
-          <div style={{ fontSize: 12, color: "#8B5CF6", fontFamily: "'JetBrains Mono', monospace", background: "rgba(139,92,246,0.1)", padding: "4px 10px", borderRadius: 6 }}>⭐ {score}/{STEPS.length}</div>
+          <div style={{ fontSize: 12, color: "#E8C872", fontFamily: "'JetBrains Mono', monospace", background: "rgba(232,200,114,0.1)", padding: "4px 10px", borderRadius: 6 }}>⭐ {score}/{STEPS.length}</div>
         </div>
 
         <div style={{ display: "flex", gap: 4, alignItems: "center", marginBottom: 28 }}>
-          {STEPS.map((_, i) => <div key={i} style={{ flex: 1, height: 4, borderRadius: 2, background: i <= currentStep ? "linear-gradient(90deg, #3B82F6, #8B5CF6)" : "rgba(255,255,255,0.06)", transition: "background 0.4s" }} />)}
+          {STEPS.map((_, i) => <div key={i} style={{ flex: 1, height: 4, borderRadius: 2, background: i <= currentStep ? "linear-gradient(90deg, #E8C872, #D4A843)" : "rgba(255,255,255,0.06)", transition: "background 0.4s" }} />)}
           <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginLeft: 8, fontFamily: "'JetBrains Mono', monospace", whiteSpace: "nowrap" }}>{currentStep + 1}/{STEPS.length}</span>
         </div>
 
         <div style={{ background: "rgba(255,255,255,0.015)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 16, padding: "26px 22px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
             <span style={{ fontSize: 28 }}>{step.emoji}</span>
-            <h2 style={{ margin: 0, fontSize: 20, fontWeight: 900, background: "linear-gradient(135deg, #60A5FA, #A78BFA)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{step.title}</h2>
+            <h2 style={{ margin: 0, fontSize: 20, fontWeight: 900, background: "linear-gradient(135deg, #E8C872, #D4A843)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{step.title}</h2>
           </div>
 
           {step.conceptBlocks && <ConceptBlocks blocks={step.conceptBlocks} />}
+          {step.prNamingDemo && <PRNamingDemo />}
           {step.diagram && <RemoteDiagram diagram={step.diagram} />}
           {step.explanation && <div style={{ padding: "14px 16px", background: "rgba(59,130,246,0.04)", borderLeft: "3px solid #3B82F6", borderRadius: "0 10px 10px 0", fontSize: 12.5, color: "rgba(255,255,255,0.6)", lineHeight: 1.8, margin: "12px 0" }}>{step.explanation}</div>}
           {step.story && <div style={{ padding: "14px 16px", background: "rgba(245,158,11,0.05)", borderLeft: "3px solid #F59E0B", borderRadius: "0 10px 10px 0", fontSize: 13, color: "rgba(255,255,255,0.7)", lineHeight: 1.8, marginBottom: 8 }}><span style={{ fontWeight: 700, color: "#F59E0B" }}>📖 情境：</span>{step.story}</div>}
@@ -358,8 +439,16 @@ export default function GitBridge1() {
         </div>
 
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: 20, gap: 12 }}>
-          <button onClick={goPrev} disabled={currentStep === 0} style={{ padding: "12px 24px", background: currentStep === 0 ? "rgba(255,255,255,0.02)" : "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10, color: currentStep === 0 ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.6)", fontSize: 13, fontWeight: 600, cursor: currentStep === 0 ? "default" : "pointer" }}>← 上一課</button>
-          <button onClick={goNext} disabled={currentStep === STEPS.length - 1} style={{ padding: "12px 24px", background: currentStep === STEPS.length - 1 ? "rgba(255,255,255,0.02)" : "linear-gradient(135deg, #60A5FA, #A78BFA)", border: "none", borderRadius: 10, color: currentStep === STEPS.length - 1 ? "rgba(255,255,255,0.12)" : "#fff", fontSize: 13, fontWeight: 700, cursor: currentStep === STEPS.length - 1 ? "default" : "pointer" }}>下一課 →</button>
+          {currentStep === 0 ? (
+            prevPath ? <button onClick={() => navigate(prevPath)} style={{ padding: "12px 24px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.10)", borderRadius: 10, color: "rgba(255,255,255,0.5)", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>← 上一章</button> : <div />
+          ) : (
+            <button onClick={goPrev} style={{ padding: "12px 24px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10, color: "rgba(255,255,255,0.6)", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>← 上一課</button>
+          )}
+          {currentStep === STEPS.length - 1 ? (
+            nextPath ? <button onClick={() => navigate(nextPath)} style={{ padding: "12px 24px", background: "linear-gradient(135deg, #E8C872, #D4A843)", border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一章 →</button> : <div />
+          ) : (
+            <button onClick={goNext} style={{ padding: "12px 24px", background: "linear-gradient(135deg, #E8C872, #D4A843)", border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一課 →</button>
+          )}
         </div>
       </div>
     </div>

@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { useChapterNav } from "./chapter-context";
 
 /* ─────────────────────────────────────────────
    COURSE DATA
@@ -246,7 +248,7 @@ function CommandInput({ command, onComplete }) {
     setInput("");
     setStatus("typing");
     setShowHint(false);
-    if (inputRef.current) inputRef.current.focus();
+    if (inputRef.current) inputRef.current.focus({ preventScroll: true });
   }, [command.answer]);
 
   const normalize = (s) => s.trim().replace(/\s+/g, " ").replace(/[""'']/g, (c) => {
@@ -666,9 +668,12 @@ function ProgressBar({ current, total, score }) {
    ───────────────────────────────────────────── */
 export default function GitAdvanced() {
   const [currentStep, setCurrentStep] = useState(0);
+  useEffect(() => { window.scrollTo(0, 0); }, [currentStep]);
   const [terminalDone, setTerminalDone] = useState({});
   const [quizDone, setQuizDone] = useState({});
   const [score, setScore] = useState(0);
+  const navigate = useNavigate();
+  const { prevPath, nextPath } = useChapterNav();
 
   const step = STEPS[currentStep];
 
@@ -712,26 +717,26 @@ export default function GitAdvanced() {
             <div
               style={{
                 width: 38, height: 38, borderRadius: 10,
-                background: "linear-gradient(135deg, #3B82F6, #1D4ED8)",
+                background: "linear-gradient(135deg, #E8C872, #D4A843)",
                 display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 16, fontWeight: 900, color: "#fff",
+                fontSize: 16, fontWeight: 900, color: "#0D1117",
                 fontFamily: "'JetBrains Mono', monospace",
               }}
             >
-              G+
+              7
             </div>
             <div>
               <div style={{ fontSize: 15, fontWeight: 700 }}>Git 版本控制進階</div>
               <div style={{ fontSize: 11, color: "rgba(255,255,255,0.35)" }}>
-                互動實戰課程 · 親手輸入每一條指令
+                Git 課程系列 · 第七堂
               </div>
             </div>
           </div>
           <div
             style={{
-              fontSize: 12, color: "#3B82F6",
+              fontSize: 12, color: "#E8C872",
               fontFamily: "'JetBrains Mono', monospace",
-              background: "rgba(59,130,246,0.1)",
+              background: "rgba(232,200,114,0.1)",
               padding: "4px 10px", borderRadius: 6,
             }}
           >
@@ -755,7 +760,7 @@ export default function GitAdvanced() {
             <h2
               style={{
                 margin: 0, fontSize: 22, fontWeight: 900,
-                background: "linear-gradient(135deg, #60A5FA, #3B82F6)",
+                background: "linear-gradient(135deg, #E8C872, #D4A843)",
                 WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
               }}
             >
@@ -781,14 +786,14 @@ export default function GitAdvanced() {
           <div
             style={{
               padding: "14px 16px",
-              background: "rgba(59,130,246,0.05)",
-              borderLeft: "3px solid #3B82F6",
+              background: "rgba(96,165,250,0.05)",
+              borderLeft: "3px solid #60A5FA",
               borderRadius: "0 10px 10px 0",
               fontSize: 13, color: "rgba(255,255,255,0.6)", lineHeight: 1.8,
               marginBottom: 4,
             }}
           >
-            <span style={{ fontWeight: 700, color: "#3B82F6" }}>概念：</span>{step.concept}
+            <span style={{ fontWeight: 700, color: "#60A5FA" }}>概念：</span>{step.concept}
           </div>
 
           {/* Terminal */}
@@ -804,37 +809,20 @@ export default function GitAdvanced() {
 
         {/* Navigation */}
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: 20, gap: 12 }}>
-          <button
-            onClick={goPrev}
-            disabled={currentStep === 0}
-            style={{
-              padding: "12px 24px",
-              background: currentStep === 0 ? "rgba(255,255,255,0.02)" : "rgba(255,255,255,0.06)",
-              border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10,
-              color: currentStep === 0 ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.7)",
-              fontSize: 13, fontWeight: 600,
-              cursor: currentStep === 0 ? "default" : "pointer",
-            }}
-          >
-            ← 上一課
-          </button>
-          <button
-            onClick={goNext}
-            disabled={currentStep === STEPS.length - 1}
-            style={{
-              padding: "12px 24px",
-              background:
-                currentStep === STEPS.length - 1
-                  ? "rgba(255,255,255,0.02)"
-                  : "linear-gradient(135deg, #60A5FA, #3B82F6)",
-              border: "none", borderRadius: 10,
-              color: currentStep === STEPS.length - 1 ? "rgba(255,255,255,0.15)" : "#fff",
-              fontSize: 13, fontWeight: 700,
-              cursor: currentStep === STEPS.length - 1 ? "default" : "pointer",
-            }}
-          >
-            下一課 →
-          </button>
+          {currentStep === 0 ? (
+            prevPath ? (
+              <button onClick={() => navigate(prevPath)} style={{ padding: "12px 24px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.10)", borderRadius: 10, color: "rgba(255,255,255,0.5)", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>← 上一章</button>
+            ) : <div />
+          ) : (
+            <button onClick={goPrev} style={{ padding: "12px 24px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, color: "rgba(255,255,255,0.7)", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>← 上一課</button>
+          )}
+          {currentStep === STEPS.length - 1 ? (
+            nextPath ? (
+              <button onClick={() => navigate(nextPath)} style={{ padding: "12px 24px", background: "linear-gradient(135deg, #E8C872, #D4A843)", border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一章 →</button>
+            ) : <div />
+          ) : (
+            <button onClick={goNext} style={{ padding: "12px 24px", background: "linear-gradient(135deg, #E8C872, #D4A843)", border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一課 →</button>
+          )}
         </div>
 
         {/* Final completion */}

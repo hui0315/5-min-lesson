@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useChapterNav } from "./chapter-context";
 
 const COMPARISONS = [
   { id: "fetch-pull", title: "fetch vs pull", emoji: "🔄",
@@ -28,7 +30,7 @@ const COMPARISONS = [
     correctIdx: 0, explanation: "一步到位較方便：git checkout -b feature/new develop" },
   { id: "add-commit-am", title: "add+commit vs commit -am", emoji: "⚡",
     cmdA: { name: "git add . + commit", color: "#3B82F6", desc: "分兩步：先選擇要提交的檔案，再 commit。可以精確控制。", when: "有新檔案需要追蹤", after: "完全控制哪些檔案進入暫存區" },
-    cmdB: { name: "git commit -am", color: "#22D3EE", desc: "-a 自動加入所有「已追蹤」的修改。注意：新檔案不被包含。", when: "快速提交已追蹤檔案的修改", after: "只有已追蹤檔案被 commit" },
+    cmdB: { name: "git commit -am", color: "#D4A843", desc: "-a 自動加入所有「已追蹤」的修改。注意：新檔案不被包含。", when: "快速提交已追蹤檔案的修改", after: "只有已追蹤檔案被 commit" },
     scenario: "你修改了 3 個已有檔案，同時新建了一個 utils.js。想全部提交。",
     correctIdx: 0, explanation: "新檔案 utils.js 從未被追蹤，commit -am 不包含它。必須先 git add ." },
   { id: "force", title: "--force vs --force-with-lease", emoji: "🛡️",
@@ -44,7 +46,7 @@ const CHEATSHEET = [
     ["git remote -v", "查看遠端連結"], ["git remote add <n> <url>", "新增遠端連結"],
     ["git remote show <n>", "查看遠端詳細資訊"],
   ]},
-  { title: "📝 暫存與提交", color: "#3B82F6", cmds: [
+  { title: "📝 暫存與提交", color: "#E8C872", cmds: [
     ["git status", "查看工作區狀態"], ["git status -s", "精簡狀態"],
     ["git add <file>", "加入暫存區"], ["git add .", "所有變更加入暫存區"],
     ["git commit -m \"msg\"", "提交變更"], ["git commit -am \"msg\"", "auto add 已追蹤檔 + 提交"],
@@ -55,12 +57,12 @@ const CHEATSHEET = [
     ["git checkout <branch>", "切換分支"], ["git checkout -b <new> <base>", "建立新分支並切換"],
     ["git branch -d <branch>", "刪除本地分支"], ["git push origin --delete <branch>", "刪除遠端分支"],
   ]},
-  { title: "🔄 同步與推送", color: "#22D3EE", cmds: [
+  { title: "🔄 同步與推送", color: "#60A5FA", cmds: [
     ["git fetch origin", "下載遠端更新（不合併）"], ["git pull origin <branch>", "下載並合併"],
     ["git push origin <branch>", "推送"], ["git push -u origin <branch>", "推送+建立追蹤"],
     ["git push --force-with-lease", "安全強制推送"], ["git push origin --tags", "推送所有標籤"],
   ]},
-  { title: "🔀 合併與整合", color: "#8B5CF6", cmds: [
+  { title: "🔀 合併與整合", color: "#E8C872", cmds: [
     ["git merge <branch>", "合併分支"], ["git rebase <branch>", "Rebase 到目標分支"],
     ["git rebase --continue", "解衝突後繼續 rebase"], ["git rebase --abort", "放棄 rebase"],
   ]},
@@ -75,7 +77,7 @@ const CHEATSHEET = [
     ["git reset --soft HEAD~1", "撤銷 commit，保留暫存"], ["git reset --hard HEAD~1", "撤銷 commit，丟棄修改"],
     ["git revert HEAD", "反向 commit 撤銷"], ["git bisect start/bad/good/reset", "二分搜尋找 bug"],
   ]},
-  { title: "🏷️ 標籤", color: "#EC4899", cmds: [
+  { title: "🏷️ 標籤", color: "#E8C872", cmds: [
     ["git tag", "列出標籤"], ["git tag -a v1.0 -m \"msg\"", "建立附註標籤"], ["git tag v1.0", "建立輕量標籤"],
   ]},
 ];
@@ -161,9 +163,23 @@ function CheatSheet() {
 export default function GitRef() {
   const [tab, setTab] = useState("compare");
   const [cur, setCur] = useState(0);
+  useEffect(() => { window.scrollTo(0, 0); }, [cur]);
+  useEffect(() => {
+    const style = document.createElement("style");
+    style.innerHTML = `
+      @keyframes goldGlow {
+        0%, 100% { box-shadow: inset 0 0 0 0 rgba(232, 200, 114, 0.3); }
+        50% { box-shadow: inset 0 0 12px 0 rgba(232, 200, 114, 0.5); }
+      }
+    `;
+    document.head.appendChild(style);
+    return () => document.head.removeChild(style);
+  }, []);
   const [done, setDone] = useState({});
   const [score, setScore] = useState(0);
-  const comp = COMPARISONS[cur], total = COMPARISONS.length, accent = "#F472B6";
+  const navigate = useNavigate();
+  const { prevPath, nextPath } = useChapterNav();
+  const comp = COMPARISONS[cur], total = COMPARISONS.length, accent = "#E8C872";
   const handleCorrect = () => { if (!done[cur]) { setDone(p => ({ ...p, [cur]: true })); setScore(s => s + 1); } };
 
   return (
@@ -171,15 +187,15 @@ export default function GitRef() {
       <div style={{ width: "100%", maxWidth: 900 }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ width: 38, height: 38, borderRadius: 10, background: `linear-gradient(135deg, ${accent}, #DB2777)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 900, color: "#fff", fontFamily: "'JetBrains Mono', monospace" }}>5</div>
-            <div><div style={{ fontSize: 15, fontWeight: 700 }}>指令總覽與比較</div><div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>Git 課程系列 · 第五堂</div></div>
+            <div style={{ width: 38, height: 38, borderRadius: 10, background: "linear-gradient(135deg, #E8C872, #D4A843)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 900, color: "#0D1117", fontFamily: "'JetBrains Mono', monospace" }}>8</div>
+            <div><div style={{ fontSize: 15, fontWeight: 700 }}>指令總覽與比較</div><div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>Git 課程系列 · 第八堂</div></div>
           </div>
-          {tab === "compare" && <div style={{ fontSize: 12, color: accent, fontFamily: "'JetBrains Mono', monospace", background: `${accent}15`, padding: "4px 10px", borderRadius: 6 }}>⭐ {score}/{total}</div>}
+          {tab === "compare" && <div style={{ fontSize: 12, color: "#E8C872", fontFamily: "'JetBrains Mono', monospace", background: "rgba(232,200,114,0.1)", padding: "4px 10px", borderRadius: 6 }}>⭐ {score}/{total}</div>}
         </div>
         <div style={{ display: "flex", gap: 8, marginBottom: 24 }}>
           {[{ key: "compare", label: "⚔️ 指令比較", desc: "情境選擇題" }, { key: "cheatsheet", label: "📋 速查表", desc: "完整指令參考" }].map(t => (
-            <button key={t.key} onClick={() => setTab(t.key)} style={{ flex: 1, padding: "14px 16px", textAlign: "center", cursor: "pointer", background: tab === t.key ? `${accent}12` : "rgba(255,255,255,0.02)", border: `1.5px solid ${tab === t.key ? accent + "44" : "rgba(255,255,255,0.06)"}`, borderRadius: 12, transition: "all 0.3s" }}>
-              <div style={{ fontSize: 14, fontWeight: 700, color: tab === t.key ? accent : "rgba(255,255,255,0.6)", marginBottom: 2 }}>{t.label}</div>
+            <button key={t.key} onClick={() => setTab(t.key)} style={{ flex: 1, padding: "14px 16px", textAlign: "center", cursor: "pointer", background: tab === t.key ? "rgba(232,200,114,0.12)" : "rgba(255,255,255,0.02)", border: `1.5px solid ${tab === t.key ? "rgba(232,200,114,0.4)" : "rgba(255,255,255,0.06)"}`, borderRadius: 12, transition: "all 0.3s" }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: tab === t.key ? "#E8C872" : "rgba(255,255,255,0.6)", marginBottom: 2 }}>{t.label}</div>
               <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>{t.desc}</div>
             </button>
           ))}
@@ -187,24 +203,32 @@ export default function GitRef() {
 
         {tab === "compare" && (<>
           <div style={{ display: "flex", gap: 4, alignItems: "center", marginBottom: 20 }}>
-            {COMPARISONS.map((_, i) => <div key={i} onClick={() => setCur(i)} style={{ flex: 1, height: 4, borderRadius: 2, cursor: "pointer", background: i <= cur ? `linear-gradient(90deg, ${accent}, #DB2777)` : "rgba(255,255,255,0.06)", transition: "background 0.4s" }} />)}
+            {COMPARISONS.map((_, i) => <div key={i} onClick={() => setCur(i)} style={{ flex: 1, height: 4, borderRadius: 2, cursor: "pointer", background: i <= cur ? "linear-gradient(90deg, #E8C872, #D4A843)" : "rgba(255,255,255,0.06)", transition: "background 0.4s", animation: i <= cur ? "goldGlow 3s ease-in-out infinite" : "none" }} />)}
             <span style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", marginLeft: 8, fontFamily: "'JetBrains Mono', monospace", whiteSpace: "nowrap" }}>{cur + 1}/{total}</span>
           </div>
           <div style={{ background: "rgba(255,255,255,0.015)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 16, padding: "26px 22px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
               <span style={{ fontSize: 28 }}>{comp.emoji}</span>
-              <h2 style={{ margin: 0, fontSize: 20, fontWeight: 900, background: `linear-gradient(135deg, ${accent}, #DB2777)`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{comp.title}</h2>
+              <h2 style={{ margin: 0, fontSize: 20, fontWeight: 900, background: "linear-gradient(135deg, #E8C872, #D4A843)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{comp.title}</h2>
             </div>
             <CompCard key={cur} comp={comp} onCorrect={handleCorrect} />
           </div>
           <div style={{ display: "flex", justifyContent: "space-between", marginTop: 20, gap: 12 }}>
-            <button onClick={() => cur > 0 && setCur(c => c - 1)} disabled={cur === 0} style={{ padding: "12px 24px", background: cur === 0 ? "rgba(255,255,255,0.02)" : "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, color: cur === 0 ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.6)", fontSize: 13, fontWeight: 600, cursor: cur === 0 ? "default" : "pointer" }}>← 上一組</button>
-            <button onClick={() => cur < total - 1 && setCur(c => c + 1)} disabled={cur === total - 1} style={{ padding: "12px 24px", background: cur === total - 1 ? "rgba(255,255,255,0.02)" : `linear-gradient(135deg, ${accent}, #DB2777)`, border: "none", borderRadius: 10, color: cur === total - 1 ? "rgba(255,255,255,0.12)" : "#fff", fontSize: 13, fontWeight: 700, cursor: cur === total - 1 ? "default" : "pointer" }}>下一組 →</button>
+            {cur === 0 ? (
+              prevPath ? <button onClick={() => navigate(prevPath)} style={{ padding: "12px 24px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, color: "rgba(255,255,255,0.5)", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>← 上一章</button> : <div />
+            ) : (
+              <button onClick={() => setCur(c => c - 1)} style={{ padding: "12px 24px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, color: "rgba(255,255,255,0.6)", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>← 上一組</button>
+            )}
+            {cur === total - 1 ? (
+              nextPath ? <button onClick={() => navigate(nextPath)} style={{ padding: "12px 24px", background: "linear-gradient(135deg, #E8C872, #D4A843)", border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一章 →</button> : <div />
+            ) : (
+              <button onClick={() => setCur(c => c + 1)} style={{ padding: "12px 24px", background: "linear-gradient(135deg, #E8C872, #D4A843)", border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一組 →</button>
+            )}
           </div>
           {cur === total - 1 && done[cur] && (
-            <div style={{ marginTop: 24, textAlign: "center", padding: "24px", background: `${accent}08`, border: `1px solid ${accent}22`, borderRadius: 14 }}>
+            <div style={{ marginTop: 24, textAlign: "center", padding: "24px", background: "rgba(232,200,114,0.08)", border: "1px solid rgba(232,200,114,0.2)", borderRadius: 14 }}>
               <div style={{ fontSize: 32, marginBottom: 8 }}>🎉</div>
-              <div style={{ fontSize: 17, fontWeight: 800, color: accent, marginBottom: 6 }}>指令比較全部完成！</div>
+              <div style={{ fontSize: 17, fontWeight: 800, color: "#E8C872", marginBottom: 6 }}>指令比較全部完成！</div>
               <div style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", lineHeight: 1.7 }}>切換到「📋 速查表」可隨時查閱所有指令。<br />接下來進入總複習實戰！</div>
             </div>
           )}
@@ -214,7 +238,7 @@ export default function GitRef() {
           <div style={{ background: "rgba(255,255,255,0.015)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 16, padding: "22px 18px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
               <span style={{ fontSize: 24 }}>📋</span>
-              <h2 style={{ margin: 0, fontSize: 18, fontWeight: 900, background: `linear-gradient(135deg, ${accent}, #DB2777)`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Git 指令速查表</h2>
+              <h2 style={{ margin: 0, fontSize: 18, fontWeight: 900, background: "linear-gradient(135deg, #E8C872, #D4A843)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Git 指令速查表</h2>
             </div>
             <div style={{ fontSize: 12.5, color: "rgba(255,255,255,0.4)", marginBottom: 16, lineHeight: 1.6 }}>涵蓋課程中所有學過的指令，按工作階段分類。點擊分類展開，或直接搜尋。</div>
             <CheatSheet />

@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { useChapterNav } from "./chapter-context";
 
 const STEPS = [
   {
@@ -805,8 +807,11 @@ function SummaryView({ points }) {
 
 export default function GitTutorial() {
   const [currentStep, setCurrentStep] = useState(0);
+  useEffect(() => { window.scrollTo(0, 0); }, [currentStep]);
   const [quizCompleted, setQuizCompleted] = useState({});
   const [score, setScore] = useState(0);
+  const navigate = useNavigate();
+  const { prevPath, nextPath } = useChapterNav();
 
   const step = STEPS[currentStep];
 
@@ -974,46 +979,20 @@ export default function GitTutorial() {
             gap: 12,
           }}
         >
-          <button
-            onClick={goPrev}
-            disabled={currentStep === 0}
-            style={{
-              padding: "12px 24px",
-              background: currentStep === 0 ? "rgba(255,255,255,0.03)" : "rgba(255,255,255,0.06)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              borderRadius: 10,
-              color: currentStep === 0 ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.7)",
-              fontSize: 13,
-              fontWeight: 600,
-              cursor: currentStep === 0 ? "default" : "pointer",
-              transition: "all 0.3s",
-            }}
-          >
-            ← 上一課
-          </button>
-          <button
-            onClick={goNext}
-            disabled={currentStep === STEPS.length - 1}
-            style={{
-              padding: "12px 24px",
-              background:
-                currentStep === STEPS.length - 1
-                  ? "rgba(255,255,255,0.03)"
-                  : "linear-gradient(135deg, #E8C872, #D4A843)",
-              border: "none",
-              borderRadius: 10,
-              color:
-                currentStep === STEPS.length - 1
-                  ? "rgba(255,255,255,0.2)"
-                  : "#0D1117",
-              fontSize: 13,
-              fontWeight: 700,
-              cursor: currentStep === STEPS.length - 1 ? "default" : "pointer",
-              transition: "all 0.3s",
-            }}
-          >
-            下一課 →
-          </button>
+          {currentStep === 0 ? (
+            prevPath ? (
+              <button onClick={() => navigate(prevPath)} style={{ padding: "12px 24px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.10)", borderRadius: 10, color: "rgba(255,255,255,0.5)", fontSize: 13, fontWeight: 600, cursor: "pointer", transition: "all 0.3s" }}>← 上一章</button>
+            ) : <div />
+          ) : (
+            <button onClick={goPrev} style={{ padding: "12px 24px", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, color: "rgba(255,255,255,0.7)", fontSize: 13, fontWeight: 600, cursor: "pointer", transition: "all 0.3s" }}>← 上一課</button>
+          )}
+          {currentStep === STEPS.length - 1 ? (
+            nextPath ? (
+              <button onClick={() => navigate(nextPath)} style={{ padding: "12px 24px", background: "linear-gradient(135deg, #E8C872, #D4A843)", border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all 0.3s" }}>下一章 →</button>
+            ) : <div />
+          ) : (
+            <button onClick={goNext} style={{ padding: "12px 24px", background: "linear-gradient(135deg, #E8C872, #D4A843)", border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all 0.3s" }}>下一課 →</button>
+          )}
         </div>
       </div>
     </div>
