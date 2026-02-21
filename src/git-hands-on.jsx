@@ -17,7 +17,7 @@ const STEPS = [
     emoji: "😄",
     type: "scenario",
     day: 1,
-    story: "小陳花了兩週完成第一個 React 專案，興奮地想推上 GitHub。他直接 git init → git add . → git commit，完全沒想到要建 .gitignore……",
+    story: "小花花了兩週完成第一個 React 專案，興奮地想推上 GitHub。她直接 git init → git add . → git commit，完全沒想到要建 .gitignore……",
     fileBloatDemo: true,
     tip: "node_modules 資料夾通常有數萬個檔案、200MB 以上。把它 commit 進去不只浪費空間，還會讓 clone 變得極慢，甚至讓 GitHub 拒絕你的 push。",
     quiz: {
@@ -39,7 +39,7 @@ const STEPS = [
       {
         title: "一個巨大 commit 的問題",
         color: "#EF4444",
-        content: "小陳把所有程式碼、所有修改、甚至 node_modules 全部塞進一個 commit。結果：code review 根本看不完、出 bug 無法追溯是哪次改動造成的、想 revert 一個小功能卻要撤銷所有東西。",
+        content: "小花把所有程式碼、所有修改、甚至 node_modules 全部塞進一個 commit。結果：code review 根本看不完、出 bug 無法追溯是哪次改動造成的、想 revert 一個小功能卻要撤銷所有東西。",
       },
       {
         title: "Atomic Commits — 原子提交",
@@ -63,7 +63,7 @@ const STEPS = [
     emoji: "🔄",
     type: "scenario",
     day: 1,
-    story: "小陳決定砍掉重來。刪除錯誤的 .git 資料夾，重新初始化，這次第一件事就是建立 .gitignore。",
+    story: "小花決定砍掉重來。刪除錯誤的 .git 資料夾，重新初始化，這次第一件事就是建立 .gitignore。",
     tip: "正確順序：git init → 建立 .gitignore → git add . → git commit。.gitignore 一定要在第一次 add 之前就準備好！",
     commands: [
       { prompt: "重新初始化 Git 儲存庫", answer: "git init", output: "Initialized empty Git repository in /alex-react-app/.git/", hint: "init 初始化" },
@@ -72,7 +72,7 @@ const STEPS = [
       { prompt: "第一個 commit：描述這是專案初始設定", answer: "git commit -m \"feat: initial project setup\"", output: "[main (root-commit) a1b2c3d] feat: initial project setup\n 18 files changed, 1240 insertions(+)", hint: "commit -m \"feat: ...\"", flexible: true },
     ],
     quiz: {
-      question: "小陳重做後，暫存區從 50,000+ 檔案變成 18 個，差別在哪？",
+      question: "小花重做後，暫存區從 50,000+ 檔案變成 18 個，差別在哪？",
       options: [
         { text: ".gitignore 排除了 node_modules、dist 等不需要追蹤的資料夾", correct: true },
         { text: "用了不同的 git add 指令", correct: false },
@@ -87,7 +87,7 @@ const STEPS = [
     emoji: "🐛",
     type: "scenario",
     day: 2,
-    story: "隔天早上，小陳一口氣修了 5 個 bug。等到想 commit 的時候才發現：所有改動都混在工作目錄裡，根本分不清哪個改動是哪個 bug！",
+    story: "隔天早上，小花一口氣修了 5 個 bug。等到想 commit 的時候才發現：所有改動都混在工作目錄裡，根本分不清哪個改動是哪個 bug！",
     tip: "這是新手最常犯的錯誤之一：「先寫完再說」。正確的習慣是修完一個 bug 就立刻 commit，讓每個 commit 都有明確的目的。",
     bugFixFlow: true,
     quiz: {
@@ -134,7 +134,7 @@ const STEPS = [
     emoji: "🚀",
     type: "scenario",
     day: 3,
-    story: "乾淨的 commit 歷史準備好了！小陳在 GitHub 上建了新的 repo，準備把本地的程式碼推上去。",
+    story: "乾淨的 commit 歷史準備好了！小花在 GitHub 上建了新的 repo，準備把本地的程式碼推上去。",
     tip: "-u（--set-upstream）只需要在第一次 push 時使用，它會建立本地分支和遠端分支的追蹤關係。之後只要 git push 就夠了。",
     commands: [
       { prompt: "連結到 GitHub 遠端儲存庫", answer: "git remote add origin https://github.com/alex/react-app.git", output: "", hint: "remote add origin + URL" },
@@ -157,7 +157,7 @@ const STEPS = [
     emoji: "🤝",
     type: "scenario",
     day: 3,
-    story: "小陳修了一個小 bug 想 push，結果被拒絕了！原來同事已經推了 3 個 commit。遠端的歷史比本地還新，必須先 pull 才能 push。",
+    story: "小花修了一個小 bug 想 push，結果被拒絕了！原來同事已經推了 3 個 commit。遠端的歷史比本地還新，必須先 pull 才能 push。",
     pullDemo: true,
     commands: [
       { prompt: "嘗試推送你的修改", answer: "git push origin main", output: "To github.com:alex/react-app.git\n ! [rejected]        main -> main (fetch first)\nerror: failed to push some refs\nhint: Updates were rejected because the remote contains work that you do not have locally.", hint: "push origin main" },
@@ -189,7 +189,7 @@ const STEPS = [
       { icon: "⏮️", text: "Clean History — 讓 git bisect 和 revert 成為你的超能力" },
     ],
     quiz: {
-      question: "小陳的三天旅程中，最重要的一課是什麼？",
+      question: "小花的三天旅程中，最重要的一課是什麼？",
       options: [
         { text: "Git 紀律（.gitignore、atomic commits、pull before push）比指令本身更重要", correct: true },
         { text: "背熟所有 Git 指令就夠了", correct: false },
@@ -338,7 +338,7 @@ function FileBloatDemo() {
   return (
     <div style={{ margin: "16px 0", borderRadius: 12, border: "1px solid rgba(255,255,255,0.08)", overflow: "hidden" }}>
       <div style={{ padding: "14px 16px", background: "rgba(239,68,68,0.04)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: "#EF4444", marginBottom: 4 }}>🚨 小陳的 git status 輸出</div>
+        <div style={{ fontSize: 13, fontWeight: 700, color: "#EF4444", marginBottom: 4 }}>🚨 小花的 git status 輸出</div>
         <div style={{ fontSize: 11.5, color: "rgba(255,255,255,0.4)" }}>忘記建 .gitignore 的後果</div>
       </div>
       <div style={{ padding: "16px", background: "#080C12" }}>
@@ -413,7 +413,7 @@ function CommitCompare() {
       {/* Messy side */}
       <div onMouseEnter={() => setHovered("messy")} onMouseLeave={() => setHovered(null)}
         style={{ flex: 1, minWidth: 260, padding: "16px", background: "rgba(239,68,68,0.04)", border: `1.5px solid ${hovered === "messy" ? "rgba(239,68,68,0.4)" : "rgba(239,68,68,0.15)"}`, borderRadius: 12, transition: "all 0.3s" }}>
-        <div style={{ fontSize: 12, fontWeight: 700, color: "#EF4444", marginBottom: 12, display: "flex", alignItems: "center", gap: 6 }}>❌ 小陳的做法</div>
+        <div style={{ fontSize: 12, fontWeight: 700, color: "#EF4444", marginBottom: 12, display: "flex", alignItems: "center", gap: 6 }}>❌ 小花的做法</div>
         <div style={{ padding: "10px 12px", background: "rgba(0,0,0,0.3)", borderRadius: 8, fontFamily: "'JetBrains Mono', monospace" }}>
           <div style={{ fontSize: 11, color: "#EF4444" }}>* {messy.hash}</div>
           <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)", marginLeft: 12 }}>{messy.message}</div>
