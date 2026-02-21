@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="36">
+  <rect width="128" height="36" rx="18" fill="#00AD9F"/>
+  <text x="16" y="24" font-family="-apple-system,sans-serif" font-size="14">☁️</text>
+  <text x="75" y="23" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13" font-weight="600" fill="white" text-anchor="middle">Netlify</text>
+</svg>

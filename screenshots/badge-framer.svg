@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="168" height="36">
+  <rect width="168" height="36" rx="18" fill="#0055FF"/>
+  <polygon points="14,10 26,10 26,18 14,18" fill="white"/>
+  <polygon points="14,18 26,18 14,26" fill="white" opacity="0.7"/>
+  <text x="98" y="23" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13" font-weight="600" fill="white" text-anchor="middle">Framer Motion</text>
+</svg>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="36">
+  <rect width="120" height="36" rx="18" fill="#20232A"/>
+  <circle cx="22" cy="18" r="8" fill="none" stroke="#61DAFB" stroke-width="1.5"/>
+  <circle cx="22" cy="18" r="2.5" fill="#61DAFB"/>
+  <text x="66" y="23" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13" font-weight="600" fill="white" text-anchor="middle">React 19</text>
+</svg>
