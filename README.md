@@ -21,7 +21,7 @@
 </div>
 
 <p align="center">
-     <img src="https://github.com/user-attachments/assets/你的ID](https://github.com/user-attachments/assets/ac9b64c3-4fa6-4f1a-aea9-a7959791a24b" width="100%" />
+     <img src="https://github.com/user-attachments/assets/ac9b64c3-4fa6-4f1a-aea9-a7959791a24b" width="100%" />
 </p>
 
 ## 為什麼做這個？
