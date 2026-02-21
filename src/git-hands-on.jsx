@@ -516,7 +516,7 @@ function BugFixFlow({ onAllComplete }) {
                 </button>
               )}
               {phase === "done" && currentBug < bugs.length - 1 && (
-                <button onClick={handleNext} style={{ flex: 1, padding: "10px 16px", background: "linear-gradient(135deg, #E8C872, #D4A843)", border: "none", borderRadius: 8, color: "#0D1117", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
+                <button onClick={handleNext} style={{ flex: 1, padding: "10px 16px", background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, border: "none", borderRadius: 8, color: colors.bg, fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
                   ✅ 已提交！繼續下一個 Bug →
                 </button>
               )}
@@ -574,7 +574,7 @@ function CleanTimeline() {
         {commits.map((c, i) => (
           <div key={i} onClick={() => setExpanded(expanded === i ? null : i)} style={{ position: "relative", paddingLeft: 40, paddingBottom: 12, cursor: "pointer" }}>
             {/* Dot */}
-            <div style={{ position: "absolute", left: 9, top: 4, width: 14, height: 14, borderRadius: "50%", background: c.color, border: "2px solid #0D1117", transition: "transform 0.2s", transform: expanded === i ? "scale(1.3)" : "scale(1)" }} />
+            <div style={{ position: "absolute", left: 9, top: 4, width: 14, height: 14, borderRadius: "50%", background: c.color, border: `2px solid ${colors.bg}`, transition: "transform 0.2s", transform: expanded === i ? "scale(1.3)" : "scale(1)" }} />
             {/* Content */}
             <div style={{ padding: "8px 12px", background: expanded === i ? `${c.color}0A` : "rgba(255,255,255,0.02)", border: `1px solid ${expanded === i ? `${c.color}30` : "rgba(255,255,255,0.05)"}`, borderRadius: 8, transition: "all 0.3s" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -712,7 +712,7 @@ function JourneyReflection({ summaryPoints }) {
       <div style={{ fontSize: 13, fontWeight: 700, color: ACCENT, marginBottom: 10 }}>🏆 關鍵收穫</div>
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
         {summaryPoints.map((p, i) => (
-          <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", background: "rgba(232,200,114,0.04)", border: "1px solid rgba(232,200,114,0.1)", borderRadius: 8, animation: `fadeInUp 0.3s ease ${0.8 + i * 0.1}s both` }}>
+          <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", background: hexToRgba(ACCENT, 0.04), border: `1px solid ${hexToRgba(ACCENT, 0.1)}`, borderRadius: 8, animation: `fadeInUp 0.3s ease ${0.8 + i * 0.1}s both` }}>
             <span style={{ fontSize: 18, flexShrink: 0 }}>{p.icon}</span>
             <span style={{ fontSize: 12.5, color: "rgba(255,255,255,0.65)", lineHeight: 1.6 }}>{p.text}</span>
           </div>
@@ -726,8 +726,8 @@ function JourneyReflection({ summaryPoints }) {
    Day Divider
    ═══════════════════════════════════════ */
 function DayDivider({ day, label, emoji }) {
-  const colors = { 1: "#3B82F6", 2: "#F59E0B", 3: "#10B981" };
-  const c = colors[day] || ACCENT;
+  const dayColors = { 1: "#3B82F6", 2: "#F59E0B", 3: "#10B981" };
+  const c = dayColors[day] || ACCENT;
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "8px 0 16px", padding: "10px 16px", background: `${c}0A`, borderRadius: 10, border: `1px solid ${c}20` }}>
       <span style={{ fontSize: 22 }}>{emoji}</span>
@@ -768,13 +768,13 @@ export default function GitHandsOn() {
         {/* Header */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ width: 38, height: 38, borderRadius: 10, background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 900, color: "#0D1117", fontFamily: "'JetBrains Mono', monospace" }}>10</div>
+            <div style={{ width: 38, height: 38, borderRadius: 10, background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 900, color: colors.bg, fontFamily: "'JetBrains Mono', monospace" }}>10</div>
             <div>
               <div style={{ fontSize: 15, fontWeight: 700 }}>實戰演練：從零到 GitHub</div>
               <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>Git 課程系列 · 第十堂</div>
             </div>
           </div>
-          <div style={{ fontSize: 12, color: ACCENT, fontFamily: "'JetBrains Mono', monospace", background: "rgba(232,200,114,0.1)", padding: "4px 10px", borderRadius: 6 }}>⭐ {score}/{STEPS.length}</div>
+          <div style={{ fontSize: 12, color: ACCENT, fontFamily: "'JetBrains Mono', monospace", background: hexToRgba(ACCENT, 0.1), padding: "4px 10px", borderRadius: 6 }}>⭐ {score}/{STEPS.length}</div>
         </div>
 
         {/* Progress bar */}
@@ -821,9 +821,9 @@ export default function GitHandsOn() {
             <button onClick={goPrev} className="btn-nav" style={{ padding: "12px 24px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10, color: "rgba(255,255,255,0.6)", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>← 上一課</button>
           )}
           {currentStep === STEPS.length - 1 ? (
-            nextPath ? <button onClick={() => navigate(nextPath)} className="btn-gold" style={{ padding: "12px 24px", background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一章 →</button> : <div />
+            nextPath ? <button onClick={() => navigate(nextPath)} className="btn-gold" style={{ padding: "12px 24px", background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, border: "none", borderRadius: 10, color: colors.bg, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一章 →</button> : <div />
           ) : (
-            <button onClick={goNext} className="btn-gold" style={{ padding: "12px 24px", background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一課 →</button>
+            <button onClick={goNext} className="btn-gold" style={{ padding: "12px 24px", background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, border: "none", borderRadius: 10, color: colors.bg, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一課 →</button>
           )}
         </div>
       </div>

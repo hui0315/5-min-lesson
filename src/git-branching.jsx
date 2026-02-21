@@ -1016,7 +1016,7 @@ export default function GitBranching() {
                 margin: 0,
                 fontSize: 20,
                 fontWeight: 900,
-                background: "linear-gradient(135deg, #E8C872, #D4A843)",
+                background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`,
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
               }}
@@ -1065,8 +1065,8 @@ export default function GitBranching() {
             <div
               style={{
                 padding: "14px 16px",
-                background: "#E8C87204",
-                borderLeft: "3px solid #E8C872",
+                background: hexToRgba(ACCENT, 0.016),
+                borderLeft: `3px solid ${ACCENT}`,
                 borderRadius: "0 10px 10px 0",
                 fontSize: 12.5,
                 color: "rgba(255,255,255,0.6)",
@@ -1132,10 +1132,10 @@ export default function GitBranching() {
                 onClick={() => navigate(nextPath)}
                 style={{
                   padding: "12px 24px",
-                  background: "linear-gradient(135deg, #E8C872, #D4A843)",
+                  background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`,
                   border: "none",
                   borderRadius: 10,
-                  color: "#0D1117",
+                  color: colors.bg,
                   fontSize: 13,
                   fontWeight: 700,
                   cursor: "pointer",
@@ -1154,7 +1154,7 @@ export default function GitBranching() {
                 background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`,
                 border: "none",
                 borderRadius: 10,
-                color: "#0D1117",
+                color: colors.bg,
                 fontSize: 13,
                 fontWeight: 700,
                 cursor: "pointer",
@@ -1172,13 +1172,13 @@ export default function GitBranching() {
               marginTop: 24,
               textAlign: "center",
               padding: "24px",
-              background: "#E8C87208",
-              border: "1px solid #E8C87222",
+              background: hexToRgba(ACCENT, 0.031),
+              border: `1px solid ${hexToRgba(ACCENT, 0.133)}`,
               borderRadius: 14,
             }}
           >
             <div style={{ fontSize: 32, marginBottom: 8 }}>🎉</div>
-            <div style={{ fontSize: 17, fontWeight: 800, color: "#E8C872", marginBottom: 6 }}>
+            <div style={{ fontSize: 17, fontWeight: 800, color: ACCENT, marginBottom: 6 }}>
               恭喜！你已掌握分支工作流程！
             </div>
             <div

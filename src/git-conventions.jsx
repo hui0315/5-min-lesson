@@ -282,7 +282,7 @@ function PrefixTable() {
                 gap: 12,
                 padding: "10px 12px",
                 borderRadius: 8,
-                background: hovered === i ? `${p.color}0a` : "transparent",
+                background: hovered === i ? hexToRgba(p.color, 0.039) : "transparent",
                 transition: "background 0.2s",
                 cursor: "default",
               }}
@@ -407,8 +407,8 @@ function BranchDemo() {
               style={{
                 padding: "12px 14px",
                 marginBottom: 6,
-                background: selected === i ? `${b.color}0a` : "rgba(255,255,255,0.02)",
-                border: `1px solid ${selected === i ? `${b.color}33` : "rgba(255,255,255,0.04)"}`,
+                background: selected === i ? hexToRgba(b.color, 0.039) : "rgba(255,255,255,0.02)",
+                border: `1px solid ${selected === i ? hexToRgba(b.color, 0.2) : "rgba(255,255,255,0.04)"}`,
                 borderRadius: 10,
                 cursor: "pointer",
                 transition: "all 0.3s",
@@ -562,8 +562,8 @@ function VersionDemo() {
                 onClick={() => bump(b.type)}
                 style={{
                   padding: "8px 16px",
-                  background: `${b.color}15`,
-                  border: `1px solid ${b.color}33`,
+                  background: hexToRgba(b.color, 0.08),
+                  border: `1px solid ${hexToRgba(b.color, 0.2)}`,
                   borderRadius: 8,
                   color: b.color,
                   fontFamily: "'JetBrains Mono', monospace",
@@ -789,8 +789,8 @@ function GitignoreDemo() {
                   padding: "3px 10px",
                   fontSize: 10.5,
                   fontFamily: "'JetBrains Mono', monospace",
-                  background: framework === key ? `${val.color}15` : "transparent",
-                  border: `1px solid ${framework === key ? `${val.color}44` : "rgba(255,255,255,0.08)"}`,
+                  background: framework === key ? hexToRgba(val.color, 0.08) : "transparent",
+                  border: `1px solid ${framework === key ? hexToRgba(val.color, 0.267) : "rgba(255,255,255,0.08)"}`,
                   borderRadius: 5,
                   color: framework === key ? val.color : "rgba(255,255,255,0.35)",
                   cursor: "pointer",
@@ -1249,7 +1249,7 @@ function ConceptBlocks({ blocks }) {
           key={i}
           style={{
             padding: "14px 16px",
-            background: `${b.color}08`,
+            background: hexToRgba(b.color, 0.031),
             borderLeft: `3px solid ${b.color}`,
             borderRadius: "0 10px 10px 0",
           }}
@@ -1507,8 +1507,8 @@ export default function GitConventions() {
               marginTop: 24,
               textAlign: "center",
               padding: "24px",
-              background: `${ACCENT}08`,
-              border: `1px solid ${ACCENT}22`,
+              background: hexToRgba(ACCENT, 0.031),
+              border: `1px solid ${hexToRgba(ACCENT, 0.133)}`,
               borderRadius: 14,
             }}
           >

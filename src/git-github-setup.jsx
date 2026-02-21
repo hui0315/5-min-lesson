@@ -744,7 +744,7 @@ function ConceptBlocks({ blocks }) {
           key={i}
           style={{
             padding: "14px 16px",
-            background: `${b.color}08`,
+            background: hexToRgba(b.color, 0.031),
             borderLeft: `3px solid ${b.color}`,
             borderRadius: "0 10px 10px 0",
           }}
@@ -774,7 +774,7 @@ export default function GitGithubSetup() {
   const { prevPath, nextPath } = useChapterNav();
 
   const step = STEPS[currentStep];
-  const accent = "#E8C872";
+  const accent = ACCENT;
   const goNext = () => {
     if (currentStep < STEPS.length - 1) setCurrentStep((s) => s + 1);
   };
@@ -820,13 +820,13 @@ export default function GitGithubSetup() {
                 width: 38,
                 height: 38,
                 borderRadius: 10,
-                background: `linear-gradient(135deg, #E8C872, #D4A843)`,
+                background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 fontSize: 14,
                 fontWeight: 900,
-                color: "#0D1117",
+                color: colors.bg,
                 fontFamily: "'JetBrains Mono', monospace",
               }}
             >
@@ -844,9 +844,9 @@ export default function GitGithubSetup() {
           <div
             style={{
               fontSize: 12,
-              color: "#E8C872",
+              color: ACCENT,
               fontFamily: "'JetBrains Mono', monospace",
-              background: `rgba(232,200,114,0.1)`,
+              background: hexToRgba(ACCENT, 0.1),
               padding: "4px 10px",
               borderRadius: 6,
             }}
@@ -868,7 +868,7 @@ export default function GitGithubSetup() {
                 cursor: "pointer",
                 background:
                   i <= currentStep
-                    ? `linear-gradient(90deg, #E8C872, #D4A843)`
+                    ? `linear-gradient(90deg, ${ACCENT}, ${ACCENT2})`
                     : "rgba(255,255,255,0.06)",
                 transition: "background 0.4s",
                 animation: i <= currentStep ? "goldGlow 3s ease-in-out infinite" : "none",
@@ -904,7 +904,7 @@ export default function GitGithubSetup() {
                 margin: 0,
                 fontSize: 20,
                 fontWeight: 900,
-                background: `linear-gradient(135deg, #E8C872, #D4A843)`,
+                background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`,
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
               }}
@@ -953,8 +953,8 @@ export default function GitGithubSetup() {
             <div
               style={{
                 padding: "14px 16px",
-                background: "rgba(232,200,114,0.04)",
-                borderLeft: `3px solid #E8C872`,
+                background: hexToRgba(ACCENT, 0.04),
+                borderLeft: `3px solid ${ACCENT}`,
                 borderRadius: "0 10px 10px 0",
                 fontSize: 12.5,
                 color: "rgba(255,255,255,0.6)",
@@ -986,10 +986,10 @@ export default function GitGithubSetup() {
           )}
           {currentStep === STEPS.length - 1 ? (
             nextPath ? (
-              <button onClick={() => navigate(nextPath)} style={{ padding: "12px 24px", background: "linear-gradient(135deg, #E8C872, #D4A843)", border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一章 →</button>
+              <button onClick={() => navigate(nextPath)} style={{ padding: "12px 24px", background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, border: "none", borderRadius: 10, color: colors.bg, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一章 →</button>
             ) : <div />
           ) : (
-            <button onClick={goNext} style={{ padding: "12px 24px", background: `linear-gradient(135deg, #E8C872, #D4A843)`, border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一課 →</button>
+            <button onClick={goNext} style={{ padding: "12px 24px", background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, border: "none", borderRadius: 10, color: colors.bg, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一課 →</button>
           )}
         </div>
 
@@ -1000,13 +1000,13 @@ export default function GitGithubSetup() {
               marginTop: 24,
               textAlign: "center",
               padding: "24px",
-              background: `rgba(232,200,114,0.08)`,
-              border: `1px solid rgba(232,200,114,0.2)`,
+              background: hexToRgba(ACCENT, 0.08),
+              border: `1px solid ${hexToRgba(ACCENT, 0.2)}`,
               borderRadius: 14,
             }}
           >
             <div style={{ fontSize: 32, marginBottom: 8 }}>🎉</div>
-            <div style={{ fontSize: 17, fontWeight: 800, color: "#E8C872", marginBottom: 6 }}>
+            <div style={{ fontSize: 17, fontWeight: 800, color: ACCENT, marginBottom: 6 }}>
               恭喜！你的專案已推上 GitHub！
             </div>
             <div

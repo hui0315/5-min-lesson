@@ -807,7 +807,7 @@ function MultiQuiz({ quizzes, onAllComplete }) {
           <button onClick={() => setCurrent(c => c - 1)} style={{ padding: "8px 18px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 8, color: "rgba(255,255,255,0.5)", fontSize: 12, cursor: "pointer" }}>← 上一題</button>
         ) : <div />}
         {current < quizzes.length - 1 ? (
-          <button onClick={() => setCurrent(c => c + 1)} style={{ padding: "8px 18px", background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, border: "none", borderRadius: 8, color: "#0D1117", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>下一題 →</button>
+          <button onClick={() => setCurrent(c => c + 1)} style={{ padding: "8px 18px", background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, border: "none", borderRadius: 8, color: colors.bg, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>下一題 →</button>
         ) : <div />}
       </div>
 
@@ -868,18 +868,18 @@ export default function GitCommandsRef() {
   };
 
   return (
-    <div style={{ minHeight: "100%", background: "#0A0A12", color: "#E6EDF3", fontFamily: "'Noto Sans TC', 'Segoe UI', sans-serif", display: "flex", flexDirection: "column", alignItems: "center", padding: "28px 24px" }}>
+    <div style={{ minHeight: "100%", background: colors.bgDeep, color: colors.text, fontFamily: "'Noto Sans TC', 'Segoe UI', sans-serif", display: "flex", flexDirection: "column", alignItems: "center", padding: "28px 24px" }}>
       <div style={{ width: "100%", maxWidth: 900 }}>
         {/* Header */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ width: 38, height: 38, borderRadius: 10, background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 900, color: "#0D1117", fontFamily: "'JetBrains Mono', monospace" }}>8</div>
+            <div style={{ width: 38, height: 38, borderRadius: 10, background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 900, color: colors.bg, fontFamily: "'JetBrains Mono', monospace" }}>8</div>
             <div>
               <div style={{ fontSize: 15, fontWeight: 700 }}>觀念澄清：易混淆指令與情境決策</div>
               <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>Git 課程系列 · 第八堂</div>
             </div>
           </div>
-          <div style={{ fontSize: 12, color: ACCENT, fontFamily: "'JetBrains Mono', monospace", background: `${ACCENT}15`, padding: "4px 10px", borderRadius: 6 }}>⭐ {score}/{total}</div>
+          <div style={{ fontSize: 12, color: ACCENT, fontFamily: "'JetBrains Mono', monospace", background: hexToRgba(ACCENT, 0.08), padding: "4px 10px", borderRadius: 6 }}>⭐ {score}/{total}</div>
         </div>
 
         {/* Progress */}
@@ -926,9 +926,9 @@ export default function GitCommandsRef() {
             <button onClick={() => setCur(s => s - 1)} style={{ padding: "12px 24px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, color: "rgba(255,255,255,0.6)", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>← 上一課</button>
           )}
           {cur === total - 1 ? (
-            nextPath ? <button onClick={() => navigate(nextPath)} style={{ padding: "12px 24px", background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一章 →</button> : <div />
+            nextPath ? <button onClick={() => navigate(nextPath)} style={{ padding: "12px 24px", background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, border: "none", borderRadius: 10, color: colors.bg, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一章 →</button> : <div />
           ) : (
-            <button onClick={() => setCur(s => s + 1)} style={{ padding: "12px 24px", background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一課 →</button>
+            <button onClick={() => setCur(s => s + 1)} style={{ padding: "12px 24px", background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, border: "none", borderRadius: 10, color: colors.bg, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一課 →</button>
           )}
         </div>
 

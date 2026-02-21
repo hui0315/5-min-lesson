@@ -227,8 +227,8 @@ export default function CheatsheetPanel({ open, onClose }) {
                   alignItems: "center",
                   justifyContent: "space-between",
                   padding: "12px 14px",
-                  background: isOpen ? `${cat.color}10` : "rgba(255,255,255,0.02)",
-                  border: `1px solid ${isOpen ? cat.color + "33" : "rgba(255,255,255,0.05)"}`,
+                  background: isOpen ? hexToRgba(cat.color, 0.063) : "rgba(255,255,255,0.02)",
+                  border: `1px solid ${isOpen ? hexToRgba(cat.color, 0.2) : "rgba(255,255,255,0.05)"}`,
                   borderRadius: isOpen ? "10px 10px 0 0" : 10,
                   cursor: "pointer",
                   transition: "all 0.3s",
@@ -253,7 +253,7 @@ export default function CheatsheetPanel({ open, onClose }) {
               </button>
               {isOpen && (
                 <div style={{
-                  border: `1px solid ${cat.color}22`,
+                  border: `1px solid ${hexToRgba(cat.color, 0.133)}`,
                   borderTop: "none",
                   borderRadius: "0 0 10px 10px",
                   overflow: "hidden",

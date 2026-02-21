@@ -411,7 +411,7 @@ export default function GitBridge1() {
       <div style={{ width: "100%", maxWidth: 900 }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ width: 38, height: 38, borderRadius: 10, background: "linear-gradient(135deg, #E8C872, #D4A843)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, fontWeight: 900, color: "#0D1117", fontFamily: "'JetBrains Mono', monospace" }}>5</div>
+            <div style={{ width: 38, height: 38, borderRadius: 10, background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, fontWeight: 900, color: colors.bg, fontFamily: "'JetBrains Mono', monospace" }}>5</div>
             <div>
               <div style={{ fontSize: 15, fontWeight: 700 }}>團隊協作：遠端與協作基礎</div>
               <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)" }}>Git 課程系列 · 第五堂</div>
@@ -421,14 +421,14 @@ export default function GitBridge1() {
         </div>
 
         <div style={{ display: "flex", gap: 4, alignItems: "center", marginBottom: 28 }}>
-          {STEPS.map((_, i) => <div key={i} style={{ flex: 1, height: 4, borderRadius: 2, background: i <= currentStep ? "linear-gradient(90deg, #E8C872, #D4A843)" : "rgba(255,255,255,0.06)", transition: "background 0.4s" }} />)}
+          {STEPS.map((_, i) => <div key={i} style={{ flex: 1, height: 4, borderRadius: 2, background: i <= currentStep ? `linear-gradient(90deg, ${ACCENT}, ${ACCENT2})` : "rgba(255,255,255,0.06)", transition: "background 0.4s" }} />)}
           <span style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginLeft: 8, fontFamily: "'JetBrains Mono', monospace", whiteSpace: "nowrap" }}>{currentStep + 1}/{STEPS.length}</span>
         </div>
 
         <div style={{ background: "rgba(255,255,255,0.015)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 16, padding: "26px 22px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
             <span style={{ fontSize: 28 }}>{step.emoji}</span>
-            <h2 style={{ margin: 0, fontSize: 20, fontWeight: 900, background: "linear-gradient(135deg, #E8C872, #D4A843)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{step.title}</h2>
+            <h2 style={{ margin: 0, fontSize: 20, fontWeight: 900, background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{step.title}</h2>
           </div>
 
           {step.conceptBlocks && <ConceptBlocks blocks={step.conceptBlocks} />}
@@ -448,9 +448,9 @@ export default function GitBridge1() {
             <button onClick={goPrev} style={{ padding: "12px 24px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: 10, color: "rgba(255,255,255,0.6)", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>← 上一課</button>
           )}
           {currentStep === STEPS.length - 1 ? (
-            nextPath ? <button onClick={() => navigate(nextPath)} style={{ padding: "12px 24px", background: "linear-gradient(135deg, #E8C872, #D4A843)", border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一章 →</button> : <div />
+            nextPath ? <button onClick={() => navigate(nextPath)} style={{ padding: "12px 24px", background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, border: "none", borderRadius: 10, color: colors.bg, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一章 →</button> : <div />
           ) : (
-            <button onClick={goNext} style={{ padding: "12px 24px", background: "linear-gradient(135deg, #E8C872, #D4A843)", border: "none", borderRadius: 10, color: "#0D1117", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一課 →</button>
+            <button onClick={goNext} style={{ padding: "12px 24px", background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT2})`, border: "none", borderRadius: 10, color: colors.bg, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>下一課 →</button>
           )}
         </div>
       </div>
