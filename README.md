@@ -21,7 +21,7 @@
 </div>
 
 <p align="center">
-  <img src="./screenshots/demo-hero.gif" alt="課程預覽" width="800" />
+  <video src="./screenshots/demo-hero.mp4" width="100%" autoplay loop muted playsinline></video>
 </p>
 
 ## 為什麼做這個？
