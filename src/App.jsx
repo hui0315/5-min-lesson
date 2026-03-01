@@ -20,6 +20,9 @@ import GitAdvanced from "./git-advanced";
 import GitCommandsRef from "./git-commands-ref";
 import GitReview from "./git-review";
 import GitHandsOn from "./git-hands-on";
+import InterviewAiMl from "./interview-ai-ml";
+import InterviewFullstack from "./interview-fullstack";
+import InterviewTools from "./interview-tools";
 
 /* ─────────────────────────────────────
    Course metadata
@@ -35,6 +38,10 @@ const COURSES = [
   { path: "/commands-ref",    label: "觀念澄清",   subtitle: "易混淆指令 · 情境決策",    accent: lessonThemes["/commands-ref"].accent,    accent2: lessonThemes["/commands-ref"].accent2,    badge: "8",  element: <GitCommandsRef /> },
   { path: "/review",         label: "總複習",     subtitle: "情境實戰演練",             accent: lessonThemes["/review"].accent,         accent2: lessonThemes["/review"].accent2,         badge: "9",  element: <GitReview /> },
   { path: "/hands-on",       label: "實戰演練",   subtitle: "從零到 GitHub 三日旅程",   accent: lessonThemes["/hands-on"].accent,       accent2: lessonThemes["/hands-on"].accent2,       badge: "10", element: <GitHandsOn /> },
+  // ── Interview prep courses ──
+  { path: "/interview-ai-ml",     label: "AI / ML",     subtitle: "Python · PyTorch · LLM · RAG",      accent: lessonThemes["/interview-ai-ml"].accent,     accent2: lessonThemes["/interview-ai-ml"].accent2,     badge: "AI",  element: <InterviewAiMl />,     section: "interview" },
+  { path: "/interview-fullstack",  label: "全端技術",    subtitle: "React · FastAPI · Vite · SQLite",   accent: lessonThemes["/interview-fullstack"].accent,  accent2: lessonThemes["/interview-fullstack"].accent2,  badge: "</>", element: <InterviewFullstack />, section: "interview" },
+  { path: "/interview-tools",      label: "開發工具",    subtitle: "Git · GitHub",                       accent: lessonThemes["/interview-tools"].accent,      accent2: lessonThemes["/interview-tools"].accent2,      badge: "#",   element: <InterviewTools />,     section: "interview" },
 ];
 
 /* ─────────────────────────────────────
@@ -179,10 +186,10 @@ function Sidebar({ open, onClose, onOpenCheatsheet }) {
               fontFamily: "'JetBrains Mono', monospace",
             }}
           >
-            課程目錄
+            Git 課程
           </div>
 
-          {COURSES.map((c) => {
+          {COURSES.filter((c) => !c.section).map((c) => {
             const isActive =
               location.pathname === c.path ||
               (location.pathname === "/" && c.path === "/tutorial");
@@ -243,6 +250,117 @@ function Sidebar({ open, onClose, onOpenCheatsheet }) {
                 </div>
 
                 {/* Text */}
+                <div style={{ minWidth: 0 }}>
+                  <div
+                    style={{
+                      fontSize: 13,
+                      fontWeight: isActive ? 700 : 500,
+                      color: isActive
+                        ? c.accent
+                        : "rgba(255,255,255,0.65)",
+                      transition: "color 0.25s",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
+                    {c.label}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 11,
+                      color: isActive
+                        ? hexToRgba(c.accent, 0.53)
+                        : "rgba(255,255,255,0.25)",
+                      fontFamily: "'JetBrains Mono', monospace",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      transition: "color 0.25s",
+                    }}
+                  >
+                    {c.subtitle}
+                  </div>
+                </div>
+              </button>
+            );
+          })}
+
+          {/* Interview prep section */}
+          <div style={{
+            borderTop: "1px dashed rgba(255,255,255,0.08)",
+            margin: "12px 8px 10px",
+          }} />
+          <div
+            style={{
+              fontSize: 10,
+              fontWeight: 700,
+              color: "rgba(255,255,255,0.25)",
+              textTransform: "uppercase",
+              letterSpacing: 1.5,
+              padding: "0 8px 10px",
+              fontFamily: "'JetBrains Mono', monospace",
+            }}
+          >
+            面試複習
+          </div>
+
+          {COURSES.filter((c) => c.section === "interview").map((c) => {
+            const isActive = location.pathname === c.path;
+            return (
+              <button
+                key={c.path}
+                onClick={() => handleNav(c.path)}
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                  padding: "12px 12px",
+                  marginBottom: 4,
+                  background: isActive
+                    ? hexToRgba(c.accent, 0.08)
+                    : "transparent",
+                  border: "none",
+                  borderRadius: 10,
+                  cursor: "pointer",
+                  transition: "all 0.25s ease",
+                  textAlign: "left",
+                  borderLeft: isActive
+                    ? `3px solid ${c.accent}`
+                    : "3px solid transparent",
+                }}
+                onMouseOver={(e) => {
+                  if (!isActive)
+                    e.currentTarget.style.background =
+                      "rgba(255,255,255,0.04)";
+                }}
+                onMouseOut={(e) => {
+                  if (!isActive)
+                    e.currentTarget.style.background = "transparent";
+                }}
+              >
+                <div
+                  style={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: 8,
+                    background: isActive
+                      ? `linear-gradient(135deg, ${c.accent}, ${c.accent}99)`
+                      : "rgba(255,255,255,0.05)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: 11,
+                    fontWeight: 900,
+                    color: isActive ? colors.bg : "rgba(255,255,255,0.35)",
+                    fontFamily: "'JetBrains Mono', monospace",
+                    flexShrink: 0,
+                    transition: "all 0.25s ease",
+                  }}
+                >
+                  {c.badge}
+                </div>
                 <div style={{ minWidth: 0 }}>
                   <div
                     style={{
@@ -354,7 +472,7 @@ function Sidebar({ open, onClose, onOpenCheatsheet }) {
             fontFamily: "'JetBrains Mono', monospace",
           }}
         >
-          {COURSES.length} 堂課程
+          {COURSES.filter((c) => !c.section).length} 堂課程 · {COURSES.filter((c) => c.section === "interview").length} 堂面試複習
         </div>
       </aside>
     </>
@@ -521,7 +639,7 @@ function AppContent() {
               fontFamily: "'JetBrains Mono', monospace",
             }}
           >
-            Git 互動課程
+            5 分鐘互動課程
           </div>
 
           {/* Cheatsheet quick access in topbar */}

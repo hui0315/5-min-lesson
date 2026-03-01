@@ -30,6 +30,10 @@ export const lessonThemes = {
   "/commands-ref":    { accent: "#FBBF24", accent2: "#F59E0B" },  // Amber — clarity
   "/review":         { accent: "#22D3EE", accent2: "#06B6D4" },  // Cyan — review
   "/hands-on":       { accent: "#FB923C", accent2: "#F97316" },  // Orange — action
+  // Interview prep courses
+  "/interview-ai-ml":      { accent: "#F472B6", accent2: "#EC4899" },  // Pink — AI/ML
+  "/interview-fullstack":  { accent: "#38BDF8", accent2: "#0EA5E9" },  // Sky — Full-stack
+  "/interview-tools":      { accent: "#A3E635", accent2: "#84CC16" },  // Lime — Tools
 };
 
 // Helper: convert hex (#RRGGBB) to rgba string
